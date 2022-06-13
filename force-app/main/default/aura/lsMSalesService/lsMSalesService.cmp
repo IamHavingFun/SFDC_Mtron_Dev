@@ -1,0 +1,30 @@
+<!--
+  * @filename      : lsMSalesService
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-05 오전 11:25
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-05 오전 11:25    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                description="lsMSalesService">
+
+    <!-- ===========================================================
+    ==== Step Component 생성 메소드
+    ============================================================ -->
+    <aura:method name="doCreateStepComponent" access="public">
+        <aura:attribute name="createName" type="String" default="" description="Step Component명"/>
+        <aura:attribute name="createParams" type="Map" default="{}" description="Step Component 생성 파라미터"/>
+        <aura:attribute name="callback" type="Function" description="callback function"/>
+        <aura:attribute name="targetComponent" type="Aura.Component" description="targetComponent"/>
+    </aura:method>
+
+</aura:component>

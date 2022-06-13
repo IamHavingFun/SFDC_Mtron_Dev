@@ -1,0 +1,75 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultGuidedSellingMain
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일]고객상담 : main : 고객상담 메인화면
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesCustomerConsult"
+                description="lsMSalesCustomerConsultGuidedSellingMain">
+
+    <!-- ============================================================================
+    ==== final Select Proudct Event 처리 : 최종 제품선택 이벤트 핸들러
+    ==== includeFacets="true" 처리를 하여 본 container에서 hanldler 처리되게끔 함.
+    ============================================================================= -->
+    <aura:handler name="fianlSelectProduct" event="c:lacComEvent" action="{!c.doFinalSelectProduct}" includeFacets="true"/>
+
+    <aura:attribute name="isLoading" type="Boolean" default="{!false}" description="isLoading"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <!-- [object Object] 에러가 발생하여 lazy loading 처리 -->
+    <aura:if isTrue="{!v.isLoading}">
+        <header id="header">
+            <article class="TopLeft"></article>
+            <article class="TopName">고객상담</article>
+            <article class="TopRright"></article>
+        </header>
+
+        <div id="container">
+            <!-- ============================================================================
+            ==== STEP 업무 : 맞춤형 트랙터 추천
+            ============================================================================= -->
+            <article class="{!and(not(empty(v.mobileStepVO.bizData)), v.mobileStepVO.bizData.guidedSellingType == 'C') ? 'PSelect1 box_select' : 'PSelect1'}"
+                     aura:id="guidedSellingItem"
+                     data-value="C"
+                     onclick="{!c.doSelectGuidedSellingType}">
+                <div class="boxAll">
+                    <div class="left_img1"></div>
+                    <div class="right_txt">
+                        <span class="tit">맞춤형 트랙터 추천</span>
+                        <span class="txt">고객의 영농 특성에 적합한 맞춤형 트랙터를 추천해 드립니다.</span>
+                    </div>
+                </div>
+            </article>
+            <!-- ============================================================================
+            ==== 단순 팝업업무 : 전체 제품 구함
+            ============================================================================= -->
+            <article class="{!and(not(empty(v.mobileStepVO.bizData)), v.mobileStepVO.bizData.guidedSellingType == 'A') ? 'PSelect1 box_select' : 'PSelect1'}"
+                     aura:id="guidedSellingItem"
+                     data-value="A"
+                     onclick="{!c.doSelectGuidedSellingType}">
+                <div class="boxAll">
+                    <div class="left_img2"></div>
+                    <div class="right_txt">
+                        <span class="tit">전체 모델 보기</span>
+                        <span class="txt">LS엠트론이 제공하는 다양한 제품을 직접 확인하세요.</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </aura:if>
+
+</aura:component>

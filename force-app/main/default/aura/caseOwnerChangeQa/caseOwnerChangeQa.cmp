@@ -1,0 +1,52 @@
+<!--
+* @filename      : caseOwnerChangeQa.cmp
+* @projectname   :
+* @author        : i2max
+* @date          : 2020-05-14 오전 8:30
+* @group         :
+* @group-content :
+* @description   : 문의 / 건의 소유자 변경 : 제출 상태에서만 가능.
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+0.1     2020-05-14 오전 8:30       SEOKHO LEE          Create
+-->
+
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="CaseOwnerChange"
+                description="caseOwnerChangeQa">
+
+    <aura:attribute name="caseData" type="CustomizedCase__c" description="문의/건의 레코드" />
+    <aura:attribute name="isOwnerChangePossible" type="Boolean" default="{#false}" description="소유자 변경 가능 여부" />
+    <aura:attribute name="ownerQueueOptions" type="List" description="문의/건의 대상 대기열 목록" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="담당부서 변경" aura:id="quickAction" hasSelfFooter="{#false}" height="300">
+        <aura:if isTrue="{!v.isOwnerChangePossible}">
+            <div class="">
+                <lightning:combobox  label="변경 부서" options="{!v.ownerQueueOptions}" placeholder="선택" value="{!v.caseData.OwnerId}" />
+            </div>
+            <div class="slds-p-around_x-large slds-text-align_center">
+                변경 하고자 하는 부서를 선택 해주세요.
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-text-align_center">제출 상태에서만 부서 변경이 가능 합니다.</div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isOwnerChangePossible}">
+                <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+
+</aura:component>

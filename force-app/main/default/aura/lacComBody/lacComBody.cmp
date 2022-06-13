@@ -1,0 +1,29 @@
+<!--
+  * @filename      : lacComBody
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-03-26 오후 1:55
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-03-26 오후 1:55     i2max_my.Seo           Create
+ -->
+<aura:component description="lacComBody">
+    <aura:attribute name="searchSection" type="Aura.Component[]"/>
+
+    <lightning:card>
+        <aura:if isTrue="{!not(empty(v.searchSection))}">
+            <div class="slds-form--inline slds-m-around_small">
+                {#v.searchSection}
+            </div>
+        </aura:if>
+
+        {#v.body}
+    </lightning:card>
+</aura:component>

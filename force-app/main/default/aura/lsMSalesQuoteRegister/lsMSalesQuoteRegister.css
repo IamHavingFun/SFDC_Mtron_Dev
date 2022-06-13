@@ -1,0 +1,84 @@
+.THIS {
+}
+
+.THIS .cLsMSalesThemeLayout .slds-button {
+    
+}
+.THIS .btn {
+    height: 66px;
+    background: #023671;
+    border: 1px solid #023671;
+    color: #fff;
+    text-align: center;
+    line-height: 36px;
+    padding: 0 25px 0 25px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    cursor: pointer;
+    letter-spacing: -1px;
+    font-weight: 500;
+}
+
+.THIS .col_board_amount .btnBox .sbtn_gray {
+    margin-left: 0 !important;
+    margin-right: 10px;
+    padding: 0 25px;
+}
+
+.THIS .total_amount .left {
+    width: 300px; padding-left: 30px; 
+    box-sizing: border-box; font-weight: 600; line-height: 66px; 
+}
+.THIS .total_amount .except-left {
+    width: 150px; padding-left: 30px;
+    box-sizing: border-box; font-weight: 600; line-height: 66px;
+}
+.THIS .total_amount .right {
+    width: calc(100% - 300px); padding-right: 30px;
+            box-sizing: border-box; line-height: 66px; text-align: right;
+}
+.THIS .total_amount .except-right {
+    width: calc(100% - 150px); padding-right: 60px;
+    box-sizing: border-box; line-height: 66px; text-align: right;
+}
+.THIS .total_amount .except-right .row{
+    width: 100%; height: 30px; color: #ED164B; text-align: right; margin-bottom: 8px;
+}
+.THIS .total_amount .except-right .bold{
+    font-weight:  700;
+}
+.THIS .total_amount .totalBox .left {
+            width: 400px;
+}
+.THIS .total_amount .totalBox .right {
+            width: calc(100% - 400px);
+}
+        
+.THIS .slds-form-element {
+    position: relative;
+    min-width: 0px;
+    float: right;
+}
+/*.THIS .slds-input {*/
+/*    text-align: right;*/
+/*}*/
+.THIS .custom-input-text__right input{
+    text-align: right;
+}
+
+.THIS .slds-m-right_x-large {
+    margin-right: 0;
+}
+
+.THIS .col_board_amount .right {
+    width: 320px;
+}
+
+.THIS .col_board_amount .left {
+    width: calc(100% - 320px);
+}
+
+.THIS .col_board_amount .right .row .mark {
+    width: 160px;
+}

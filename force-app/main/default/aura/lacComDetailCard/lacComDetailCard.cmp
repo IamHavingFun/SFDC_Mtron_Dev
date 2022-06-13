@@ -1,0 +1,40 @@
+<!--
+  * @filename      : lacComDetailCard
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component description="lacComDetailCard">
+
+    <!-- 해당 Cmp Attribute -->
+    <aura:attribute name="targetObject" type="String" description="이동할 대상 sObject"/>
+    <aura:attribute name="isFooter" type="Boolean" default="{!true}" description="footer 유무"/>
+    <aura:attribute name="button" type="Aura.Component[]" description="버튼 영역"/>
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <lightning:card title="" class="slds-m-top_none">
+    <aura:set attribute="body">
+        <div class="slds-card__body_inner">
+            {#v.body}
+        </div>
+    </aura:set>
+    <aura:set attribute="footer">
+        <aura:if isTrue="{!v.isFooter}">
+            <a class="slds-card__footer-action" onclick="{!c.doNaviObjHome}">
+                <div class="{#(v.isCommunity) ? 'slds-text-align_right' : ''}">View All</div>
+            </a>
+        </aura:if>
+    </aura:set>
+</lightning:card>
+</aura:component>

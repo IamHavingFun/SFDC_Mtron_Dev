@@ -1,0 +1,71 @@
+<!--
+  * @filename      : lsMSalesContractList
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-06-29 오후 2:02
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-29 오후 2:02    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                controller="lsMSalesContractList"
+                description="lsMSalesContractList">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- 검색 -->
+    <div class="top_searchBoxN slds-list_horizontal">
+        <lightning:input label="" type="text" style="width:100%;" placeholder="매수자 검색" value="{!v.reqData.name}"/>
+        <lightning:button class="btn_search_icon" onclick="{!c.doSearch}"/>
+    </div>
+    <!-- //검색 -->
+
+    <!-- 테이블 -->
+    <div class="col_board">
+        <c:lsMSalesTableFrame  aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}">
+            <!-- iteration 돌리기 전 체크 로직. -->
+            <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+                <ul>
+                    <aura:iteration items="{!v.recordList}" var="record">
+                        <li>
+                            <div class="left">
+                                <div class="tit">{!record.Customer__r.Name}
+                                    <span class="bar"></span> {!record.Customer__r.PersonMobilePhone}
+                                    <span class="bar"></span> <lightning:formattedDateTime value="{!record.LastModifiedDate}" />
+                                </div>
+                                <div class="stxt">
+                                    <aura:iteration items="{!record.ContractLineItem__r}" var="row">
+                                        {!row.ProductId__r.Name}
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <lightning:button label="{!record.Opportunity__r.StageName == '인도' ?
+                                                            '고객 인도' : and(record.Opportunity__r.StageName == '계약', record.eFormsignStatus__c == '미요청') ?
+                                                            '계약서 작성중' : and(record.Opportunity__r.StageName == '계약', record.eFormsignStatus__c == '계약체결') ?
+                                                            '출고 대기중' : '계약 진행중지'}"
+                                                  class="btn btn_sign"
+                                                  value="{!record.Id}"
+                                                  onclick="{!c.doMoveRegister}"/>
+                            </div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+
+                <aura:set attribute="else">
+                    <c:lsMSalesNoDataFound/>
+                </aura:set>
+            </aura:if>
+        </c:lsMSalesTableFrame>
+    </div>
+</aura:component>

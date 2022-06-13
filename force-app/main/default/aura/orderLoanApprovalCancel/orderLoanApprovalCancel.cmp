@@ -1,0 +1,52 @@
+<!--
+  * @filename      : orderLoanApprovalCancel
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-03-27
+  * @group         :
+  * @group-content :
+  * @description   : 추가 여신 승인 취소 처리
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-03-27     	i2max          Create
+ -->
+
+<aura:component extends="c:lacComBase"
+                controller="OrderLoanApprovalCancel"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                description="orderLoanApprovalCancel">
+
+    <aura:attribute name="order" type="Order__c" description="주문"/>
+    <aura:attribute name="isProcess" type="Boolean" description="처리가능여부"/>
+    <aura:attribute name="processMessage" type="String" description="처리 메세지"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="추가여신승인요청 취소" aura:id="quickAction" hasSelfFooter="{#true}" isSmall="{#true}">
+
+        <div class="slds-text-align_center slds-m-top_medium">
+            <span class="f15">
+                <aura:if isTrue="{!v.isProcess}">
+                    해당 주문의 추가여신승인요청 취소 처리 하시겠습니까?<br/>
+                    <aura:set attribute="else">
+                        {!v.processMessage}
+                    </aura:set>
+                </aura:if>
+            </span>
+        </div>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnCancel" label="취소" onclick="{!c.doCancel}" />
+            <aura:if isTrue="{!v.isProcess}">
+                <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}" />
+            </aura:if>
+        </aura:set>
+
+    </c:lacComQuickAction>
+
+</aura:component>

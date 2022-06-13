@@ -1,0 +1,39 @@
+<!--
+* @filename      : orderAssetTransferRequestButtons.cmp
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-06-08 오전 11:01
+* @group         :
+* @group-content :
+* @use-area      : 파트너 주문 상세화면
+* @description   : 전수배 주문 요청 상태시 버튼 활성화 처리.
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+0.1     2020-06-08 오전 11:01     SEOKHO LEE          Create
+-->
+
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,forceCommunity:availableForAllPageTypes"
+                controller="OrderAssetTransferRequestButtons"
+                description="orderAssetTransferRequestButtons 불러오기 위한 버튼 컴포넌트">
+
+    <aura:attribute name="order" type="Order__c" description="주문 개체"/>
+    <aura:attribute name="isRequested" type="Boolean" description="전환요청 상태체크" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService" />
+
+    <div class="div-align_right">
+        <aura:if isTrue="{!v.isRequested}">
+            <lightning:button aura:id="actionButtons" class="" label="전수배 전환 동의" variant="brand" onclick="{!c.doCallQa}"/>
+        </aura:if>
+    </div>
+
+</aura:component>

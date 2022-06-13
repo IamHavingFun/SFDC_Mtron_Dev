@@ -1,0 +1,16 @@
+<!--
+ - Created by MS on 2020-06-24.
+ -->
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="partnerLandingMovie">
+
+    <aura:attribute name="YoutubeURL" type="String" default="" required="true" description="동영상 URL"/>
+
+    <lightning:card>
+        <div style="text-align: center">
+            <iframe width="95%" height="315" src="{!v.YoutubeURL}" frameborder="0" allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+        </div>
+    </lightning:card>
+
+</aura:component>

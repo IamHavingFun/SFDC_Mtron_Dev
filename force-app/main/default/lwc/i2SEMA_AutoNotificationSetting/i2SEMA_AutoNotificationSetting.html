@@ -1,0 +1,284 @@
+<!--
+  * @filename       : i2SEMA_AutoNotificationSetting
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-14 오전 10:18
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오전 10:18     i2max_byeon.jw       Create
+ -->
+<template>
+
+    <lightning-card title={notificationSetting.Name} icon-name="standard:quick_text">
+        <!-- Event Description -->
+        <div class="sectionDescription" style="padding-top:1rem;padding-bottom:1rem;">
+            <div class="singleItem" style="padding-bottom:0.5rem;border-bottom: 1px solid black;">
+                <h1 class="slds-text-heading_small">Event Define</h1>
+                <div class="slds-grid">
+                    <div>
+                        <p class="slds-text-body_regular" style="color:#7F7E76;">Set notification event rules for specific objects.</p>
+                        <p class="slds-text-body_regular" style="color:#7F7E76;">defines when the event will execute and the recipients and templates.</p>
+                    </div>
+                    <div class="slds-col_bump-left">
+                        <lightning-button type="button" label={activateLabel} variant={activateVariant} onclick={toggleActivate}></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Name, Active -->
+        <div class="rowHolder">
+            <div class="mainItem">
+                <lightning-input type="text"
+                                 label="Event Name"
+                                 name="Name"
+                                 value={notificationSetting.Name}
+                                 onchange={setNotificationSettingValue}>
+                </lightning-input>
+            </div>
+            <div class="subItem">
+                <lightning-input type="checkbox"
+                                 label="Active"
+                                 checked={notificationSetting.IsActive__c}
+                                 disabled>
+                </lightning-input>
+            </div>
+        </div>
+
+        <!-- Object, Execute -->
+        <div class="rowHolder">
+            <div class="mainItem">
+                <c-i2-s-e-m-a_-search-drop-box  drop-box-label="Object"
+                                        drop-box-api="ObjectType__c"
+                                        drop-box-items={objects}
+                                        drop-box-value={notificationSetting.ObjectType__c}
+                                        ondropboxselect={dropBoxEventHandle}>
+                </c-i2-s-e-m-a_-search-drop-box>
+            </div>
+            <div class="subItem">
+                <lightning-combobox label="Execute on"
+                                    options={executeOptions}
+                                    value={notificationSetting.ExecuteOn__c}
+                                    name="ExecuteOn__c"
+                                    onchange={setNotificationSettingValue}
+                                    disabled={executeDisabled}>
+                </lightning-combobox>
+            </div>
+        </div>
+
+        <!-- Recipient -->
+        <div class="rowHolder">
+            <div class="mainItem">
+                <c-i2-s-e-m-a_-search-drop-box  drop-box-label="Recipient"
+                                        drop-box-api="RecipientField__c"
+                                        drop-box-items={recipientFields}
+                                        drop-box-value={notificationSetting.RecipientField__c}
+                                        ondropboxselect={dropBoxEventHandle}
+                                        disabled={recipientDisabled}>
+                </c-i2-s-e-m-a_-search-drop-box>
+            </div>
+            <div class="subItem">
+
+            </div>
+        </div>
+
+        <!-- Template, Labels -->
+        <div class="rowHolder">
+            <div class="mainItem">
+                <lightning-record-edit-form object-api-name="NotificationAutomaticSetting__c" record-id={recordId}>
+                    <lightning-input-field field-name="NotificationTemplate__c"
+                                           value={notificationSetting.NotificationTemplate__c}
+                                           name="NotificationTemplate__c"
+                                           onchange={templateChangeHandle}>
+                    </lightning-input-field>
+                </lightning-record-edit-form>
+            </div>
+            <div class="subItem">
+                <template if:true={label1Render}>
+                    <c-i2-s-e-m-a_-search-drop-box  drop-box-label="LABEL 1"
+                                            drop-box-api="Label1FieldAPI__c"
+                                            drop-box-items={fields}
+                                            drop-box-value={notificationSetting.Label1FieldAPI__c}
+                                            ondropboxselect={dropBoxEventHandle}
+                                            disabled={labelDisabled}>
+                    </c-i2-s-e-m-a_-search-drop-box>
+                </template>
+            </div>
+        </div>
+        <template if:true={label2Render}>
+            <div class="rowHolder">
+                <div class="mainItem"></div>
+                <div class="subItem">
+                    <c-i2-s-e-m-a_-search-drop-box  drop-box-label="LABEL 2"
+                                            drop-box-api="Label2FieldAPI__c"
+                                            drop-box-items={fields}
+                                            drop-box-value={notificationSetting.Label2FieldAPI__c}
+                                            ondropboxselect={dropBoxEventHandle}
+                                            disabled={labelDisabled}>
+                    </c-i2-s-e-m-a_-search-drop-box>
+                </div>
+            </div>
+        </template>
+        <template if:true={label3Render}>
+            <div class="rowHolder">
+                <div class="mainItem"></div>
+                <div class="subItem">
+                    <c-i2-s-e-m-a_-search-drop-box  drop-box-label="LABEL 3"
+                                            drop-box-api="Label3FieldAPI__c"
+                                            drop-box-items={fields}
+                                            drop-box-value={notificationSetting.Label3FieldAPI__c}
+                                            ondropboxselect={dropBoxEventHandle}
+                                            disabled={labelDisabled}>
+                    </c-i2-s-e-m-a_-search-drop-box>
+                </div>
+            </div>
+        </template>
+        <template if:true={label4Render}>
+            <div class="rowHolder">
+                <div class="mainItem"></div>
+                <div class="subItem">
+                    <c-i2-s-e-m-a_-search-drop-box  drop-box-label="LABEL 4"
+                                            drop-box-api="Label4FieldAPI__c"
+                                            drop-box-items={fields}
+                                            drop-box-value={notificationSetting.Label4FieldAPI__c}
+                                            ondropboxselect={dropBoxEventHandle}
+                                            disabled={labelDisabled}>
+                    </c-i2-s-e-m-a_-search-drop-box>
+                </div>
+            </div>
+        </template>
+        <template if:true={label5Render}>
+            <div class="rowHolder">
+                <div class="mainItem"></div>
+                <div class="subItem">
+                    <c-i2-s-e-m-a_-search-drop-box  drop-box-label="LABEL 5"
+                                            drop-box-api="Label5FieldAPI__c"
+                                            drop-box-items={fields}
+                                            drop-box-value={notificationSetting.Label5FieldAPI__c}
+                                            ondropboxselect={dropBoxEventHandle}
+                                            disabled={labelDisabled}>
+                    </c-i2-s-e-m-a_-search-drop-box>
+                </div>
+            </div>
+        </template>
+
+        <!-- Schedule, Schedule Time-->
+        <div class="rowHolder">
+            <div class="mainItem">
+                <lightning-input type="checkbox"
+                                 label="Schedule"
+                                 name="IsSchedule__c"
+                                 checked={notificationSetting.IsSchedule__c}
+                                 onchange={setNotificationSettingValue}>
+                </lightning-input>
+            </div>
+            <div class="subItem">
+                <div class="subItemRow">
+                    <lightning-combobox label="Schedule base on"
+                                        options={scheduleBaseOptions}
+                                        value={notificationSetting.ScheduleBasedOn__c}
+                                        name="ScheduleBasedOn__c"
+                                        onchange={setNotificationSettingValue}
+                                        disabled={scheduleDisabled}>
+                    </lightning-combobox>
+                </div>
+                <template if:true={scheduleBaseFieldRender}>
+                    <div class="subItemRow">
+                        <c-i2-s-e-m-a_-search-drop-box  drop-box-label="Field for schedule"
+                                            drop-box-api="FieldForSchedule__c"
+                                            drop-box-items={scheduleBaseFields}
+                                            drop-box-value={notificationSetting.FieldForSchedule__c}
+                                            ondropboxselect={dropBoxEventHandle}
+                                            disabled={scheduleDisabled}>
+                        </c-i2-s-e-m-a_-search-drop-box>
+                    </div>
+                </template>
+                <div class="subItemRow">
+                    <lightning-input type="number"
+                                     label="Schedule Time(Hour)"
+                                     name="ScheduleTime__c"
+                                     value={notificationSetting.ScheduleTime__c}
+                                     step="0.1"
+                                     onchange={setNotificationSettingValue}
+                                     disabled={scheduleDisabled}>
+                    </lightning-input>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Field Condition Description -->
+        <div class="sectionDescription" style="padding-top:3rem;padding-bottom:1rem;">
+            <div class="singleItem" style="padding-bottom:0.5rem;border-bottom: 1px solid black;">
+                <h1 class="slds-text-heading_small">Field Conditions</h1>
+                <div class="slds-grid">
+                    <div>
+                        <p class="slds-text-body_regular" style="color:#7F7E76;">Set up the fields that are conditioned to perform the event.</p>
+                        <p class="slds-text-body_regular" style="color:#7F7E76;">Each condition has an alias and an expression must be written to perform the event.</p>
+                    </div>
+                    <div class="slds-col_bump-left">
+                        <lightning-button label="Add Condition"
+                                          onclick={addCondition}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Field Condition -->
+        <template if:false={hasConditions}>
+            <div class="rowHolder">
+                <div class="singleItem">
+                    <lightning-formatted-text value="There's no field conditions"></lightning-formatted-text>
+                </div>
+            </div>
+        </template>
+        <template if:true={hasConditions} for:each={fieldConditions} for:item="condition">
+            <div class="rowHolder" key={condition.Alias__c}>
+                <c-i2-s-e-m-a_-auto-notification-condition origin-condition= {condition}
+                                                fields={fields}
+                                                field-types={fieldTypes}
+                                                object-type={notificationSetting.ObjectType__c}
+                                                onchangecondition={changeCondition}
+                                                onremovecondition={removeCondition}>
+                </c-i2-s-e-m-a_-auto-notification-condition>
+            </div>
+        </template>
+
+        <!-- Logical Expression , Add Button -->
+        <div class="rowHolder">
+            <div class="mainItem">
+                <template if:true={expressionRender}>
+                    <lightning-input type="text"
+                                     label="Logical Expression (e.g. A && B )"
+                                     value={notificationSetting.LogicalExpression__c}
+                                     name="LogicalExpression__c"
+                                     onchange={setNotificationSettingValue}
+                                     required>
+                    </lightning-input>
+                </template>
+            </div>
+        </div>
+
+        <div slot="footer">
+            <lightning-button type="button" label="Save" variant="brand" onclick={saveNotificationSetting}></lightning-button>
+        </div>
+
+    </lightning-card>
+
+
+    <!--    <lightning-formatted-text value="Supported Field Types : Text(incl. Picklist), Email, Phone, Number, Percent, Currency, Date, DateTime, CheckBox, Reference"></lightning-formatted-text>-->
+
+    <!-- Spinner -->
+    <template if:true={loading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    
+</template>

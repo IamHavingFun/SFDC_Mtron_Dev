@@ -1,0 +1,57 @@
+<!--
+ - Created by MS on 2020-07-02.
+ -->
+
+<aura:component extends="c:lsMSalesQuickActionBase"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="lsMSalesCaseEvaluationQa"
+                controller="LsMSalesCaseEvaluationQa">
+
+    <aura:attribute name="caseRec" type="CustomizedCase__c" description="Case 저장 개체"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        .h150 {
+            height : 410px !important;
+        }
+        .mm70 {
+            margin-top: -70px;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">평가 등록</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <div id="container" class="bgW h150">
+        <article class="content">
+            <ul class="slds-m-top_medium">
+                <li>답변 평가</li>
+            </ul>
+            <ul class="box_tab col2">
+                <li class="{!equals(v.caseRec.DealerFeedback__c, '만족') ? 'active' : ''}" onclick="{!c.doSelected}" data-selecteval="만족"><a href="javascript:void(0);">만족</a></li>
+                <li class="{!equals(v.caseRec.DealerFeedback__c, '재검토 요청') ? 'active' : ''}" onclick="{!c.doSelected}" data-selecteval="재검토 요청"><a href="javascript:void(0);" >재검토 요청</a></li>
+            </ul>
+            <ul class="slds-m-top_medium">
+                <li>재검토 사유</li>
+                <li>
+                    <lightning:textarea name="Comment" label="재검토 사유" value="{!v.caseRec.DealerFeedbackComment__c}" variant="label-hidden" class=""/>
+                </li>
+            </ul>
+        </article>
+    </div>
+
+    <section class="bbtnBox mm70">
+        <button class="bbtn_white btn_50" onclick="{!c.doCancel}">취소</button>
+        <button class="bbtn btn_50" onclick="{!c.doSave}">등록</button>
+    </section>
+
+</aura:component>

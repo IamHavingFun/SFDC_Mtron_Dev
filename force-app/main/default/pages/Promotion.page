@@ -1,0 +1,285 @@
+<!--
+ - Created by MS on 2020-06-24.
+ -->
+
+<apex:page id="Promotion" controller="PromotionController" showHeader="false" applyBodyTag="false" standardStylesheets="false">
+    <head>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+        <title>LS엠트론 이벤트</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"/>
+        <meta name="robots" content="index, follow"/>
+        <apex:stylesheet value="{!URLFOR($Resource.promotion, 'css/reset.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.promotion, 'css/style.css')}"/>
+        <style>
+            .ui-dialog .ui-dialog-title {font-size:14px;}
+            .alertMessage {
+                font-size:17px;padding:10px 10px 20px 10px;letter-spacing:0px;line-height:30px;font-weight:500;background: repeating-linear-gradient(-45deg, #FFFFFF, #FFFFFF 10px, #F5F5F5 0, #f5f5f5 20px);border:1px solid #CCCCCC;"
+            }
+            .telArea, .dateArea{
+                width: calc(100% - 90px);
+            }
+            .form_select_date{
+                width: 55%;
+                height: 45px;
+                display: inline-block;
+                padding: 0 8px;
+                box-sizing: border-box;
+                border-radius: 0;
+                border: 1px solid #ccc;
+                font-size: 15px;
+            }
+            .form_select_time {
+                width: 35%;
+                height: 45px;
+                display: inline-block;
+                padding: 0 8px;
+                box-sizing: border-box;
+                border-radius: 0;
+                border: 1px solid #ccc;
+                font-size: 15px;
+            }
+            .form_select_tel, .form_select_tel_num {
+                width: 30%;
+                height: 45px;
+                display: inline-block;
+                padding: 0 8px;
+                box-sizing: border-box;
+                border-radius: 0;
+                border: 1px solid #ccc;
+                font-size: 15px;
+            }
+        </style>
+        <script>
+            j$ = jQuery.noConflict();
+            j$(document).ready(function(){
+                j$("#waitWindow").dialog({ autoOpen: false, modal: true, position: { my: "center", at: "center", of: window }, closeText: 'hide', draggable: false, title:'대리점 조회'});
+            });
+
+            function selectAllCheckboxes(obj){
+                var inputCheckBox = document.getElementsByTagName("input");
+                if(obj.checked){
+                    for(var i=0; i<inputCheckBox.length; i++){
+                        inputCheckBox[i].checked = obj.checked;
+                    }
+                }
+            }
+
+            function fnSave(){
+                var developerName = '{!targetCampaign.recordtype.developerName}';
+                var infoName = j$('[id$=":infoName"]').val();
+                if(infoName == '') {
+                    alert('고객명이 입력되지 않았습니다.');
+                    j$('[id$=":infoName"]').focus();
+                    return;
+                }
+
+                var infoTel2 = j$('[id$=":infoTel2"]').val();
+                var infoTel3 = j$('[id$=":infoTel3"]').val();
+
+                if(infoTel2 == '') {
+                    alert('전화번호를 입력 하세요');
+                    j$('[id$=":infoTel2"]').focus();
+                    return;
+                }
+                if(infoTel3 == '') {
+                    alert('전화번호를 입력 하세요');
+                    j$('[id$=":infoTel3"]').focus();
+                    return;
+                }
+                var soDealer = j$('[id$=":soDealerV"]').val();
+                if(soDealer == '') {
+                    alert('대리점이 선택되지 않았습니다.');
+                    j$('[id$=":soDealerV"]').focus();
+                    return;
+                }
+                var reqDate = j$('.form_select_date').val();
+                if(developerName == 'TestDrive' && reqDate == '') {
+                    alert('신청일자를 선택 해주세요.');
+                    j$('.form_select_date').focus();
+                    return;
+                }
+                var reqTime = j$('.form_select_time').val();
+                if(developerName == 'TestDrive' && reqTime == '') {
+                    alert('신청시간을 선택 해주세요.');
+                    j$('.form_select_time').focus();
+                    return;
+                }
+                var inputCheckBox = document.getElementsByTagName("input");
+                for(var i=0; i<inputCheckBox.length; i++){
+                    if(inputCheckBox[i].id.indexOf("Check")!=-1){
+                        if(!inputCheckBox[i].checked){
+                            alert('(필수) 동의 사항이 동의되지 않았습니다.');
+                            return;
+                        }
+                    }
+                }
+
+                promotionSave();
+            }
+
+            function fnPageReDirect(){
+                window.location.href = 'http://www.lstractor.co.kr';
+            }
+
+            function showDialog(){
+                j$("#waitWindow").dialog("open");
+                return false;
+            }
+
+            function hideDialog(){
+                j$("#waitWindow").dialog("close");
+                return false;
+            }
+
+            function telNumberCheck(obj) {
+                j$(obj).val(j$(obj).val().replace(/[^0-9]/g,""));
+            }
+
+        </script>
+    </head>
+    <article class="eventBody">
+        <!-- 이벤트 이미지 영역 -->
+        <section class="visual">
+            <apex:outputText rendered="{!if(targetCampaign.AttachedContentDocuments.size > 0, true, false)}">
+                <img src="{!if($CurrentPage.parameters.Internal == 'yes','','/Partner')+'/sfc/servlet.shepherd/document/download/' + targetCampaign.AttachedContentDocuments[0].ContentDocumentId}"/>
+            </apex:outputText>
+        </section>
+        <!-- //이벤트 이미지 영역 -->
+        <apex:outputText rendered="{!(!valid)}">
+            <div class="bbtn_area">
+                <div class="alertMessage">
+                    신청하신 {!if(targetCampaign.recordtype.developerName =='TestDrive','시승','프로모션')} 이벤트가 종료 되었습니다.<br/>
+                    성원에 감사드립니다<br/>
+                    빠른 시일내 더 좋은 이벤트로 찾아 뵙겠습니다
+                </div>
+                <button onclick="fnPageReDirect();return false;">닫기</button>
+            </div>
+        </apex:outputText>
+        <apex:outputText rendered="{!(valid)}">
+            <apex:form id="PromotionTable">
+                <apex:actionStatus onstart="showDialog();" onstop="hideDialog();"  id="IngStatus" rendered="true"/>
+                <apex:outputText rendered="{!(Savevalid)}">
+                    <div class="bbtn_area">
+                        <div class="alertMessage">
+                            <apex:outputText rendered="{!if(targetCampaign.recordtype.developerName == 'TestDrive',true,false)}">
+                                시승 신청이 접수 되었습니다.<br/>
+                                시승 시간확정을 위해 담당 대리점에서<br/>
+                                기재해주신 번호로 연락 드리도록 하겠습니다.<br/>
+                                감사합니다
+                            </apex:outputText>
+                            <apex:outputText rendered="{!if(targetCampaign.recordtype.developerName == 'Promotion',true,false)}">
+                                전화상담 요청이 접수 되었습니다.<br/>
+                                구체적인 안내를 위해 담당 대리점에서<br/>
+                                기재해주신 번호로 연락드리도록 하겠습니다<br/>
+                                감사합니다
+                            </apex:outputText>
+                            <button onclick="fnPageReDirect();return false;">닫기</button>
+                        </div>
+
+                    </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!(!Savevalid)}">
+                    <apex:actionFunction name="promotionSave" status="IngStatus" action="{!promotionSave}"/>
+                    <apex:outputPanel id="info">
+                        <div class="event_form">
+                            <ul>
+                                <li>
+                                    <strong>고객명</strong>
+                                    <apex:inputText id="infoName" value="{!infoName}" html-placeholder="이름을 입력해주세요."/>
+                                </li>
+                                <li>
+                                    <strong>전화번호</strong>
+                                    <div class="telArea">
+                                        <apex:selectList id="infoTel1" value="{!infoTel1}" size="1" styleClass="form_select_tel">
+                                            <apex:selectOption itemLabel="010" itemValue="010"/>
+                                            <apex:selectOption itemLabel="011" itemValue="011"/>
+                                            <apex:selectOption itemLabel="017" itemValue="017"/>
+                                        </apex:selectList>-
+                                        <apex:inputText id="infoTel2" value="{!infoTel2}" html-placeholder="0000" styleClass="form_select_tel_num" maxLength="4" onKeyUp="telNumberCheck(this);"/>-
+                                        <apex:inputText id="infoTel3" value="{!infoTel3}" html-placeholder="0000" styleClass="form_select_tel_num" maxLength="4" onKeyUp="telNumberCheck(this);"/>
+                                    </div>
+                                </li>
+                                <li class="form_select test">
+                                    <strong>지역(도)</strong>
+                                    <apex:selectList value="{!soStateV}" size="1" styleClass="form_select2">
+                                        <apex:selectOptions value="{!soState}"/>
+                                        <apex:actionSupport event="onchange" action="{!doChangeState}" rerender="info" status="IngStatus"/>
+                                    </apex:selectList>
+                                    <div class="form_select__arrow"></div>
+                                </li>
+                                <li class="form_select test">
+                                    <strong>지역(시군)</strong>
+                                    <apex:selectList value="{!soAreaV}" size="1" styleClass="form_select2">
+                                        <apex:selectOptions value="{!soArea}"/>
+                                        <apex:actionSupport event="onchange" action="{!doChangeArea}" rerender="info" status="IngStatus"/>
+                                    </apex:selectList>
+                                    <div class="form_select__arrow"></div>
+                                </li>
+                                <li class="form_select test">
+                                    <strong>대리점</strong>
+                                    <apex:selectList value="{!soDealerV}" size="1" id="soDealerV" styleClass="form_select2" >
+                                        <apex:selectOptions value="{!soDealer}"/>
+                                        <apex:actionSupport event="onchange" action="{!doChangeDealer}" rerender="info" status="IngStatus"/>
+                                    </apex:selectList>
+                                    <div class="form_select__arrow"></div>
+                                </li>
+                                <apex:outputPanel rendered="{!if(targetCampaign.recordtype.developerName =='TestDrive', true, false)}">
+                                    <li>
+                                        <strong>시승 기간</strong>
+                                        <span>
+                                                <apex:outputText value="{0, date, yyyy'.' MM'.'  dd }">
+                                                <apex:param value="{!targetCampaign.StartDate}" />
+                                                </apex:outputText>
+                                                ~
+                                                <apex:outputText value="{0, date, yyyy'.' MM'.'  dd }">
+                                                    <apex:param value="{!targetCampaign.EndDate}" />
+                                                </apex:outputText>
+                                            </span>
+                                    </li>
+                                    <li>
+                                        <strong>신청 일시</strong>
+                                        <div class="dateArea">
+                                            <apex:selectList value="{!soRequestDate}" size="1" id="soRequestDate" styleClass="form_select_date">
+                                                <apex:selectOptions value="{!dateRanage}"/>
+                                            </apex:selectList>&nbsp;
+                                            <apex:selectList value="{!soRequestTime}" size="1" id="soRequestTime" styleClass="form_select_time">
+                                                <apex:selectOptions value="{!timeRanage}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </li>
+                                </apex:outputPanel>
+                            </ul>
+                        </div>
+                    </apex:outputPanel>
+                    <ul class="event_agree">
+                        <li>
+                            <apex:inputCheckbox id="All" onclick="selectAllCheckboxes(this)"/>
+                            <label for="Promotion:PromotionTable:All"><span></span>개인정보 수집, 처리 위탁 및 이벤트 약관에 모두 동의합니다.</label>
+                        </li>
+                        <li class="agree_in">
+                            <apex:inputCheckbox label="동의" value="{!infoCUPI_T}" id="CheckCUPI" />
+                            <label for="Promotion:PromotionTable:CheckCUPI"><span></span><strong>(필수)</strong>개인정보 수집 및 이용에 동의합니다.</label>
+                        </li>
+                        <li class="agree_in">
+                            <apex:inputCheckbox label="동의" value="{!infoReceiveSM_T}" id="CheckReceive" />
+                            <label for="Promotion:PromotionTable:CheckReceive"><span></span><strong>(필수)</strong>광고/홍보성 정보 수신에 동의합니다.</label>
+                        </li>
+                        <li class="agree_in">
+                            <apex:inputCheckbox label="동의" value="{!infoCUPIThirdParty_T}" id="CheckThird" />
+                            <label for="Promotion:PromotionTable:CheckThird"><span></span><strong>(필수)</strong>개인정보 처리 위탁에 동의합니다.</label>
+                        </li>
+                    </ul>
+                    <div class="bbtn_area">
+                        <button onclick="fnSave();return false;">{!if(targetCampaign.recordtype.developerName =='TestDrive','시승 신청','대리점 전화상담 요청')}</button>
+                    </div>
+                </apex:outputText>
+            </apex:form>
+            <div id="waitWindow" style="text-align:center;font-size:16px;font-weight:bold;">
+                <img src="{!URLFOR($Resource.loading)}"/><br/>
+                <div style="margin-top:10px;">이창을 닫지 마시고<br/>잠시만 기다려주세요.</div>
+            </div>
+        </apex:outputText>
+    </article>
+</apex:page>

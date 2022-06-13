@@ -1,0 +1,84 @@
+<!--
+  * @filename      : lsMSalesAccDetailUpdate
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-24 오전 7:23
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-24 오전 7:23    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesAccDetailUpdate"
+                description="lsMSalesAccDetailUpdate">
+
+    <aura:attribute name="yearList" type="List" description="" default=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <header id="header">
+        <article class="TopLeft">
+        </article>
+        <article class="TopName">매수자 상세정보 입력</article>
+        <article class="TopRright">
+        </article>
+    </header>
+    
+    <div id="container">
+        <article class="top_searchBox">
+            계약서 작성을 위해서는 <br/> 매수자 상세정보 입력이 필요합니다.
+        </article>
+        <article class="top_nameBox">
+            <aura:if isTrue="{!equals(v.mobileStepVO.bizData.quote.CustomerName__r.RecordType.DeveloperName, 'CorporationAccount')}">
+                <div class="tit" style="text-align:left;">매수자 : {!v.mobileStepVO.bizData.quote.CustomerName__r.Name}({!v.mobileStepVO.bizData.quote.CustomerName__r.Mobile__c})</div>
+
+                <aura:set attribute="else">
+                    <div class="tit" style="text-align:left;">매수자 : {!v.mobileStepVO.bizData.quote.CustomerName__r.LastName}({!v.mobileStepVO.bizData.quote.CustomerName__r.PersonMobilePhone})</div>
+                </aura:set>
+            </aura:if>
+        </article>
+    
+        <article class="content bgW">
+            <aura:if isTrue="{!not(equals(v.mobileStepVO.bizData.quote.CustomerName__r.RecordType.DeveloperName, 'CorporationAccount'))}">
+                <div class="mt40">
+                    <label class="form_tit">생년월일</label>
+                    <span class="input_birthday">
+                        <lightning:combobox aura:id="year" label="" class="input_year" options="{!v.mobileStepVO.dateData.yearList}" value="{!v.mobileStepVO.dateData.tempYear}" placeholder="년"/>
+                        <lightning:combobox aura:id="month" label="" class="input_month" options="{!v.mobileStepVO.dateData.monthList}" value="{!v.mobileStepVO.dateData.tempMonth}" placeholder="월"/>
+                        <lightning:combobox aura:id="day" label="" class="input_day" options="{!v.mobileStepVO.dateData.dayList}" value="{!v.mobileStepVO.dateData.tempDay}" placeholder="일"/>
+                    </span>
+                </div>
+            </aura:if>
+            
+            <div class="mt40">
+                <label class="form_tit">주소검색</label>
+                <span class="input_adress">
+                    <lightning:input label="" class="searchW" type="text" value="{!v.mobileStepVO.bizData.quote.CustomerName__r.BillingPostalCode}" disabled="true"/>
+                    <lightning:button label="주소검색" class="btn_search" onclick="{!c.doAddressSearch}"/>
+                    <lightning:input label="" type="text" value="{!v.mobileStepVO.bizData.quote.CustomerName__r.BillingState + ' ' +
+                                                                 v.mobileStepVO.bizData.quote.CustomerName__r.BillingCity + ' ' +
+                                                                 v.mobileStepVO.bizData.quote.CustomerName__r.BillingStreet}"
+                                     disabled="true"/>
+                    <lightning:input label="" type="text" value="{!v.mobileStepVO.bizData.tempDetailAddress}" disabled="true"/>
+                </span>
+            </div>
+            
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrevPage}"/>
+                <lightning:button label="매수자 상세정보 저장" class="bbtn btn_50" onclick="{!c.doValidCheck}"/>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,55 @@
+<!--
+  * @filename      : lacComService
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-03-26 오후 2:03
+  * @group         : 
+  * @group-content : 
+  * @description   : Label, Navi service, Excel 등의 기능을 포함한 컴포넌트
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-03-26 오후 2:03     i2max_my.Seo           Create
+ -->
+<aura:component extends="c:lacComBase"
+                controller="LacComService"
+                description="lacComService">
+
+    <lightning:navigation aura:id="naviService"/>
+
+    <!-- ===========================================================
+    ==== sobject label 정보 불러오는 method.
+    ============================================================ -->
+    <aura:method name="doGetSobjectData" access="public">
+        <aura:attribute name="targetObjectList" type="List" description="대상이 되는 sobject list"/>
+        <aura:attribute name="callback" type="Function" description="가져온 label값을 넘겨주는 callback function"/>
+    </aura:method>
+
+    <!-- ===========================================================
+    ==== naviService method.
+    ============================================================ -->
+    <aura:method name="doNaviService" access="public">
+        <aura:attribute name="pageReference" type="Map" description="필요한 naviService에 맞는 pageReference"/>
+    </aura:method>
+
+    <!-- ===========================================================
+    ==== single table excel export method.
+    ============================================================ -->
+    <aura:method name="doExcelExport" access="public">
+        <aura:attribute name="cmp" type="Aura.Component" description="실 table이 존재하는 component"/>
+        <aura:attribute name="tableName" type="String" description="table의 aura id"/>
+        <aura:attribute name="fileName" type="String" description="export 될 파일의 이름"/>
+    </aura:method>
+
+    <!-- ===========================================================
+    ==== multi table excel export method.
+    ============================================================ -->
+    <aura:method name="doExcelMultiExport" access="public">
+        <aura:attribute name="cmp" type="Aura.Component" description="실 table이 존재하는 component"/>
+        <aura:attribute name="tableNames" type="List" description="table의 aura id들"/>
+        <aura:attribute name="fileName" type="String" description="export 될 파일의 이름"/>
+    </aura:method>
+</aura:component>

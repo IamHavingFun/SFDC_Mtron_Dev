@@ -1,0 +1,128 @@
+<!--
+* @filename      : cupiCreateQa.cmp
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-05-14 오전 8:30
+* @group         :
+* @group-content :
+* @description   :
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+0.1     2020-05-14 오전 8:30       SEOKHO LEE          Create
+-->
+
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="CupiCreateQa">
+    <aura:html tag="style">
+        .slds-modal__container {
+        margin: 0 auto;
+        width: 60% !important;
+        height: 100% !important;
+        max-width: 90rem !important;
+        min-width: 20rem;  }
+        .slds-col{
+        margin-top: 10px;
+        margin-left: 50px; }
+   </aura:html>
+
+    <aura:attribute name="accordionSection" type="List" default="['개인','동의']" description="accordion default" />
+    <aura:attribute name="wrapperData" type="CupiCreateQa.WrapperData"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="개인 정보 활용 동의" aura:id="quickAction" hasSelfFooter="{#false}">
+        <lightning:accordion aura:id="accordion" allowMultipleSectionsOpen="true"  activeSectionName="{!v.accordionSection}" >
+            <lightning:accordionSection name="개인" label="개인 정보">
+            <lightning:layout>
+                    <lightning:layoutItem  class="slds-col slds-size_1-of-12 slds-align-middle slds-text-align_left">
+                        이름
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_left">
+                        {!v.wrapperData.account.FirstName + v.wrapperData.account.LastName}
+                    </lightning:layoutItem>
+                <lightning:layoutItem  class="slds-col slds-size_1-of-12 slds-align-middle slds-text-align_left"/>
+                </lightning:layout>
+                <lightning:layout>
+                    <lightning:layoutItem  class="slds-col slds-size_1-of-12 slds-align-middle slds-text-align_left">
+                        연락처
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_left">
+                        {!v.wrapperData.account.fm_Mobile__c}
+                    </lightning:layoutItem>
+                    <lightning:layoutItem  class="slds-col slds-size_1-of-12 slds-align-middle slds-text-align_left"/>
+                </lightning:layout>
+            </lightning:accordionSection>
+
+        <lightning:recordEditForm objectApiName="CUPI__c">
+            <lightning:accordionSection name="동의" label="동의 정보">
+                    <lightning:layout>
+                        <lightning:layoutItem class="slds-col slds-size_3-of-12 slds-align-middle slds-text-align_left">
+                            <label>개인정보 수집 및 동의 여부</label>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!v.wrapperData.cupi.IsCUPI__c}" aura:id ="IsCUPI__c" label="동의함" onchange="{!c.doChange}" value="{!v.wrapperData.cupi.IsCUPI__c}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!not(v.wrapperData.cupi.IsCUPI__c)}" aura:id="IsCUPI__c" label="동의 안함" onchange="{!c.doChange}" value="{!not(v.wrapperData.cupi.IsCUPI__c)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem class="slds-col slds-size_3-of-12 slds-align-middle slds-text-align_left">
+                            <label>개인정보 제3자 제공 동의 여부</label>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!v.wrapperData.cupi.IsCUPIThirdParty__c }" aura:id ="IsCUPIThirdParty__c" label="동의함" onchange="{!c.doChange}" value="{!v.wrapperData.cupi.IsCUPIThirdParty__c }"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!not(v.wrapperData.cupi.IsCUPIThirdParty__c)}" aura:id="IsCUPIThirdParty__c" label="동의 안함" onchange="{!c.doChange}" value="{!not(v.wrapperData.cupi.IsCUPIThirdParty__c)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem class="slds-col slds-size_3-of-12 slds-align-middle slds-text-align_left">
+                            <label>문자메세지 수신 동의 여부</label>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!v.wrapperData.cupi.ReceiveSMS__c}" aura:id ="ReceiveSMS__c" label="동의함" onchange="{!c.doChange}" value="{!v.wrapperData.cupi.ReceiveSMS__c}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!not(v.wrapperData.cupi.ReceiveSMS__c)}" aura:id="ReceiveSMS__c" label="동의 안함" onchange="{!c.doChange}" value="{!not(v.wrapperData.cupi.ReceiveSMS__c)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem class="slds-col slds-size_3-of-12 slds-align-middle slds-text-align_left">
+                            <label>이메일 수신 동의 여부</label>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!v.wrapperData.cupi.IsReceiveEmail__c}" aura:id ="IsReceiveEmail__c" label="동의함" onchange="{!c.doChange}" value="{!v.wrapperData.cupi.IsReceiveEmail__c}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!not(v.wrapperData.cupi.IsReceiveEmail__c)}" aura:id="IsReceiveEmail__c" label="동의 안함" onchange="{!c.doChange}" value="{!not(v.wrapperData.cupi.IsReceiveEmail__c)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem class="slds-col slds-size_3-of-12 slds-align-middle slds-text-align_left">
+                            <label>DM 수신 동의 여부</label>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!v.wrapperData.cupi.ReceiveDM__c}" aura:id ="ReceiveDM__c" label="동의함" onchange="{!c.doChange}" value="{!v.wrapperData.cupi.ReceiveDM__c}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem  class="slds-col slds-size_2-of-12 slds-align-middle slds-text-align_center">
+                            <lightning:input type="checkbox" checked="{!not(v.wrapperData.cupi.ReceiveDM__c)}" aura:id="ReceiveDM__c" label="동의 안함" onchange="{!c.doChange}" value="{!not(v.wrapperData.cupi.ReceiveDM__c)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+            </lightning:accordionSection>
+        </lightning:recordEditForm>
+        </lightning:accordion>
+    <aura:set attribute="footer">
+        <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}"/>
+    </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

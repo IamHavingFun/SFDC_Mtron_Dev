@@ -1,0 +1,89 @@
+<!--
+  * @filename      : lsMSalesQuickAction
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-05 오전 11:14
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-05 오전 11:14    i2max_my.Seo      Create
+ -->
+<aura:component description="lsMSalesQuickAction">
+
+    <aura:attribute name="isNoti" type="Boolean" description="NotiBox or ContBox" default="false"/>
+
+    <aura:attribute name="actions" type="Aura.Component[]" description="버튼 영역"/>
+    <aura:attribute name="contents" type="Aura.Component[]" description="중간에 실제 Content 영역"/>
+
+    <!-- Content Box 전용 -->
+    <aura:attribute name="headers" type="Aura.Component[]" description="Header 영역"/>
+    <aura:attribute name="search" type="Aura.Component[]" description="search 영역"/>
+    <aura:attribute name="titBox" type="Aura.Component[]" description="titBox 영역"/>
+    <aura:attribute name="btnSet" type="Aura.Component[]" description=""/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+            padding: 0px !important;
+        }
+        .slds-modal_large .slds-modal__container {
+            width: 98% !important;
+        }
+    </aura:html>
+
+    <!-- Header -->
+    <aura:if isTrue="{#v.isNoti}">
+        <!-- Noti형 Modal -->
+        <section class="modal_body noHeader">
+            <article class="body_notiBox">
+                {!v.contents}
+            </article>
+            <article class="modal_bbtn">
+                {!v.actions}
+            </article>
+        </section>
+
+        <!-- Content가 있는 Modal -->
+        <aura:set attribute="else">
+            <!-- Header -->
+            <header class="modal_header">
+                <article class="left"></article>
+                <article class="center">
+                    {!v.headers}
+                </article>
+                <article class="right"></article>
+            </header>
+
+            <!-- Contents-->
+            <section class="modal_body noHeader">
+                <aura:if isTrue="{!not(empty(v.search))}">
+                    <div class="top_searchBox">
+                        {!v.search}
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!not(empty(v.titBox))}">
+                    <div class="top_titBox">
+                        {!v.titBox}
+                    </div>
+                </aura:if>
+                <div class="body_contBox mt50">
+                    {!v.contents}
+                </div>
+                <aura:if isTrue="{!not(empty(v.btnSet))}">
+                    <article class="btn_set_h">
+                        {!v.btnSet}
+                    </article>
+                </aura:if>
+            </section>
+        </aura:set>
+    </aura:if>
+
+    <div>
+        {!v.body}
+    </div>
+</aura:component>

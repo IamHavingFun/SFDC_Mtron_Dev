@@ -1,0 +1,52 @@
+<!--
+  * @filename      : lsMSalesContractConfirmQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-08-06 오전 9:11
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-08-06 오전 9:11    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                description="lsMSalesContractConfirmQa">
+
+    <aura:attribute name="actionForContract" type="Aura.Action" description=""/>
+    <aura:attribute name="actionForEForm" type="Aura.Action" description=""/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">계약 내용 변경 확인</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <article class="modal_body">
+        <section class="body_contBox">
+            <div class="slds-align_absolute-center slds-m-top_large">
+                계약서 내용이 수정되었습니다. 변경된 내용을 저장할까요?<br/>
+                저장없이 다음단계로 넘어가면 기존 정보로 전자계약서가 생성됩니다.
+            </div>
+
+            <section class="bbtnBox mb60">
+                <lightning:button label="저장 후 전자계약서 생성" class="bbtn btn_50" onclick="{!c.doSaveContract}"/>
+                <lightning:button label="전자계약서 생성" class="bbtn btn_50" onclick="{!c.doMoveEFormQa}"/>
+            </section>
+        </section>
+    </article>
+</aura:component>

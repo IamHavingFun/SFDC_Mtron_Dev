@@ -1,0 +1,20 @@
+<!--
+  * @filename       : i2SEMA_ManualSendReceiverEvent
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-13 오전 9:02
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-13 오전 9:02     i2max_byeon.jw       Create
+ -->
+
+<aura:event type="COMPONENT" description="i2SEMA_ManualSendReceiverEvent">
+    <aura:attribute name="selectedIds" type="List" description="선택한 수신자 ID 목록"/>
+</aura:event>

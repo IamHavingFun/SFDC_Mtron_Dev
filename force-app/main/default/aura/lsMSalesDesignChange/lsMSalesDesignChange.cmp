@@ -1,0 +1,73 @@
+<!--
+  * @filename      : lsMSalesDesignChange.cmp
+  * @projectname   :
+  * @author        : i2max_ParkJW
+  * @date          : 2020-06-09 오전 10:58
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-09 오전 10:58           i2max_ParkJW        Create
+    0.2     2020-06-24 오전 11:22           i2max_ParkJW        퍼블리싱 반영
+    0.3     2020-06-29 오전 09:34           i2max_ParkJW        불필요한 코드 제거(doNavi), 컴포넌트명 변경
+    0.4     2020-07-01 ?????????           허기창 수석님          쿼리 변경(apex), Qa콜 로직 변경 (모달 -> 별도 페이지)
+ -->
+
+
+<!-- publish version-->
+<aura:component extends="c:lsMSalesBase"
+                implements="forceCommunity:availableForAllPageTypes"
+                controller="lsMSalesDesignChange"
+                description="lsMSalesDesignChange">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">설계변경</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 검색영역 -->
+        <div class="top_searchBox">
+            <span class="">
+                <div class="slds-list_horizontal">
+                    <lightning:input aura:id="productName" label="" type="text" value="{!v.reqData.productName}" style="width:calc(100% - 66px);" placeholder="모델명"/><!-- , 기대번호 입력-->
+                    <lightning:button class="btn_search_icon" label="" onclick="{!c.doSearch}"/>
+                </div>
+            </span>
+        </div>
+        <!-- //상단 검색영역 -->
+
+        <article class="content">
+            <!-- 테이블 -->
+            <c:lsMSalesTableFrame aura:id="table" isPaging="{!true}" simple="{!true}" isCommunity="{#v.isCommunity}">
+                <div class="row_board mt20">
+                    <ul>
+                        <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                            <li>
+                                <div class="tit"><a data-recordid="{!record.Id}" onclick="{!c.doViewDetail}">{!record.PECN_NAME__c}</a></div>
+                                <lightning:formattedDateTime value="{!record.PREGISTRATION_DATE__c}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                             minute="2-digit" hour12="false"/>
+                                <!--<div class="date">{!record.PREGISTRATION_DATE__c}</div>-->
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </c:lsMSalesTableFrame>
+            <!-- // 테이블 -->
+        </article>
+
+    </div>
+</aura:component>

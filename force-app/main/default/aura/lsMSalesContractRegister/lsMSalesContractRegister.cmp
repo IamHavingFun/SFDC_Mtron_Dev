@@ -1,0 +1,215 @@
+<!--
+  * @filename      : lsMSalesContractRegister
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-24 오전 7:28
+  * @group         : 
+  * @group-content : 
+  * @description   : 수정 필요.
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-24 오전 7:28    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                controller="LsMSalesContractRegister"
+                description="lsMSalesContractRegister">
+
+    <aura:attribute name="mobileStepVO" type="LsMSalesStepVO"/>
+    <aura:attribute name="isModify" type="Boolean" description="Step 업무를 제외하면 기본은 조회 모드" default="false"/>
+    <aura:attribute name="isWait" type="Boolean" description="Btn Label"/>
+    <aura:attribute name="isStep" type="Boolean" description="" default="true"/>
+    <aura:attribute name="totalViewPrice" type="Decimal" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:dependency resource="markup://c:lsMSalesContractConfirmQa"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <header id="header" class="bgW" style="width: 100%">
+        <article class="TopLeft"></article>
+        <article class="TopName">견적/계약</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <article class="modal_body" style="width: 100%">
+        <section class="body_topBox">
+            <ul class="manInfo">
+                <aura:if isTrue="{!not(v.mobileStepVO.bizData.isCorporationAccount)}">
+                    <li>
+                        <span class="name">매수자</span>
+                        <span class="name_right">:</span>
+                        <span class="txt">{!v.mobileStepVO.bizData.quote.CustomerName__r.LastName}</span>
+                    </li>
+                    <li>
+                        <span class="name">연락처</span>
+                        <span class="name_right">:</span>
+                        <span class="txt">{!v.mobileStepVO.bizData.quote.CustomerName__r.PersonMobilePhone}</span>
+                    </li>
+
+                    <aura:set attribute="else">
+                        <li>
+                            <span class="name">매수자</span>
+                            <span class="name_right">:</span>
+                            <span class="txt">{!v.mobileStepVO.bizData.quote.CustomerName__r.Name}</span>
+                        </li>
+                        <li>
+                            <span class="name">연락처</span>
+                            <span class="name_right">:</span>
+                            <span class="txt">{!v.mobileStepVO.bizData.quote.CustomerName__r.Mobile__c}</span>
+                        </li>
+                    </aura:set>
+                </aura:if>
+                <li>
+                    <span class="name">주소</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">
+                        {!v.mobileStepVO.bizData.quote.CustomerName__r.BillingState + ' ' +
+                        v.mobileStepVO.bizData.quote.CustomerName__r.BillingCity + ' ' +
+                        v.mobileStepVO.bizData.quote.CustomerName__r.BillingStreet + ' ' +
+                        v.mobileStepVO.bizData.tempDetailAddress}
+                    </span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="body_graytotalBox">
+            <div class="left">
+                <ul>
+                    <!-- iteration 부분 체크 length & empty -->
+                    <aura:if isTrue="{!and(not(empty(v.mobileStepVO.bizData.qliList)), v.mobileStepVO.bizData.qliList.length > 0)}">
+                        <aura:iteration items="{!v.mobileStepVO.bizData.qliList}" var="qli">
+                            <li>[{#qli.Product__r.ProductType__c}]{#qli.Product__r.Name}</li>
+                        </aura:iteration>
+                        <aura:iteration items="{!v.mobileStepVO.bizData.qoiList}" var="qoi">
+                            <li>[기타 작업기]{#qoi.ProductName__c}</li>
+                        </aura:iteration>
+                    </aura:if>
+                </ul>
+            </div>
+            <div class="right">
+                <ul>
+                    <li>총 계약금액</li>
+                    <li class="price">
+                        <lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.TotalPrice__c}"/>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <ul class="body_priceBox">
+            <li>
+                <dl onclick="{!c.doCreateAmtQa}" data-amttype="계약금">
+                    <dt>계약금</dt>
+                    <dd class="price">
+                        <lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.ContractAmt__c}" maximumFractionDigits="3"/>
+                    </dd>
+                </dl>
+                <dl onclick="{!c.doCreateAmtQa}" data-amttype="융자금">
+                    <dt>융자금</dt>
+                    <dd class="price">
+                        <lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.LoanContractAmt__c}" maximumFractionDigits="3"/>
+                    </dd>
+                </dl>
+                <dl onclick="{!c.doCreateAmtQa}" data-amttype="보조금">
+                    <dt>보조금</dt>
+                    <dd class="price">
+                        <lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.SubsidyContractAmt__c}" maximumFractionDigits="3"/>
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl onclick="{!c.doCreateAmtQa}" data-amttype="리스">
+                    <dt>리스</dt>
+                    <dd class="price"><lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.LeaseContractAmt__c}" maximumFractionDigits="3"/></dd>
+                </dl>
+                <dl onclick="{!c.doCreateAmtQa}" data-amttype="자부담">
+                    <dt>자부담</dt>
+                    <dd class="price"><lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.SelfPayContractAmt__c}" maximumFractionDigits="3"/></dd>
+                </dl>
+                <dl onclick="{!c.doCreateAmtQa}" data-amttype="중고인수">
+                    <dt>중고인수</dt>
+                    <dd class="price"><lightning:formattedNumber value="{!v.mobileStepVO.bizData.contract.UsedUndertakingAmt__c}" maximumFractionDigits="3"/></dd>
+                </dl>
+            </li>
+        </ul>
+
+        <section class="body_contBox">
+            <div class="form_tit_col mt30">
+                <div class="left">합계 금액</div>
+                <div class="number_right">
+                    <lightning:formattedNumber class="slds-m-top_large" value="{!v.totalViewPrice}" maximumFractionDigits="3"/>
+                </div>
+            </div>
+            <div class="form_tit_col mt30">
+                <div class="left">인도기일</div>
+                <div class="right">
+                    <span class="input_birthday">
+                        <lightning:combobox aura:id="year" label="" class="input_year" options="{!v.mobileStepVO.dateData.yearAmtList}" value="{!v.mobileStepVO.dateData.tempCustomerYear}" placeholder="년" disabled="{!and(not(v.isModify), not(v.isStep))}"/>
+                        <lightning:combobox aura:id="month" label="" class="input_month" options="{!v.mobileStepVO.dateData.monthList}" value="{!v.mobileStepVO.dateData.tempCustomerMonth}" placeholder="월" disabled="{!and(not(v.isModify), not(v.isStep))}"/>
+                        <lightning:combobox aura:id="day" label="" class="input_day" options="{!v.mobileStepVO.dateData.dayList}" value="{!v.mobileStepVO.dateData.tempCustomerDay}" placeholder="일" disabled="{!and(not(v.isModify), not(v.isStep))}"/>
+                    </span>
+                </div>
+            </div>
+
+            <!-- 기타 -->
+            <label class="form_tit" style="display:block;">기타</label>
+            <lightning:textarea label="" value="{!v.mobileStepVO.bizData.contract.Remarks__c}"/>
+
+            <!-- 특약 사항 -->
+            <label class="form_tit" style="display:block;">특약사항</label>
+            <lightning:textarea label="" value="{!v.mobileStepVO.bizData.contract.AdditionalTerms__c}"/>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <!-- Step 업무 시 버튼. 계약 생성만. -->
+                <aura:if isTrue="{!v.isStep}">
+                    <lightning:button label="이전 화면" class="bbtn_white btn_33" onclick="{!c.doPrev}"/>
+                    <lightning:button label="계약 정보 저장" class="bbtn btn_33" onclick="{!c.doSave}"/>
+                </aura:if>
+
+                <!-- List에서 넘어 오는 경우, 수정 혹은 단순 보기. -->
+                <aura:if isTrue="{!not(v.isStep)}">
+<!--                    <aura:if isTrue="{!v.isModify}">-->
+<!--                        <lightning:button label="목록으로" class="bbtn_white btn_33" onclick="{!c.doPrevPage}"/>-->
+<!--                        <lightning:button label="계약서 작성/저장" class="bbtn btn_33" onclick="{!c.doSave}"/>-->
+<!--                        <lightning:button label="전자계약서 생성" class="bbtn btn_33" onclick="{!c.doRegisterEFormContract}"/>-->
+<!--                    </aura:if>-->
+                    <!-- 수정 -->
+                    <aura:if isTrue="{!and(v.isModify, v.mobileStepVO.bizData.contract.CustomerReviewCheck__c)}">
+                        <lightning:button label="목록으로" class="bbtn_white btn_33" onclick="{!c.doPrevPage}"/>
+                        <lightning:button label="계약 정보 저장" class="bbtn btn_33" onclick="{!c.doSave}"/>
+                        <lightning:button label="매매계약서 서명" class="bbtn btn_33" onclick="{!c.doRegisterEFormContract}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.isModify, not(v.mobileStepVO.bizData.contract.CustomerReviewCheck__c))}">
+                        <lightning:button label="목록으로" class="bbtn_white btn_33" onclick="{!c.doPrevPage}"/>
+                        <lightning:button label="계약 정보 저장" class="bbtn btn_33" onclick="{!c.doSave}"/>
+                        <lightning:button label="매매 계약서 확인" class="bbtn btn_50" onclick="{!c.doCreateEFormViewQa}"/>
+                    </aura:if>
+
+                    <!-- 단순 조회 -->
+                    <aura:if isTrue="{!and(not(v.isModify), v.mobileStepVO.bizData.contract.isLWSRegistration__c)}">
+                        <lightning:button label="목록으로" class="bbtn_white btn_50" onclick="{!c.doPrevPage}"/>
+                        <lightning:button label="PDI 조회" class="bbtn btn_50" onclick="{!c.doNaviToPDI}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!and(and(not(v.isModify), not(v.mobileStepVO.bizData.contract.isLWSRegistration__c)), not(v.isWait))}">
+                        <lightning:button label="목록으로" class="bbtn bbtn_white" onclick="{!c.doPrevPage}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isWait}">
+                        <lightning:button label="목록으로" class="bbtn_white btn_50" onclick="{!c.doPrevPage}"/>
+                        <lightning:button label="매매 계약서 확인" class="bbtn btn_50" onclick="{!c.doCreateEFormViewQa}"/>
+                    </aura:if>
+                </aura:if>
+            </section>
+
+            <!-- //하단버튼 -->
+        </section>
+
+    </article>
+</aura:component>

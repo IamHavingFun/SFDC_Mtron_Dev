@@ -1,0 +1,55 @@
+<!--
+* ===============================================================
+* File Name   : LandingSlider_Land.cmp
+* Description : LandingSlider_Land
+* Author      : i2max
+* Modification Log
+* ===============================================================
+* Ver  Date          Author         Modification
+* ===============================================================
+* 1.0  2016. 11. 20  i2max        Create
+* ===============================================================
+-->
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                description="partnerLandingTop">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <ltng:require styles="{!$Resource.publish + '/css/swiper.min.css'}"
+                  scripts="{!$Resource.publish + '/js/swiper.min.js'}"
+                  afterScriptsLoaded="{!c.scriptsLoaded}"/>
+
+    <article class="ps_result_product slds-m-around_xxx-small">
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="{!$Resource.landingImg1}" alt=""/>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{!$Resource.landingImg2}" alt=""/>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{!$Resource.landingImg3}" alt=""/>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{!$Resource.landingImg4}" alt=""/>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{!$Resource.landingImg5}" alt=""/>
+                </div>
+            </div>
+            <!-- Add Pagination -->
+<!--            <div class="swiper-pagination"></div>-->
+            <!-- Add Arrows -->
+            <!--<div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>-->
+            <!-- Add scrollbar -->
+            <!--<div class="swiper-scrollbar"></div>-->
+        </div>
+    </article>
+
+</aura:component>

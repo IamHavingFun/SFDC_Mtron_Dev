@@ -1,0 +1,72 @@
+<!--
+  * @filename      : lacComConfirmQuickAction
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-04-14 오전 11:06
+  * @group         : 
+  * @group-content : 
+  * @description   : 가장 기본 형태의 QuickAction으로 confirm 용도로 사용. action을 넘겨 confirm 후, 수행하게끔 처리.
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오전 11:06     i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lacComBase"
+                description="lacComConfirmQuickAction">
+
+    <aura:attribute name="action" type="Aura.Action" description=""/>
+    <aura:attribute name="isWide" type="Boolean" description="넓은 사이즈의 모달이 필요한 경우" default="false"/>
+    <aura:attribute name="title" type="String" description="header title"/>
+    <aura:attribute name="comment" type="String" description="body comment"/>
+    <aura:attribute name="btnLabel" type="String" description="button label"/>
+    <aura:attribute name="isCancelBtn" type="Boolean" description="" default="true"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .cuf-content {
+            padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+            padding: 0rem !important;
+        }
+        .slds-modal__content{
+            overflow-y:auto !important;
+            height:unset !important;
+            max-height:unset !important;
+        }
+    </aura:html>
+
+    <aura:if isTrue="{!v.isWide}">
+        <aura:html tag="style">
+            .slds-modal__container {
+                max-width: 70rem !important;
+                width:70% !important;
+            }
+        </aura:html>
+    </aura:if>
+
+    <!-- header -->
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <h4 class="title slds-text-heading--medium">{#v.title}</h4>
+    </div>
+    <!-- body -->
+    <div class="slds-modal__content slds-p-around--x-small slds-size_1-of-1 slds-is-relative" aura:id="modalbody">
+        <div class="slds-align-middle slds-m-around_large">
+<!--            <p class="slds-text-body_regular slds-text-align_center" style="color:#7F7E76;">{#v.comment}</p>-->
+            <p class="slds-text-body_regular slds-text-align_center" style="color:#7F7E76;">
+                <lightning:formattedText class="" value="{#v.comment}"/>
+            </p>
+        </div>
+    </div>
+    <!-- footer -->
+    <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+        <aura:if isTrue="{#v.isCancelBtn}">
+            <lightning:button aura:id="btnCancel" label="취소" onclick="{!c.doCancel}"/>
+        </aura:if>
+        <lightning:button aura:id="btnConfirm" label="{#v.btnLabel}" variant="brand" onclick="{!c.doAction}"/>
+    </div>
+</aura:component>

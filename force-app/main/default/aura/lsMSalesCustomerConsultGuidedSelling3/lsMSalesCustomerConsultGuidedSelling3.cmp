@@ -1,0 +1,270 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultGuidedSelling3
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일]고객상담 : Step3 : Guided Selling Step3
+  *                : 맟춤형 추천(마력, 옵션들 선택)
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesCustomerConsult"
+                description="lsMSalesCustomerConsultGuidedSelling3">
+
+    <aura:attribute name="horsePowerItems" type="List" description="제품시리즈의 마력의 2차원 배열"/>
+
+<!--
+    <aura:attribute name="options1" type="List" />
+    <aura:attribute name="options2" type="List" />
+    <aura:attribute name="options3" type="List" />
+    <aura:attribute name="options4" type="List" />
+-->
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .PSelect4_list {
+            padding: 5px;
+        }
+    </aura:html>
+
+    <!-- ============================================================================
+    ==== Header 영역
+    ============================================================================= -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">고객상담</article>
+        <article class="TopRright"></article>
+    </header>
+    <!-- ============================================================================
+    ==== Body 영역
+    ============================================================================= -->
+    <div id="container">
+        <article class="content">
+            <!-- ============================================================================
+            ==== 스텝 영역
+            ============================================================================= -->
+            <div class="stepBox">
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step_check.png'}" alt=""/>
+                    <div class="txt on">Step1</div>
+                </div>
+                <div class="line on"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step_check.png'}" alt=""/>
+                    <div class="txt on">Step2</div>
+                </div>
+                <div class="line on"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step3_on.png'}" alt=""/>
+                    <div class="txt on">Step3</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step4.png'}" alt=""/>
+                    <div class="txt">Step4</div>
+                </div>
+            </div>
+            <!-- ============================================================================
+            ==== 선택사항 영역
+            ============================================================================= -->
+            <ul class="btn_tab mt70">
+                <li>{!v.mobileStepVO.bizData.prodSerRecStd.FarmingForm__c}</li>
+                <aura:if isTrue="{!not(empty(v.mobileStepVO.bizData.prodSerRecStd.FarmingSize__c))}">
+                    <li>{!v.mobileStepVO.bizData.prodSerRecStd.FarmingSize__c}</li>
+                </aura:if>
+            </ul>
+            <!-- ============================================================================
+            ==== 주업무 영역
+            ============================================================================= -->
+            <section class="PSelect3Box">
+                <article class="PSelect3">
+                    <div class="left_img">
+                        <img src="{! '/' + v.mobileStepVO.bizData.productSeriesVO.sitePathPrefix + '/sfc/servlet.shepherd/version/download/' + v.mobileStepVO.bizData.productSeriesVO.contentVersion.Id}"/>
+                    </div>
+                    <div class="right_txt">
+                        <!-- 20200803: Series__c 에서 Name으로 변경 -->
+                        <span class="tit">{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Name}</span>
+                        <ul>
+                            <li>
+                                <div class="name">마력(PS)</div>
+                                <div class="name_right">:</div>
+                                <div class="txt">{!v.mobileStepVO.bizData.productSeriesVO.productSeries.HorsePower__c}</div>
+                            </li>
+                            <li>
+                                <div class="name">중량(KG)</div>
+                                <div class="name_right">:</div>
+                                <div class="txt">{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Weight__c}</div>
+                            </li>
+                            <li>
+                                <div class="name">전장(MM)</div>
+                                <div class="name_right">:</div>
+                                <div class="txt">{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Length__c}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="PSelect_radio">
+                    <label class="form_tit mt0">마력</label>
+                    <aura:if isTrue="{!and(not(empty(v.horsePowerItems)), v.horsePowerItems.length > 0)}">
+                        <aura:iteration items="{!v.horsePowerItems}" var="item">
+                            <div class="slds-list_horizontal">
+                                <aura:if isTrue="{!not(empty(item[0]))}">
+                                    <lightning:input aura:id="horsePowerItem"
+                                                     class="slds-size_1-of-2"
+                                                     type="radio"
+                                                     label="{#item[0]}"
+                                                     checked="{#item[0] == v.mobileStepVO.infoData.searchProductSeries.HorsePower__c}"
+                                                     value="{#item[0]}"
+                                                     onchange="{!c.doSelectHorsePowerItem}"/>
+
+                                </aura:if>
+                                <aura:if isTrue="{!not(empty(item[1]))}">
+                                    <lightning:input aura:id="horsePowerItem"
+                                                     class="slds-size_1-of-2"
+                                                     type="radio"
+                                                     label="{#item[1]}"
+                                                     checked="{#item[1] == v.mobileStepVO.infoData.searchProductSeries.HorsePower__c}"
+                                                     value="{#item[1]}"
+                                                     onchange="{!c.doSelectHorsePowerItem}"/>
+
+                                </aura:if>
+                            </div>
+                        </aura:iteration>
+                    </aura:if>
+                </article>
+
+<!--                <article class="PSelect_radio">
+                    <label class="form_tit mt0">옵션1(캐빈)</label>
+                    <div class="slds-list_horizontal">
+                    <lightning:radioGroup name="radioGroupOption1"
+                                          type="radio"
+                                          required="true"
+                                          class="radio_horizontal"
+                                          label=""
+                                          variant="label-hidden"
+                                          value="{!v.mobileStepVO.infoData.searchProductSeries.Option1__c}"
+                                          options="{!v.options1}"/>
+                    </div>
+
+                    <label class="form_tit">옵션2(트랜스미션)</label>
+                    <lightning:radioGroup name="radioGroupOption2"
+                                          type="radio"
+                                          required="true"
+                                          class=""
+                                          label=""
+                                          variant="label-hidden"
+                                          value="{!v.mobileStepVO.infoData.searchProductSeries.Option2__c}"
+                                          options="{!v.options2}"/>
+
+                    <label class="form_tit">옵션3(앞차축)</label>
+                    <lightning:radioGroup name="radioGroupOption3"
+                                          type="radio"
+                                          required="true"
+                                          class="radio_horizontal"
+                                          label=""
+                                          variant="label-hidden"
+                                          value="{!v.mobileStepVO.infoData.searchProductSeries.Option3__c}"
+                                          options="{!v.options3}"/>
+
+                    <label class="form_tit">옵션4(유압)</label>
+                    <lightning:radioGroup name="radioGroupOption4"
+                                          type="radio"
+                                          required="true"
+                                          class="radio_horizontal"
+                                          label=""
+                                          variant="label-hidden"
+                                          value="{!v.mobileStepVO.infoData.searchProductSeries.Option4__c}"
+                                          options="{!v.options4}"/>
+                </article>-->
+            </section>
+
+<!--
+            <section class="PSelect3Box">
+                <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+                    <ul>
+                        <aura:iteration items="{!v.recordList}" var="product">
+                            <li class="{!v.mobileStepVO.bizData.productVO.product.Id == product.Id ? 'PSelect2 box_select' : 'PSelect2'}"
+                                aura:id="productItem"
+                                data-value="{!product.Id}"
+                                onclick="{!c.doSelectProduct}">
+                                <div class="left">{!product.Name}</div>
+                                <div class="right">
+                                    <lightning:formattedNumber value="{!product.ListPrice__c}" style="currency"/>
+                                </div>
+                                <div class="option">{!product.Option1__c + '/' + product.Option2__c+ '/' + product.Option3__c+ '/' + product.Option4__c}</div>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                    <aura:set attribute="else">
+                        <c:lsMSalesNoDataFound/>
+                    </aura:set>
+                </aura:if>
+            </section>
+-->
+
+
+            <section class="PSelect4_list">
+                <div class="col_board_option">
+                    <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+                        <ul>
+                        <aura:iteration items="{!v.recordList}" var="product">
+                            <li class="{!v.mobileStepVO.bizData.productVO.product.Id == product.Id ? 'box_select' : ''}"
+                                aura:id="productItem"
+                                data-value="{!product.Id}"
+                                onclick="{!c.doSelectProduct}">
+                                <div class="left">{!product.Name}</div>
+<!--                                <div class="right">
+                                    <lightning:formattedNumber value="{!product.ListPrice__c}" style="currency"/>
+                                </div>-->
+                                <div class="">
+                                    <table border="0" cellspacing="0" cellpadding="0">
+                                        <colgroup>
+                                            <col width="50%"/>
+                                            <col width="50%"/>
+                                        </colgroup>
+                                        <tr>
+                                            <td><div class="option">캐빈 : {!product.Option1__c}</div></td>
+                                            <td><div class="option">트랜스미션 : {!product.Option2__c}</div></td>
+                                        </tr>
+                                    </table>
+                                    <table border="0" cellspacing="0" cellpadding="0">
+                                        <colgroup>
+                                            <col width="50%"/>
+                                            <col width="50%"/>
+                                        </colgroup>
+                                        <tr>
+                                            <td><div class="option">앞차축 : {!product.Option3__c}</div></td>
+                                            <td><div class="option">유압 : {!product.Option4__c}</div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                        </aura:iteration>
+                        </ul>
+                        <aura:set attribute="else">
+                            <c:lsMSalesNoDataFound/>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </section>
+
+            <!-- ============================================================================
+            ==== 하단 버튼 영역
+            ============================================================================= -->
+            <section class="bbtnBox">
+                <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+            </section>
+        </article>
+    </div>
+</aura:component>

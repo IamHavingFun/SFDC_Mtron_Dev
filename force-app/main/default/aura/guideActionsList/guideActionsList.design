@@ -1,0 +1,3 @@
+<design:component>
+    <design:attribute name="targetObject" label="Target Object" datasource="Home, Account, Contact, Asset, Opportunity, Order__c, Delivery__c, Campaign" default="Home" description="Home, Account, Contact, Opportunity 중 page에 따라 선택하세요."/>
+</design:component>

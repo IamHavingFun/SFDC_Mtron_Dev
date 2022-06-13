@@ -1,0 +1,18 @@
+<!-- Accounts_min_use_signed_identity.vfp
+This an example Visualforce page that can work in the scenario 
+where sparkler.sfdc.userIdentifierField
+is set to be "signedIdentity".
+Note: This page requires the existence of Apex Class "MyAccountController", 
+please refer to the Sparkler
+Deployment guide on how to create "MyAccountController".
+-->
+<apex:page standardController="Account" extensions="MyAccountController">
+<apex:canvasApp applicationName="SparklerCon" 
+    height="636px" 
+    width="804px" 
+    parameters="
+    {
+        'ts.name': 'Account_Dashboard/AcctDashboard',
+        'ts.trustedTicket.signedIdentity':'{!signedIdentity}',
+    }" />
+</apex:page>

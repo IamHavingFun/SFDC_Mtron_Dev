@@ -1,0 +1,6 @@
+<!--
+ - Created by MS on 2020-06-24.
+ -->
+<design:component>
+    <design:attribute name="YoutubeURL" label="유투브 동영상 URL" default="" description="유투브 동영상을 넣어 주세요."/>
+</design:component>

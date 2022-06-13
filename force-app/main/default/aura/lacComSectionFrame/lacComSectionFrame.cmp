@@ -1,0 +1,39 @@
+<!--
+  * @filename      : lacComSectionFrame
+  * @projectname   : 
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component description="lacComSectionFrame">
+
+    <aura:attribute name="title" type="String" default="Title"/>
+    <aura:attribute name="hasHeader" type="Boolean" default="true" description="헤더 사용 여부"/>
+
+    <aura:if isTrue="{!v.hasHeader}">
+        <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-m-left_small" title="Section Title">{#v.title}</span>
+        </h3>
+    </aura:if>
+
+    <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate slds-grid">
+            <fieldset class="slds-form-element slds-form_compound slds-is-editing">
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__group">
+                        {!v.body}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,45 @@
+/****************************************************************************************
+  * @filename      : orderNewQa.css
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-04-10 오전 7:19
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-04-10 오전 7:19     i2max_my.Seo          Create
+****************************************************************************************/
+.THIS {
+}
+
+.THIS .custom-box {
+    margin-top: 18px;
+}
+
+.THIS .custom-box2 {
+    margin-top: 19px;
+}
+
+.THIS .custom-box3 {
+    margin-top: 16px;
+    height: 32px;
+}
+
+.THIS .customRadioCls .slds-form-element__control .slds-radio {
+    display : inline-block !important;
+}
+
+.THIS .slds-form-element__label {
+    font-size:      13px;
+    font-weight:    bold;
+}
+
+.THIS .slds-combobox_container {
+    width: 200px;
+}

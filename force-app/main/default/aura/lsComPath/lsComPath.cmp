@@ -1,0 +1,12 @@
+<!--
+ - Created by MS on 2020-07-21.
+ -->
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId"
+                description="lsComPath">
+    <aura:attribute name="variant" type="String" default="non-linear"/>
+    <aura:attribute name="hideUpdateButton" type="Boolean" default="false"/>
+    <lightning:path aura:id="path" recordId="{!v.recordId}"
+                    variant="non-linear"
+                    hideUpdateButton="true"
+    />
+</aura:component>

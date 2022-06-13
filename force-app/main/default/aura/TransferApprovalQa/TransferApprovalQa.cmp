@@ -1,0 +1,156 @@
+<!--
+* @filename      : TransferApprovalQa
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-11-19 오전 10:41 
+* @group         :
+* @group-content :
+* @description   : 전배 승인 처리
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+ 0.1     2020-11-19 오전 10:41     SEOKHO LEE          Create
+-->
+<aura:component extends="c:lsSalesBase"
+                controller="TransferApprovalQa"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="isProcessed" type="Boolean" description="처리 한건인지 체크"/>
+    <aura:attribute name="isRejectGrant" type="Boolean" description="거부 권한이 가능한지 체크"/>
+    <aura:attribute name="isTargetContract" type="Boolean" description="대상 계약이 있는지 체크"/>
+    <aura:attribute name="isSendReceiveItem" type="Boolean" description="전수배 대상인지 체크."/>
+    <aura:attribute name="notiMessage" type="String" description="체크 메세지"/>
+    <aura:attribute name="transferData" type="TransferApprovalQa.TransferData" description="전배 승인 처리 Wrapper Data"/>
+    <aura:attribute name="options" type="List" default="[
+        {'label': '승인', 'value': '승인'},
+        {'label': '거부', 'value': '거부'} ]"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="전배 승인 처리" aura:id="quickAction" hasSelfFooter="{#false}" isWide="{#true}">
+
+<!--        || {!v.isProcessed} || {!v.isRejectGrant} || {!v.isTargetContract} || {!v.isSendReceiveItem} || {!v.notiMessage} ||-->
+
+        <aura:if isTrue="{!not(v.isProcessed)}">
+            <c:lacComSectionFrame title="전배 요청 정보" hasHeader="{#true}">
+                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">요청 기대번호</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="8">
+                        {!v.transferData.assetTransferRequest.AssetNo__r.Name}
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">요청 모델</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="8">
+                        {!v.transferData.assetTransferRequest.Model__r.Name}
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">수배 대리점</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="8">
+                        {!v.transferData.assetTransferRequest.WantedDealer__r.Name}
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">전배 대상 여부</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="8">
+                        <lightning:input type="checkbox" label="Basic option" variant="label-hidden" name="input1" checked="{!v.isSendReceiveItem}" disabled="true"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">승인 여부</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="8">
+                        <lightning:radioGroup label="" type="radio" options="{!v.options}" value="{!v.transferData.assetTransferRequest.Status__c}"
+                                              class="radio_horizontal" disabled="{!v.transferData.isProcessed ? true : false}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </c:lacComSectionFrame>
+            <br/>
+            <!-- 거부 시 계약 정보 테이블 -->
+            <aura:if isTrue="{!and(v.isSendReceiveItem , equals(v.transferData.assetTransferRequest.Status__c, '거부'))}">
+                <aura:if isTrue="{!not(empty(v.transferData.contracts))}">
+                    <c:lacComSectionFrame title="계약 정보" hasHeader="{#true}">
+                        <c:lacComTableFrame aura:id="table" isPaging="{!false}" simple="{!true}" isCommunity="{#v.isCommunity}">
+                            <c:lacComTable aura:id="dataTable" style="width:100%" hasScroll="true" left="1" fixedHeader="{!true}" scrollHeight="150px">
+                                <colgroup>
+                                    <col width="10%"/>
+                                    <col width="30%"/>
+                                    <col width="30%"/>
+                                    <col width="30%"/>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <c:lacComTh>선 택</c:lacComTh>
+                                    <c:lacComTh>계약 번호</c:lacComTh>
+                                    <c:lacComTh>인도 기일</c:lacComTh>
+                                    <c:lacComTh>고객명</c:lacComTh>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <aura:if isTrue="{!equals(v.transferData.isProcessed, true)}">
+                                    <tr>
+                                        <c:lacComTd>
+                                            <lightning:input class="custom-checkbox-margin" type="checkbox" checked="true" disabled="true"/>
+                                        </c:lacComTd>
+                                        <c:lacComTd>{!v.transferData.assetTransferRequest.Contract__r.ContractNumber__c}</c:lacComTd>
+                                        <c:lacComTd>{!v.transferData.assetTransferRequest.Contract__r.CustomerExpectedDate__c}</c:lacComTd>
+                                        <c:lacComTd>{!v.transferData.assetTransferRequest.Contract__r.Status__c}</c:lacComTd>
+                                    </tr>
+                                    <aura:set attribute="else">
+                                        <aura:iteration items="{!v.transferData.contracts}" var="row" indexVar="idx">
+                                            <tr>
+                                                <c:lacComTd>
+                                                    <lightning:input class="custom-checkbox-margin" type="checkbox" aura:id="check" onchange="{!c.doCheck}" value="{!row.Id}"/>
+                                                </c:lacComTd>
+                                                <c:lacComTd>{!row.ContractNumber__c}</c:lacComTd>
+                                                <c:lacComTd>{!row.CustomerExpectedDate__c}</c:lacComTd>
+                                                <c:lacComTd>{!row.fm_CustomerName__c}</c:lacComTd>
+                                            </tr>
+                                        </aura:iteration>
+                                    </aura:set>
+                                </aura:if>
+                                </tbody>
+                            </c:lacComTable>
+                        </c:lacComTableFrame>
+                        <aura:if isTrue="{!and(v.isSendReceiveItem,v.isRejectGrant)}">
+                            <div>※전배 요청 거부에 근거한 계약은 기재된 고객 인도기일 前 반드시 PDI 등록이 완료되어야 하며, 만약 등록되지 않을 경우 Sales IQ 30점이 차감됩니다.
+                            </div>
+                        </aura:if>
+                    </c:lacComSectionFrame>
+
+                    <aura:set attribute="else">
+                        <div style="text-align: center">
+                            동일 모델에 대한 계약이 존재하지 않거나, 계약이 존재하되 고객 인도기일이 30일 이상 잔여하여 거부의 근거로 활용할 수 없습니다.
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+            <aura:set attribute="else">
+                <div class="slds-align_absolute-center">
+                    {!v.notiMessage}
+                </div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!not(v.isProcessed)}">
+                <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}" />
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

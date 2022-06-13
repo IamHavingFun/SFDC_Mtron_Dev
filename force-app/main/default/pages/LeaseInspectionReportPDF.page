@@ -1,0 +1,311 @@
+<apex:page id="LeaseInspectionReportPDF"
+           showHeader="false"
+           sideBar="false"
+           standardStylesheets="false"
+           applyBodyTag="false"
+           applyHtmlTag="false"
+           renderAs="pdf"
+           controller="LeaseInspectionReportPDFController">
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <style type="text/css">
+            body { font-family: Arial Unicode MS; font-size:13px;}
+            @page {
+                size: A4; /* ISO/JIS A4 (210mm�297mm) */
+                margin: 5mm;
+                @bottom-center {
+                    content: counter(page) "/" counter(pages);
+                }
+            }
+            /*@page:first {*/
+            /*    size: A4 ; !* ISO/JIS A4 (210mm�297mm) *!*/
+            /*    margin: 5mm;*/
+            /*    margin-top: 3mm;*/
+            /*}*/
+
+            .labelToRight{
+                margin-right: 15px;
+                text-align: right;
+                float: right;
+            }
+            .headerToLeft{
+                margin-left: 15px;
+                text-align: left;
+                width: 25%;
+                float: left;
+                font-size: 10px;
+            }
+            .headerToRight20{
+                margin-right: 15px;
+                text-align: right;
+                width: 20%;
+                float: right;
+                font-size: 10px;
+            }
+            .headerToRight30{
+                margin-right: 15px;
+                text-align: right;
+                width: 30%;
+                float: right;
+                font-size: 10px;
+            }
+            .header_title{
+                text-align:center;
+                width: 50%;
+                padding: 10px;
+                margin: 0 auto;
+                font-weight: bold;
+                font-size : 22px;
+            }
+            .textWrap{
+                width: 70%;
+                margin: 2px;
+            }
+            .firstText{
+                float: left;
+                width:10%;
+            }
+            .underlineText{
+                border-bottom:1px solid;
+                width: 400px;
+                float: left;
+                text-align: center;
+            }
+            .secondText{
+                float: right;
+            }
+            table{
+                border-collapse:collapse;
+                text-align: center;
+                border:1.5px solid black;
+            }
+            .tableHeader{
+                font-weight: bold;
+            }
+            th{
+                border-bottom:2px solid black;
+            }
+            tr, td, th{
+                padding: 1.5px;
+                word-break:inherit;
+            }
+            .vertical {
+                writing-mode: vertical-rl !important;
+            }
+            .alignLeft{
+                vertical-align:top;
+                padding: 0px;
+                text-align:left;
+            }
+            .alignCenter{
+                text-align:center;
+            }
+            .underBorderline{
+                border-bottom: solid 1px !important;
+            }
+            .makewordBold{
+                font-weight:bold;
+            }
+            .page-break {
+                display:block;
+                page-break-after:always;
+            }
+            .dealerSign {
+
+            }
+            .no-border-left {
+                border-left-color: #FFF;
+            }
+            .set-bottom{
+                margin-top: 15px;
+            }
+            .checkBoxStyle {
+                width:15px;
+                height:15px;
+                border:1px solid;
+                background-color:black;
+                display:inline-block;
+            }
+            .noneCheckboxStyle{
+                width:15px;
+                height:15px;
+                border:1px solid;
+                display:inline-block;
+            }
+            .checkBoxLeftMargin {
+                margin-right:26px;
+            }
+            .checkBoxRightMargin {
+                margin-right:13px;
+            }
+        </style>
+
+    </head>
+    <body>
+<!--        <div class="page-break">-->
+            <div class="header_title" style="">리스물건 검수보고서</div>
+            <br/>
+            <br/>
+            <div class="headerToLeft">(회사보관용)</div>
+            <br/>
+            <div class="headerToRight30">계약번호 : {!leaseInspectionReport.Contract__r.Name}</div>
+            <br/>
+            <div class="headerToRight20">검수일자 : 2021년 3월 26일</div>
+            <br/>
+            <div style="border-bottom: solid 1px !important;"></div>
+            <div class="headerToRight20">
+                <apex:outputText value="{0, date, yyyy'년' MM'월'  dd'일'  }">
+                    <apex:param value="{!todayDate}" />
+                </apex:outputText>
+            </div>
+            <br/>
+
+            <!-- 리스 이용자 table -->
+            <span> 1. 리스 이용자 </span>
+            <br/>
+            <table cellspacing="0" cellpadding="0" border="1px" width="100%">
+                <tr>
+                    <td class="alignLeft" style="width:10%; background-color: lightgray;">(1)리스이용자명</td>
+                    <td style="width:40%">
+                        {!leaseInspectionReport.CustomerName__c}
+                    </td>
+                    <td class="alignLeft" style="width:10%; background-color: lightgray;"></td>
+                    <td style="width:40%">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="alignLeft" style="width:10%; background-color: lightgray;">(2)장비 소재지</td>
+                    <td colspan="3">{!leaseInspectionReport.CustomerAddress__c}</td>
+                </tr>
+                <tr>
+                    <td class="alignLeft" style="background-color: lightgray;"> (3)담당자 / 연락처 </td>
+                    <td colspan="3"> {!leaseInspectionReport.CustomerName__c} / {!leaseInspectionReport.CustomerMobile__c} </td>
+                </tr>
+            </table>
+<!--        </div>-->
+        <br/>
+
+        <!-- 리스 물건 table -->
+        <span> 2. 리스 물건 </span>
+        <br/>
+        <table cellspacing="0" cellpadding="0" border="1px" width="100%">
+            <tr>
+                <td class="alignLeft" style="width:10%; background-color: lightgray;"> (1) 리스물건명 (모델명) </td>
+                <td style="width:90%"> {!leaseInspectionReport.Product__r.Name} </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:10%; background-color: lightgray;"> (2) 제조번호 (S/N) </td>
+                <td style="width:90%"> {!leaseInspectionReport.Asset__r.Name} </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="background-color: lightgray;"> (3) 제조업체 (공급업체) </td>
+                <td style="width:90%"> LS 엠트론 </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="background-color: lightgray;"> (4) 제작년도 </td>
+                <td style="width:90%">
+                    <apex:outputText value="{0, date, yyyy'년' MM'월'  dd'일'  }">
+                        <apex:param value="{!leaseInspectionReport.Asset__r.CreatedDate}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="background-color: lightgray;"> (5) 검사구분 </td>
+                <td style="width:90%"> {!leaseInspectionReport.InspectionType__c} </td>
+            </tr>
+        </table>
+        <br/>
+
+        <!-- 검수 내용 table -->
+        <span> 3. 검수 내용 </span>
+        <br/>
+        <table cellspacing="0" cellpadding="0" border="1px" width="100%">
+            <tr>
+                <td style="background-color: lightgray; height: 2vh;"></td>
+                <td style="background-color: lightgray; height: 2vh;"> 네 / 아니오 </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (1) 리스물건이 정상적으로 고객에게 인도되고 사용되고 있는가? </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.IsHandOver__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(!leaseInspectionReport.IsHandOver__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (2) 리스물건이 리스 계약서상의 리스물건과 정확하게 일치하는가? </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.IsCorrect__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(!leaseInspectionReport.IsCorrect__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (3) 리스물건에 대한 실물 사진을 찍어서 이를 증빙으로 보관했는가? </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.IsStored__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(!leaseInspectionReport.IsStored__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (4) 리스물건과 견적서를 비교하여 공리스가 아님을 확인했는가?
+                    (중고물건 리스약정시에는 물건의 제작 년도를 확인함)
+                </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.IsLeaseChecked__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(!leaseInspectionReport.IsLeaseChecked__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+        </table>
+        <br/>
+
+        <!-- 리스 물건 상태 table -->
+        <span> 4. 리스 물건 상태 </span>
+        <br/>
+        <table cellspacing="0" cellpadding="0" border="1px" width="100%">
+            <tr>
+                <td style="background-color: lightgray; height: 2vh;"></td>
+                <td style="background-color: lightgray; height: 2vh;"> 양호 / 보통 / 불량 </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (1) 외부 상태 </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.ExternalStatus__c == '양호','checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(leaseInspectionReport.ExternalStatus__c == '보통','checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(leaseInspectionReport.ExternalStatus__c == '불량','checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (2) 내부 상태  </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.InternalStatus__c == '양호','checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(leaseInspectionReport.InternalStatus__c == '보통','checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(leaseInspectionReport.InternalStatus__c == '불량','checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="alignLeft" style="width:50%"> (3) 전체적인 상태 </td>
+                <td style="width:50%">
+                    <div class="{!if(leaseInspectionReport.WholeStatus__c == '양호','checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(leaseInspectionReport.WholeStatus__c == '보통','checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                    <div class="{!if(leaseInspectionReport.WholeStatus__c == '불량','checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                </td>
+            </tr>
+        </table>
+        <br/>
+
+        <span> 5. 사진 첨부요령 </span>
+        <br/>
+        <p> ● 장비 전면,측면, 후면 사진 (예, 물건 대수마다 1장씩, *물건이 2대인 경우, 2장*) </p>
+        <p> ● 물건별 제조번호(Serial Number)표시부분 + 당사 소유물 확인PLATE 부착된 부분 사진 1장 </p>
+        <br/>
+        <table border="1" width="100%" align="center">
+            <tr style="height: 5vh;">
+                <td width="10%"> 검수자 </td>
+                <td width="40%"> 영업소명 : {!leaseInspectionReport.BusinessOffice__r.Name} </td>
+                <td width="40%"> 영업사원명 : {!leaseInspectionReport.BusinessOfficeSalesRep__r.Name} </td>
+                <td width="10%"> <img src="/sfc/servlet.shepherd/document/download/{!leaseInspectionReport.AttachedContentDocuments[0].ContentDocumentId}?big" style="width:70px"/> (서명) </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+</apex:page>

@@ -1,0 +1,99 @@
+<!--
+  * @filename      : lsMSalesDesignChangeQa
+  * @projectname   :
+  * @author        : i2max_Parkjw
+  * @date          : 2020-06-16 오후 4:14
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-16 오후 4:14    i2max_Parkjw        Create
+    0.2     2020-06-24 오전 11:22   i2max_ParkJW        퍼블리싱 반영
+    0.3     2020-07-02 오후 01:34   i2max_ParkJW        pageReference로직을 공통쪽 헬퍼를 사용하도록 변경
+    0.4     2020-07-03 오전 10:12   i2max_ParkJW        컴포넌트, 컨트롤러, 페이지 교체 (lsMSalesDesignChangeQa => lsMSalesDesignChangeDetail)
+ -->
+
+
+<aura:component extends="c:lsMSalesBase"
+                implements="force:hasRecordId,forceCommunity:availableForAllPageTypes"
+                controller="lsMSalesDesignChangeDetail"
+                description="lsMSalesDesignChangeDetail">
+
+
+    <aura:attribute name="productChange" type="ProductChange__c"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+        .tit120 {
+        width: 100px !important;
+        }
+    </aura:html>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">설계변경 상세조회</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 타이틀영역 2줄 -->
+        <div class="top_titBox">
+            <div class="tit">
+                {!v.productChange.PECN_NAME__c}
+            </div>
+            <div class="stit">
+                등록일 : <lightning:formattedDateTime value="{!v.productChange.PREGISTRATION_DATE__c}"/>
+            </div>
+        </div>
+        <!-- //상단 타이틀영역 2줄 -->
+
+        <article class="content">
+            <!-- 테이블 -->
+            <div class="board_view mt20">
+                <ul>
+                    <li>
+                        <div class="tit tit120">적용일자</div>    <!-- 폰트 사이즈 수정하거나, 폭 넓히기 -->
+                        <div class="tit_right">:</div>
+                        <div class="txt">{!v.productChange.PAPPLY_DATE__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit tit120">적용호기</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt">{!v.productChange.PUNITEFFECTIVITY__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit tit120">적용모델</div>
+                    </li>
+                    <div class="viewGrayBox">
+                        <aura:iteration items="{!v.productChange.ProductChange2__r}" var="record" indexVar="idx">
+                            <span class="w50">{!record.fm_PModel__c}</span>
+                        </aura:iteration>
+                        <div class="lineBar"></div>
+                        <div class="guideTxt">변경 부품 목록 등 상세 내용은 PC버전을 확인하세요.</div>
+                    </div>
+                </ul>
+            </div>
+            <!-- // 테이블 -->
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox">
+                <lightning:button label="목록으로" class="bbtn" onclick="{!c.doBack}"/>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+
+    </div>
+
+</aura:component>

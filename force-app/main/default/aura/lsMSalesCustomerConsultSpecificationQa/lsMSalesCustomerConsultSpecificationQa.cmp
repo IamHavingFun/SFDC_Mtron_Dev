@@ -1,0 +1,41 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultSpecificationQa
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-29
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-29     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesCustomerConsultSpecificationQa"
+                description="lsMSalesCustomerConsultSpecificationQa">
+
+    <aura:attribute name="productSeries" type="ProductSeries__c" required="true" description="선택된 제품시리즈"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lsMSalesQuickAction>
+        <aura:set attribute="headers">
+            <div class="tit">제원보기</div>
+        </aura:set>
+        <aura:set attribute="contents">
+            <div class="view_specifications">
+                <img src="{! '/' + v.resData.sitePathPrefix + '/sfc/servlet.shepherd/version/download/' + v.resData.contentVersion.Id}"/>
+            </div>
+        </aura:set>
+        <aura:set attribute="btnSet">
+            <lightning:button label="닫기" class="bbtn" onclick="{!c.doCancel}"/>
+        </aura:set>
+    </c:lsMSalesQuickAction>
+
+</aura:component>

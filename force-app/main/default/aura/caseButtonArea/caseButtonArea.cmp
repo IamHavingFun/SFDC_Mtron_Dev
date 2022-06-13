@@ -1,0 +1,28 @@
+<!--
+* @filename      : caseButtonArea.cmp
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-06-08 오전 11:01
+* @group         :
+* @group-content :
+* @description   :
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+0.1     2020-06-08 오전 11:01     SEOKHO LEE          Create
+-->
+
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,forceCommunity:availableForAllPageTypes,lightning:actionOverride"
+                description="caseEvaluation을 불러오기 위한 버튼 컴포넌트">
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService" />
+
+        <div class="slds-float--right">
+            <lightning:button aura:id="evaluation"  label="평가 등록" variant="brand" onclick="{!c.doMoveCaseEvaluation}"/>
+        </div><br/>
+</aura:component>

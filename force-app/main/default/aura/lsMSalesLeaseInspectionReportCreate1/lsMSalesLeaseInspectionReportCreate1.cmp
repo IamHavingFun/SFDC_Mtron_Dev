@@ -1,0 +1,163 @@
+<!--
+  * @filename      : lsMSalesLeaseInspectionReportCreate1
+  * @author        : I2MAX
+  * @date          : 2021-03-29
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-03-29         I2MAX          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesLeaseInspectionReport"
+                description="lsMSalesLeaseInspectionReportCreate1">
+
+    <!-- =============================================================================================================
+    ==== private attribute
+    ============================================================================================================== -->
+    <aura:attribute name="options" type="List" default="[
+        {'label': '예', 'value': true},
+        {'label': '아니오', 'value': false}
+    ]"/>
+    <aura:attribute name="statusOptions" type="List" default="[
+        {'label': '양호', 'value': '양호'},
+        {'label': '보통', 'value': '보통'},
+        {'label': '불량', 'value': '불량'}
+    ]"/>
+    <aura:attribute name="inspectionTypeList" type="List" default="[
+        {'label': '전수검사', 'value': '전수검사'}
+    ]"/>
+
+    <!-- =============================================================================================================
+    ==== content
+    ============================================================================================================== -->
+    <aura:html tag="style">
+        .slds-form-element__control {
+        width: 290px;
+        display: flex;
+        }
+        .cLsMSalesThemeLayout .slds-radio {
+        padding: 15px 15px;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].fm_ProductType__c}] {!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.Name}({!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <article class="content">
+            <div class="list_vTitBox">
+                <div class="left">리스 물건</div>
+            </div>
+            <ul class="list_verticalBox">
+                <li>
+                    <div class="left">검사구분</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.inspectionTypeList}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.InspectionType__c}"/>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="list_vTitBox">
+                <div class="left">검수 내용</div>
+            </div>
+            <ul class="list_verticalBox">
+                <li>
+                    <div class="left">(1) 리스물건이 정상적으로 고객에게 인도되고 사용되고 있는가?</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.IsHandOver__c}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">(2) 리스물건이 리스 계약서상의 리스물건과 정확하게 일치하는가?</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.IsCorrect__c}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">(3) 리스물건에 대한 실물 사진을 찍어서 이를 증빙으로 보관했는가?</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.IsStored__c}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">
+                        (4) 리스물건과 견적서를 비교하여 공리스가 아님을 확인했는가?<br/>
+                        (중고물건 리스약정시에는 물건의 제작 년도를 확인함)
+                    </div>
+                    <div class="right">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.IsLeaseChecked__c}"/>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="list_vTitBox">
+                <div class="left">리스물건 상태</div>
+            </div>
+            <ul class="list_verticalBox">
+                <li>
+                    <div class="left2">(1) 외부 상태</div>
+                    <div class="right2">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.statusOptions}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.ExternalStatus__c}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left2">(2) 내부 상태</div>
+                    <div class="right2">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.statusOptions}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.InternalStatus__c}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left2">(3) 전체적인 상태</div>
+                    <div class="right2">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.statusOptions}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.leaseInspectionReport.WholeStatus__c}"/>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPreSelf}"/>
+                    </aura:set>
+                </aura:if>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isPDI}">
+                    <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+                </aura:if>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+
+    </div>
+</aura:component>

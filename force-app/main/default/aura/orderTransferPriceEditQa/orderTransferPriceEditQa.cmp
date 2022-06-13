@@ -1,0 +1,92 @@
+<!--
+  * @filename      : orderTransferPriceEditQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-11-19 오후 12:28
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-19 오후 12:28    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="OrderTransferPriceEditQa"
+                description="orderTransferPriceEditQa">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="returnOrder" type="OrderTransferPriceEditQa.ReturnOrder" description=""/>
+    <aura:attribute name="isProcess"   type="Boolean" description="반품 주문 가격 정정 가능 상태"/>
+    <aura:attribute name="OldSellingPrice" type="Decimal" description="기존 공급 가격"/>
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComQuickAction title="반품 주문 가격 정정" aura:id="quickAction" hasSelfFooter="{#false}" isWide="{#false}">
+        <c:lacComSectionFrame title="제품 가격 정보" hasHeader="{#true}">
+            <lightning:recordEditForm objectApiName="Order__c">
+                <lightning:layout horizontalAlign="end" class="slds-p-top_large">
+                    <lightning:layoutItem size="3" class="slds-text-align_right">
+                        <label for="division" class="slds-m-top_medium">제품</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <p class="slds-m-left_x-large">
+                            {!v.returnOrder.tOrder.Product__r.Name} ({!v.returnOrder.tOrder.Product__r.ProductCode})
+                        </p>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="end"  class="slds-p-top_medium">
+                    <lightning:layoutItem size="3" class="slds-text-align_right">
+                        <label for="division" class="slds-m-top_medium">기준 가격</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <p class="slds-m-left_x-large slds-size_6-of-12">
+                            <lightning:input type="number" aura:id="BaseSellingPrice" value="{!v.returnOrder.tOrder.BaseSellingPrice__c}" disabled="{!true}"  variant="label-hidden" />
+                        </p>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="end">
+                    <lightning:layoutItem size="3" class="slds-text-align_right">
+                        <label for="division" class="slds-m-top_medium">가격 변경</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <p class="slds-m-left_x-large slds-size_6-of-12">
+                            <lightning:input type="number" aura:id="CorrectionPrice" value="{!v.returnOrder.tOrder.CorrectionPrice__c}" variant="label-hidden" onchange="{!c.doPriceChange}"/>
+                        </p>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="end">
+                    <lightning:layoutItem size="3" class="slds-text-align_right">
+                        <label for="division" class="slds-m-top_medium">공급 가격</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <p class="slds-m-left_x-large slds-size_6-of-12">
+                            <lightning:input type="number" aura:id="SellingPrice" label="{#v.returnOrder.tOrder.SellingPrice__c}" value="{!v.returnOrder.tOrder.SellingPrice__c}" disabled="{!true}" variant="label-hidden" />
+                        </p>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:recordEditForm>
+        </c:lacComSectionFrame>
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isProcess}">
+            <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doErpSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

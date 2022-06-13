@@ -1,0 +1,68 @@
+<!--
+  * @filename      : lsMSalesProductSearchCombine
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-19
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-19     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                controller="LsMSalesProductSearchCombine"
+                description="lsMSalesProductSearchCombine">
+
+    <!-- ============================================================================
+    ==== 선택된 productType
+    ============================================================================= -->
+    <aura:attribute name="productType" type="String" required="true" default="콤바인" description="관심모델: 트랙터, 콤바인, 이앙기"/>
+    <aura:attribute name="seriesOptions" type="List" description="시리즈 옵션"/>
+
+    <aura:attribute name="searchProduct" type="Product2" required="true" default="{}" description="검색용 제품"/>
+    <aura:attribute name="product" type="Product2" description="선택된 제품"/>
+
+    <aura:registerEvent name="fianlSelectProduct" type="c:lacComEvent"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <span class="form_select mt40">
+        <lightning:combobox aura:id="seriesOptions"
+                            label=""
+                            variant="label-hidden"
+                            options="{!v.seriesOptions}"
+                            value="{!v.searchProduct.Series__c}"
+                            onchange="{!c.doChangeSeries}"/>
+    </span>
+
+    <section class="col_board_option">
+        <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+            <ul>
+                <aura:iteration items="{!v.recordList}" var="product">
+                    <li aura:id="productItem"
+                        data-value="{!product.Id}"
+                        onclick="{!c.doSelectProduct}">
+                        <div class="left">{!product.Name}</div>
+                        <div class="right">
+                            <lightning:formattedNumber value="{!product.ListPrice__c}" style="currency"/>
+                        </div>
+                    </li>
+                </aura:iteration>
+            </ul>
+            <aura:set attribute="else">
+                <c:lsMSalesNoDataFound/>
+            </aura:set>
+        </aura:if>
+    </section>
+
+    <section class="bbtnBox mb60">
+        <lightning:button label="닫기" class="bbtn_white btn_50" onclick="{!c.doClose}"/>
+        <lightning:button variant="brand" label="선택" class="bbtn btn_50" disabled="{!or(empty(v.recordList), empty(v.product))}" onclick="{!c.doChoice}"/>
+    </section>
+
+</aura:component>

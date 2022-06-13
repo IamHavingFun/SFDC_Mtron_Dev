@@ -1,0 +1,72 @@
+<!--
+ - Created by MS on 2020-06-20.
+
+ @TODO : 주석 정리..
+         화면 매핑..
+         save 이후에 PDI I/F 호출 해야 함. promise 처리 필요함..
+
+테스트 데이터 아이디.
+    assetId = '02i1m000000DJHYAA4';
+    contractId = 'a0W1m0000004tGFEAY';
+ -->
+
+<aura:component extends="c:lsMSalesStepContainerBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreate"
+>
+
+<!--
+    &lt;!&ndash; ============================================================================
+    ==== Current User LDS 사용을 위한 attribute override : 상속 super의 attribute 재정의
+    ============================================================================= &ndash;&gt;
+    <aura:set attribute="isCurrentUserLDS" value="{!true}"/>
+    &lt;!&ndash; ============================================================================
+    ==== Current User LDS 필드재정의 : 중복이 되어도 됨. 기설정된 필드와 중복제거하고 합쳐짐
+    ============================================================================= &ndash;&gt;
+    <aura:set attribute="currentUserFields" value="AccountId"/>
+-->
+
+    <!-- ============================================================================
+    ==== step 업무 처리의 컴포넌트 순서
+    ============================================================================= -->
+    <aura:attribute name="stepList" type="List"
+                    default="[
+                        'lsMSalesPDICreateStep0',
+                        'lsMSalesPDICreateStep1',
+                        'lsMSalesPDICreateStep2',
+                        'lsMSalesPDICreateStep3',
+                        'lsMSalesPDICreateStep4',
+                        'lsMSalesPDICreateStep5',
+                        'lsMSalesPDICreateStepSign',
+                        'lsMSalesPDICreateStepResult'
+                    ]"
+                    description="단계별 업무 컴포넌트명"/>
+
+    <!-- ============================================================================
+    ==== step Change Event 처리 : Contain인 경우 반드시 핸들러 처리
+    ==== includeFacets="true" 처리를 하여 본 container에서 hanldler 처리되게끔 함.
+    ============================================================================= -->
+    <aura:handler name="changeStep" event="c:lacComEvent" action="{!c.doChangeStep}" includeFacets="true"/>
+
+    <!-- ============================================================================
+    ==== Mobile Service Component
+    ============================================================================= -->
+    <c:lsMSalesService aura:id="lsMSalesService"/>
+
+    <!-- ============================================================================
+    ==== System 이벤트 핸들러
+    ============================================================================= -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- ============================================================================
+    ==== System Service Component
+    ============================================================================= -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:navigation aura:id="naviService"/>
+
+    <!-- ============================================================================
+    ==== Content 영역
+    ============================================================================= -->
+    <div aura:id="stepContainer"></div>
+</aura:component>

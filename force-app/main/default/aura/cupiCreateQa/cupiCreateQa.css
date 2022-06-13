@@ -1,0 +1,25 @@
+/****************************************************************************************
+* @filename      : cupiCreateQa.css
+* @projectname   : 
+* @author        : SEOKHO LEE
+* @date          : 2020-06-05 오후 3:46 
+* @group         :
+* @group-content :
+* @description   :
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+0.1     2020-06-05 오후 3:46      SEOKHO LEE        Create
+****************************************************************************************/
+.THIS {
+}
+.THIS.combobox{
+    width: 100px;
+}
+.THIS.label{
+    margin-top: 100px;
+}

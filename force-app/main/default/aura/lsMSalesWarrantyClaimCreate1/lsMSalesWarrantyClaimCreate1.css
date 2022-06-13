@@ -1,0 +1,74 @@
+.THIS {
+}
+
+.THIS .slds-list_horizontal {
+    display: flex;
+    width: 100%;
+}
+
+.THIS .customerRBox .right {
+    width: calc(100% - 168px);
+    line-height: 66px;
+    display: flex;
+}
+/*.THIS .slds-form-element {
+    position: relative;
+    width: 100%;
+}*/
+.THIS .slds-form-element__control {
+    clear: left;
+    position: relative;
+    width: 100%;
+}
+.THIS .slds-grow {
+
+}
+.THIS .btn_search {
+    min-width: 160px;
+    padding: 0 25px;
+}
+
+.THIS .checkTxt {
+    line-height: 60px;
+    margin-left: -10px;
+}
+
+.THIS .slds-textarea {
+    height:200px;
+}
+
+.THIS .btn_30 {
+    width:calc(30% - 10px); margin-right:20px;
+}
+.THIS .btn_30:last-child {
+    margin-right:0px;
+}
+.THIS .btn_40 {
+    width:40%;
+}
+
+.THIS .slds-checkbox .slds-checkbox_faux:after {
+    content: "";
+    width: 30px;
+    height: 20px;
+    position: absolute;
+    top: 25%;
+    left: 22%;
+    transform: translate3d(0%, 0%, 0px) rotate(-45deg);
+    border-bottom: 5px solid #bbb;
+    border-left: 5px solid #bbb;
+}
+
+.THIS .slds-form-element__label {
+    margin-top: 0px;
+}
+
+.THIS .combobox1 { width: calc(50% - 10px); margin-right: 10px; display: inline-block; }
+.THIS .combobox2 { width: calc(50%); display: inline-block; }
+
+/*
+    개인 고객일 때 필요한 css class
+*/
+.THIS .input_phone1_with_authenticate { width:25%; display: inline-block; }
+.THIS .input_phone2_with_authenticate { width:calc(25% - 20px); margin-left:20px; display: inline-block; }
+.THIS .input_phone3_with_authenticate { width:calc(35% - 20px); margin-left:20px; display: inline-block; }

@@ -1,0 +1,98 @@
+<!--
+  * @filename      :
+  * @projectname   :
+  * @author        : i2max_Junseok.Kwon
+  * @date          : 2020-03-30 오전 9:29
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * =========================================================================
+  * ver     date                    author                    description
+  * =========================================================================
+  0.1     2020-03-30 오전 9:29     i2max_Junseok.Kwon        Create
+-->
+
+<aura:component extends="c:lacComBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="I2SEMA_Custom_SMS_Send"
+                description="I2SEMA_Custom_SMS_Send">
+
+    <aura:attribute name="notification" type="Notification__c" access="global"/>
+    <aura:attribute name="phoneNumber" type="String" default=""/>
+    <aura:attribute name="targetCount" type="Decimal" default="0"/>
+    <aura:attribute name="notiGroupId" type="String" default=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!--  Header -->
+    <!--<c:lacComHeader isCommunity="{!v.isCommunity}" type="" title="실판매 고객 대상 문자 발송" aura:id="header" iconName="custom:custom46">
+    </c:lacComHeader>-->
+
+    <div class="slds-m-bottom_x-small"></div>
+
+    <lightning:recordEditForm objectApiName="Notification__c">
+    <lightning:card title="대상정보">
+
+        <lightning:layout horizontalAlign="end">
+            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                <div class="slds-m-top_medium">대상 인원</div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                <div class="slds-m-top_medium">{!v.targetCount}</div>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout horizontalAlign="end">
+            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                <div class="slds-m-top_medium">발송 양식</div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" class="slds-align-middle slds-p-left_medium slds-text-align_left slds-p-top_medium">
+                <lightning:inputField aura:id="templateId" fieldName="NotificationTemplate__c" variant="label-hidden" value="{!v.notification.NotificationTemplate__c}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4">
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout horizontalAlign="end">
+            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                <div class="slds-m-top_medium">시험발송 휴대전화번호</div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" class="slds-align-middle slds-p-left_medium slds-text-align_left slds-p-top_medium">
+                <lightning:input label="휴대폰번호" value="{!v.phoneNumber}" variant="label-hidden"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4">
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout horizontalAlign="end">
+            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                <div class="slds-m-top_medium">알림결과 번호</div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" class="slds-align-middle slds-p-left_medium slds-text-align_left slds-p-top_medium">
+                <lightning:input label="결과 아이디" value="{!v.notiGroupId}" variant="label-hidden" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4">
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSend"
+                              label="발송"
+                              variant="brand"
+                              onclick="{!c.doSend}" />
+            <lightning:button aura:id="btnTestSend"
+                              label="시험발송"
+                              variant="destructive"
+                              onclick="{!c.doTestSend}" />
+        </aura:set>
+    </lightning:card>
+    </lightning:recordEditForm>
+
+</aura:component>

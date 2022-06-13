@@ -1,0 +1,9 @@
+/**
+ * Created by MS on 2020-07-28.
+ */
+
+.THIS {
+}
+.THIS .slds-form-element__control > .slds-input{
+    background-color: #eaf0f3;
+}

@@ -1,0 +1,13 @@
+.THIS {
+}
+
+.THIS .modal_body .col_board2 .right input {
+    margin-top: 12px;
+    text-align: right;
+}
+
+.THIS .top_row2Box {
+    width: 100%;
+    display: block;
+    margin-top: 40px;
+}

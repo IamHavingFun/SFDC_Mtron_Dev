@@ -1,0 +1,43 @@
+<!--
+  * @filename      : lacComComboBox
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component description="lacComComboBox">
+
+    <aura:attribute name="name" type="String" />
+    <aura:attribute name="label" type="String" />
+    <aura:attribute name="value" type="String"/>
+    <aura:attribute name="option" type="List" />
+    <aura:attribute name="isLabelHidden" type="Boolean" default="{!false}" />
+    <aura:attribute name="disabled" type="Boolean" />
+    <aura:attribute name="onchange" type="Aura.Action" />
+    <aura:attribute name="class" type="String" default="slds-show--large"/>
+
+    <!-- Combobox size attribute. 기본 default는 small size. -->
+    <aura:attribute name="isLarge" type="Boolean" default="{!false}"/>
+    <aura:attribute name="isMedium" type="Boolean" default="{!false}"/>
+
+    <lightning:combobox aura:id="select"
+                        name="{#v.name}"
+                        label="{!v.label}"
+                        options="{!v.option}"
+                        value="{!v.value}"
+                        onchange="{!c.handleChange}"
+                        class="{#v.class + (v.isLarge ? ' custom-input__large' : (v.isMedium ? ' custom-input__medium' : ' custom-input__small'))}"
+                        disabled="{!v.disabled}"
+                        variant="{!v.isLabelHidden ? 'label-hidden' : 'standard'}"
+    />
+
+</aura:component>

@@ -1,0 +1,13 @@
+.THIS {
+}
+
+.THIS .cLsMSalesQuickActionBase .slds-radio_faux {
+    display: none;
+}
+.THIS .slds-is-relative {
+    position: relative;
+    margin: 40px 0;
+}
+.THIS .PSelect3 .right_txt li .name_right {
+    margin: 0 15px;
+}

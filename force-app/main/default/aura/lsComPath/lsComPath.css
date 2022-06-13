@@ -1,0 +1,10 @@
+/**
+ * Created by MS on 2020-11-09.
+ */
+
+.THIS {
+}
+
+.THIS .slds-button {
+    visibility: hidden;
+}

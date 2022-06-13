@@ -1,0 +1,27 @@
+<!--
+* @filename      : lsMSalesCreateNewOpptyQa
+* @projectname   :
+* @author        : Park JW
+* @date          : 2020-08-06 오전 10:19
+* @group         :
+* @group-content :
+* @description   : 
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+   0.1    2020-08-06 오전 10:19          Park JW             Create
+-->
+
+<aura:component extends="c:lsMSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes,lightning:isUrlAddressable,force:lightningQuickActionWithoutHeader"
+                controller="lsMSalesCreateNewOpptyQa"
+                description="lsMSalesCreateNewOpptyQa">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+</aura:component>

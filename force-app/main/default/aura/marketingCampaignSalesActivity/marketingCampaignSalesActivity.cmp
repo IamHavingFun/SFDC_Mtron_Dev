@@ -1,0 +1,56 @@
+<!--
+  * @filename      : marketingCampaignSalesActivity
+  * @author        : I2MAX
+  * @date          : 2021-02-23 오후 1:59
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-02-23 오후 1:59         I2MAX          Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,flexipage:availableForAllPageTypes"
+                description="marketingCampaignSalesActivity"
+                controller="MarketingCampaignSalesActivityController">
+
+    <aura:attribute name="activityList" type="List"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doGetData}"/>
+    <c:lacComHeader title="영업활동(지난 1달간)" type="">영업활동(지난 1달간)</c:lacComHeader>
+    <c:lacComDetailCard isFooter="{#false}">
+        <!-- 날짜 -->
+        <aura:iteration items="{!v.activityList}" var="activity">
+            <lightning:card class="card-border">
+                <lightning:layout horizontalAlign="" class="">
+                    <lightning:layoutItem size="6" padding="around-small" >
+                        <div class="header-column">
+                            <p class="field-title" title="주제">주제</p>
+                            <p><lightning:formattedText value="{!activity.Subject__c}" /></p>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <div class="header-column">
+                            <p class="field-title" title="날짜">날짜</p>
+                            <p><lightning:formattedDateTime value="{!activity.Date__c}" /></p>
+                        </div>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <!-- 면담 내용 -->
+                <lightning:layout horizontalAlign="">
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <p class="field-title" title="면담 내용">면담 내용</p>
+                        <p><lightning:formattedRichText value="{!activity.Comments__c}"/></p>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </aura:iteration>
+        <aura:if isTrue="{!or((empty(v.activityList)), v.activityList.length == 0)}">
+            영업활동 이력이 없습니다.
+        </aura:if>
+    </c:lacComDetailCard>
+</aura:component>

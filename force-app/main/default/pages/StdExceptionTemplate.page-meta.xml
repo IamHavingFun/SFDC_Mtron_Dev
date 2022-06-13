@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>표준 예외 페이지를 위한 기본 Lightning 플랫폼 템플릿</description>
+    <label>StdExceptionTemplate</label>
+</ApexPage>

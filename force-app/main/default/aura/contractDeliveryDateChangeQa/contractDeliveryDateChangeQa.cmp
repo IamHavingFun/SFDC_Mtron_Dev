@@ -1,0 +1,54 @@
+<!--
+  * @filename      : contractDeliveryDateChangeQa
+  * @projectname   :
+  * @author        : I2MAX
+  * @date          : 2020-09-04 오후 4:35
+  * @group         :
+  * @group-content :
+  * @description   : 인도기일 변경 알림.
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * ===============================================================
+  * ver     date          author             description
+  * ===============================================================a
+    0.1         Choi SeongWon           Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="ContractDeliveryDateChangeQa"
+                description="contractDeliveryDateChangeQa">
+
+    <aura:attribute name="prevContract" type="Contract__c"  description="계약정보"/>
+    <aura:attribute name="newContract" type="Contract__c"  description="계약정보"/>
+    <aura:attribute name="toDay" type="Date"  description="오늘날짜."/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="인도기일 변경" aura:id="quickAction" hasSelfFooter="{!false}">
+
+        <lightning:layout>
+            <lightning:layoutItem  size="3" class="slds-m-top_large slds-text-align_center">
+                <label >변경 전</label>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="8">
+                <!--<lightning:formattedDateTime value="{!v.prevContract.CustomerExpectedDate__c}" ></lightning:formattedDateTime>-->
+                <lightning:input type="date" label="" class="custom-input" value="{!v.prevContract.CustomerExpectedDate__c}" disabled="true"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <lightning:layout>
+            <lightning:layoutItem  size="3" class="slds-m-top_large slds-text-align_center">
+                <label >변경 후</label>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="8">
+                <lightning:input type="date" label="" class="custom-input" value="{!v.newContract.CustomerExpectedDate__c}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <aura:set attribute="footer">
+            <lightning:button label="저장 및 문자발송" variant="brand" onclick="{!c.doSave}"/>
+        </aura:set>
+
+    </c:lacComQuickAction>
+
+</aura:component>

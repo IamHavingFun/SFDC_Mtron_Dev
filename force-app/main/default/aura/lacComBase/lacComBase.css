@@ -1,0 +1,10 @@
+.THIS {
+}
+
+/*
+    Community에서 lightning:card 사용 시, title이 없으면 error 발생.
+    title을 화면 상에 안 보이게 할 때 사용. (in Community)
+*/
+.THIS .hide-title > header.slds-card__header {
+    display: none;
+}

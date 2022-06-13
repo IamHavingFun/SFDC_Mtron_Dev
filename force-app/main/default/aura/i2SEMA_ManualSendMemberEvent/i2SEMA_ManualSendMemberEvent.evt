@@ -1,0 +1,19 @@
+<!--
+  * @filename       : i2SEMA_ManualSendMemberEvent
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-08 오후 2:11
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 2:11     i2max_byeon.jw       Create
+ -->
+
+<aura:event type="COMPONENT" description="i2SEMA_ManualSendMemberEvent">
+</aura:event>

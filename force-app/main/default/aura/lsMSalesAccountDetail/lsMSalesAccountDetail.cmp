@@ -1,0 +1,107 @@
+<!--
+* @filename      : lsMSalesAccountDetail
+* @projectname   :
+* @author        : i2max_my.Seo
+* @date          : 2020-06-17 오후 3:43
+* @group         :
+* @group-content :
+* @description   : [모바일] 고객 정보
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+ 0.1     2020-06-17 오후 3:43     i2max_my.Seo         Create
+-->
+<aura:component
+        extends="c:lsMSalesBase"
+        description="lsMSalesAccountDetail"
+        implements="force:appHostable,forceCommunity:availableForAllPageTypes,lightning:isUrlAddressable,force:hasRecordId"
+        controller="lsMSalesAccountDetail">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="tabName"  type="String" default="Asset"  description="탭 명"/>
+
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+    <aura:attribute name="detailData" type="lsMSalesAccountDetail.AccountData"  description=""/>
+    <aura:attribute name="labelMap" type="Map" description=""/>
+
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+<!--    <aura:if isTrue="{!not(empty(v.recordList))}">-->
+        <aura:html tag="style">
+            .comm-layout-column:not(:empty){
+                padding: 0px !important;
+            }
+            .uiContainerManager {
+                width: 0%;
+                width: 0%;
+            }
+        </aura:html>
+
+
+        <header id="header" class="bgW">
+            <article class="TopLeft"></article>
+            <article class="TopName">판매관리 상세조회</article>
+            <article class="TopRright"></article>
+        </header>
+
+        <div id="container" class="bgW">
+            <!-- 상단 검색영역 -->
+            <div class="top_saleBox2">
+                <div class="top_result">
+                    <div class="left">{!v.detailData.account.Name}&nbsp;({!v.detailData.account.fm_Mobile__c})</div>
+                    <div class="right">{!v.detailData.account.CustomerStatus__c}</div>
+                    <div class="result">
+                        <div class="circle_tab">
+                            <b>
+                                <aura:if isTrue="{!and(empty(v.detailData.account.FarmingForm__c),empty(v.detailData.account.FarmingArea__c))}">
+                                    없음
+                                    <aura:set attribute="else">
+                                        {!v.detailData.account.FarmingForm__c}&nbsp;&nbsp;{!v.detailData.account.FarmingArea__c}
+                                    </aura:set>
+                                </aura:if>
+                            </b>
+                        </div>
+                        <div class="circle_tab">보유 <b>{!empty(v.detailData.assets) ? 0 : v.detailData.assets.length}건</b></div>
+                        <div class="circle_tab">상담 <b>{!empty(v.detailData.opportunities) ? 0 : v.detailData.opportunities.length}건</b></div>
+                    </div>
+                </div>
+
+                <div class="top_sale_tab">
+                    <ul class="box_tab min_tab col2">
+                        <li class="{!equals(v.tabName, 'Asset') ? 'active' : ''}" onclick="{!c.doTabChange}" data-tabid="Asset"><a href="javascript:void(0);">보유자산</a></li>
+                        <li class="{!equals(v.tabName, 'Opportunity') ? 'active' : ''}" onclick="{!c.doTabChange}" data-tabid="Opportunity"><a href="javascript:void(0);" >판매관리(상담)</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- //상단 검색영역 -->
+
+            <div>
+                <article class="content">
+                    <aura:if isTrue="{!equals(v.tabName, 'Asset')}">
+                        <!-- 보유자산 tab -->
+                        <c:lsMSalesAccountDetailAssetList recordList="{!v.detailData.assets}"/>
+                        <aura:set attribute="else">
+                            <!-- 기회 tab -->
+                            <c:lsMSalesAccountDetailOpptyList recordList="{!v.detailData.opportunities}"/>
+                        </aura:set>
+                    </aura:if>
+                    
+                    <section class="bbtnBox">
+                        <lightning:button label="목록으로" class="bbtn" onclick="{!c.doBack}"/>
+                    </section>
+                </article>
+            </div>
+        </div>
+
+        
+
+</aura:component>

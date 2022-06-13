@@ -1,0 +1,65 @@
+/****************************************************************************************
+  * @filename       : i2SEMA_AutoNotificationSetting.css
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw 
+  * @date           : 2020-04-14 오후 2:19
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오후 2:19     i2max_byeon.jw       Create
+****************************************************************************************/
+template {
+    font-size : 14px;
+}
+
+.rowHolder {
+    display         : flex;
+    flex-direction  : row;              /* 하위요소 Row 기준 정렬 (Default) */
+    flex-wrap       : wrap;             /* 하위요소 반응형 처리 */
+    justify-content : flex-start;       /* 하위요소 Row 시작 위치부터 정렬 */
+    align-content   : space-around;     /* 하위요소(복수) 개행될 시, 상하간격 조절 */
+    align-items     : center;           /* 하위요소(단수) 개행될 시, 상하간격 조절 */
+    padding-top     : 0.5rem;
+    padding-bottom  : 0.5rem;
+    padding-left    : 5%;
+    padding-right   : 5%;
+}
+.rowHolder:last-child {
+    margin-bottom   : 2rem;             /* 마지막 Row 는 Footer 와의 거리두기 */
+}
+
+.mainItem {
+    flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+    flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+    flex-basis      : 50%;             /* Flex 기본 너비 */
+    padding-right   : 5%;
+}
+
+.subItem {
+    flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+    flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+    flex-basis      : 50%;             /* Flex 기본 너비 */
+    padding-left    : 5%;
+}
+
+.singleItem {
+    flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+    flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+    flex-basis      : 100%;             /* Flex 기본 너비 */
+}
+
+.sectionDescription{
+    width           : 100%;
+    padding-left    : 3%;
+    padding-right   : 3%;
+}
+
+c-i2-s-e-m-a_-auto-notification-condition {
+    width           : 100%;
+    padding-bottom  : 0.5rem;
+}

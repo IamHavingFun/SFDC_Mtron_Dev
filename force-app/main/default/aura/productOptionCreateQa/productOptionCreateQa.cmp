@@ -1,0 +1,63 @@
+<!--
+* @filename      : productOptionCreateQa
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-09-01 오전 10:44 
+* @group         :
+* @group-content :
+* @description   :
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+ 0.1     2020-09-01 오전 10:44     SEOKHO LEE          Create
+-->
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="ProductOptionCreateQa">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComQuickAction title="작업기 추가" aura:id="quickAction" hasSelfFooter="{#false}">
+
+        <lightning:layout horizontalAlign="end" class="customLayoutMargin customLayoutMargin2">
+            <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                <label for="division" class="slds-m-top_medium">본체 모델명</label>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="9">
+                {!v.initData.product.Name}
+            </lightning:layoutItem>
+        </lightning:layout>
+
+            <lightning:recordEditForm objectApiName="ProductOption__c">
+                <lightning:layout horizontalAlign="end" class="customLayoutMargin">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">작업기 유형</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <lightning:combobox aura:id="productFeaturesOptions"
+                                            label=""
+                                            variant="label-hidden"
+                                            options="{!v.initData.productFeaturesList}"
+                                            value="{!v.reqData.featureId}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="end" class="customLayoutMargin">
+                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">작업기</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                <lightning:inputField label= '' variant="label-hidden" fieldName="OptionalProduct__c" value="{!v.reqData.workingMachineId}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+        </lightning:recordEditForm>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

@@ -1,0 +1,46 @@
+<!--
+* @filename      : lsMSalesConfirmTestDriveQa
+* @projectname   :
+* @author        : Park JW
+* @date          : 2020-08-06 오전 10:19
+* @group         :
+* @group-content :
+* @description   : 
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+   0.1    2020-08-10 오후 03:25    Park JW              Create
+-->
+
+<aura:component extends="c:lsSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes,lightning:isUrlAddressable,force:lightningQuickActionWithoutHeader"
+                controller="lsMSalesConfirmTestDriveQa"
+                description="lsMSalesConfirmTestDriveQa">
+
+    <aura:attribute name="targetLead" type="Lead"/>
+    <aura:attribute name="isConfirmDriveDate" type="Boolean" default="{!false}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="시승예약완료" aura:id="quickAction" isSmall="{#true}" hasSelfFooter="{#false}">
+        <aura:if isTrue="{!v.isConfirmDriveDate}">
+            <div class="slds-text-align_center">
+                이미 예약이 확정되었습니다.
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-text-align_center">
+                    <lightning:input type="datetime" label="시승요청일시" value="{!v.targetLead.TestDriveDate__c}" />
+                </div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="footer">
+            <lightning:button label="시승예약완료" variant="brand" onclick="{!c.doSave}" disabled="{!v.isConfirmDriveDate}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+
+</aura:component>

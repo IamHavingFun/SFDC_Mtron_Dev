@@ -1,0 +1,185 @@
+<!--
+ - Created by ms on 2020-05-13.
+ -->
+
+<aura:component extends="c:lacComBase"
+                controller="PartnerHomeOpportunityList"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="partnerHomeOpportunityList">
+
+    <aura:attribute name="opptyList1" type="List" default="[]" access="global"/>
+    <aura:attribute name="opptyList2" type="List" default="[]" access="global"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        /* 중앙 카드 모듈 type-2 */
+        .cPartnerHomeNotice-type2 {
+        margin-top: 40px;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__top {
+        margin-bottom: 30px;
+        border-bottom: 2px solid #2771bf;
+        font-size: 30px;
+        color: #000;
+        font-weight: 900;
+        position: relative;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__top p {
+        padding-left: 60px;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__icon-man {
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+        width: 26px;
+        height: 41px;
+        background: url({!$Resource.comm_home + '/images/bg_module_icon.png'}) -149px -102px no-repeat;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__card-wrap {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__inner {
+        width: 100%;
+        display: flex;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__inner:first-child {
+        margin-bottom: 15px;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__card {
+        padding: 30px 20px;
+        border: 1px solid rgb(204, 204, 204);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__info {}
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__title {
+        font-size: 24px;
+        font-weight: 900;
+        color: #3b3b3b;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__title a {
+        color: inherit;
+        text-align: left;
+        text-decoration: none;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__card ~ .cPartnerHomeNotice-type2__card {
+        margin-left: 30px;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__title--light {
+        font-weight: 500;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__desc {
+        padding-top: 30px;
+        font-size: 14px;
+        color: #a2a2a2;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__sub-title {
+        display: block;
+        color: #030a14;
+        font-size: 16px;
+        font-weight: 600;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNotice-type2__ellipsis {
+        max-width: 100%;
+        height: 16px;
+        line-height: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNoticeArea-type2__sub-text {
+        font-size: 14px;
+        color: #a2a2a2;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNoticeArea-type2__more {
+        padding-top: 30px;
+        font-size: 17px;
+        color: #2771bf;
+        font-weight: 900;
+        }
+        .cPartnerHomeNotice-type2 .cPartnerHomeNoticeArea-type2__more a {
+        color: inherit;
+        text-decoration: none;
+        }
+        /* //중앙 카드 모듈 type-2 */
+    </aura:html>
+
+    <div class="cPartnerHomeNotice-type2">
+        <div class="cPartnerHomeNotice-type2__top">
+            <i class="cPartnerHomeNotice-type2__icon-man"></i>
+            <p>최근 상담고객</p>
+        </div>
+        <div class="cPartnerHomeNotice-type2__card-wrap">
+            <div class="cPartnerHomeNotice-type2__inner">
+                <aura:iteration items="{!v.opptyList1}" var="record" indexVar="idx">
+                    <div class="cPartnerHomeNotice-type2__card">
+                        <div class="cPartnerHomeNotice-type2__info">
+                            <p class="cPartnerHomeNotice-type2__title">
+                                <a href="#none">
+                                    {!record.Account.Name} <span class="cPartnerHomeNotice-type2__title--light">님</span>
+                                </a>
+                            </p>
+                            <div class="cPartnerHomeNotice-type2__desc">
+                          <span class="cPartnerHomeNotice-type2__sub-title cPartnerHomeNotice-type2__ellipsis">
+                            {!record.StageName}
+                          </span>
+                                <span class="cPartnerHomeNotice-type2__sub-title">
+                            {!record.InterestModel__r.Name}
+                          </span>
+                                <span class="cPartnerHomeNotice-type2__sub-text">
+                            최근 수정일자 : <lightning:formattedDateTime value="{!record.LastModifiedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                   minute="2-digit" hour12="false"/>
+                          </span>
+                            </div>
+                        </div>
+                        <p class="cPartnerHomeNoticeArea-type2__more">
+                            <a data-recordid="{!record.Id}" onclick="{!c.doNaviService}">자세히 보기</a>
+                        </p>
+                    </div>
+                </aura:iteration>
+            </div>
+            <div class="cPartnerHomeNotice-type2__inner">
+                <aura:iteration items="{!v.opptyList2}" var="record" indexVar="idx">
+                    <div class="cPartnerHomeNotice-type2__card">
+                        <div class="cPartnerHomeNotice-type2__info">
+                            <p class="cPartnerHomeNotice-type2__title">
+                                <a href="#none">
+                                    {!record.Account.Name} <span class="cPartnerHomeNotice-type2__title--light">님</span>
+                                </a>
+                            </p>
+                            <div class="cPartnerHomeNotice-type2__desc">
+                          <span class="cPartnerHomeNotice-type2__sub-title cPartnerHomeNotice-type2__ellipsis">
+                            {!record.StageName}
+                          </span>
+                                <span class="cPartnerHomeNotice-type2__sub-title">
+                            {!record.InterestModel__r.Name}
+                          </span>
+                                <span class="cPartnerHomeNotice-type2__sub-text">
+                            최근 수정일자 : <lightning:formattedDateTime value="{!record.LastModifiedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                   minute="2-digit" hour12="false"/>
+                          </span>
+                            </div>
+                        </div>
+                        <p class="cPartnerHomeNoticeArea-type2__more">
+                            <a data-recordid="{!record.Id}" onclick="{!c.doNaviService}">자세히 보기</a>
+                        </p>
+                    </div>
+                </aura:iteration>
+            </div>
+        </div>
+    </div>
+
+</aura:component>

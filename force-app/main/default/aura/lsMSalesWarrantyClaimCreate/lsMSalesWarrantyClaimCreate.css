@@ -1,0 +1,46 @@
+/**
+ * Created by MS on 2020-07-03.
+ */
+
+.THIS {
+}
+.THIS .slds-file-selector__text {
+    display : none !important;
+}
+
+.THIS .width100{
+    width:100%;
+}
+
+.THIS .lwsImgBox .lwsTitImg {
+    margin: 20px 30px 20px 0;
+}
+.THIS .slds-form-element__label {
+    font-size: 23px;
+    font-weight: 700;
+    color: #000;
+    letter-spacing: -2px;
+    margin-top:40px;
+}
+.THIS .lwsImgBox .lwsImg {
+    width: 340px !important;
+    height: 340px;
+}
+.THIS .slds-file-selector__dropzone {
+    padding: 0;
+    border-width: 0;
+    border-radius: 0;
+}
+.THIS .slds-file-selector__body .slds-button {
+    width: 340px !important;
+    height:66px;
+    line-height:36px;
+    color: #fff !important;
+    background:#525557;
+    border:0;
+    margin:10px 0 10px 0;
+    cursor: pointer;
+}
+.THIS .slds-file-selector__body .slds-button:hover {
+    background:#0081C4;
+}

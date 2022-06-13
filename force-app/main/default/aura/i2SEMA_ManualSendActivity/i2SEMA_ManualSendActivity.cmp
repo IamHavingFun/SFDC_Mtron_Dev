@@ -1,0 +1,69 @@
+<!--
+  * @filename       : i2SEMA_ManualSendActivity
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-08 오후 2:10
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 2:10     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_ManualSendActivity"
+                extends="c:i2SEMA_Base"
+                access="global"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+    <aura:attribute name="recordId"
+                    type="String"
+                    access="global"
+                    description="Record ID"/>
+
+    <aura:attribute name="templateId"
+                    type="String"
+                    access="global"
+                    description="template Record ID"/>
+
+    <aura:attribute name="previewReferenceData"
+                    type="Object"
+                    access="global"
+                    description="[i2SEMA_Template.ReferenceData] Preview 참조정보"/>
+
+    <!-- Design Attribute -->
+    <aura:attribute name="align"
+                    type="String"
+                    access="global"
+                    description="하위컴포넌트 Align 방향"
+                    default="vertical"/>
+
+    <!-- Preview Event -->
+    <aura:handler name="previewEvent"
+                  event="c:i2SEMA_NotificationPreviewEvent"
+                  action="{!c.handlePreview}"/>
+
+    <!-- Body -->
+    <div class="container">
+        <div>
+            <div class="flexBox">
+                <div class="{!if(equals(v.align,'Vertical'),'flexItem-vertical','flexItem-horizontal')}">
+                    <c:i2SEMA_ManualSendForm aura:id="form" recordId="{!v.recordId}" standAlone="false"/>
+                </div>
+                <div class="{!if(equals(v.align,'Vertical'),'flexItem-vertical','flexItem-horizontal')}">
+                    <c:i2SEMA_NotificationPreview aura:id="preview" recordId="{!v.templateId}" referenceData="{!v.previewReferenceData}"/>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div class="slds-grid slds-m-top--medium">
+            <div class="slds-col_bump-left">
+                <lightning:button label="{!$Label.c.i2SEMA_LAB_SEND}" variant="brand" onclick="{!c.doSave}"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

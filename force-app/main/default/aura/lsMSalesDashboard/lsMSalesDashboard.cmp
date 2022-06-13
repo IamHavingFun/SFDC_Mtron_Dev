@@ -1,0 +1,195 @@
+<!--
+* @filename      : lsMSalesDashboard
+* @projectname   :
+* @author        : i2max_my.Seo
+* @date          : 2020-06-17 오후 3:43
+* @group         :
+* @group-content :
+* @description   : [모바일] 대시보드 화면
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+ 0.1     2020-06-17 오후 3:43     i2max_my.Seo         Create
+ @TODO : 대시보드 장표.
+-->
+<aura:component extends="c:lsMSalesBase" controller="LsMSalesDashboard"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                description="lsMSalesDashboard">
+    <aura:attribute name="sObjectName" type="String"/>
+    <aura:attribute name="sObjectView" type="String"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="labelMap" type="Map" description="label관련 data를 담는 attribute"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:card iconName="standard:dashboard" title="{!v.sObjectView}" class="slds-m-top_small slds-m-left_small slds-m-right_small"/>
+        <div class="slds-p-left_small slds-p-right_small slds-p-top_small">
+            <div class="sticky-table-wrap">
+            <aura:if isTrue="{!v.sObjectName == 'Sales'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--fixed-layout slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th>{!v.data.targetYear} 목표</th>
+                        <th>{!v.data.targetYear} 누적</th>
+                        <th>달성률</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="slds-hint-parent">
+                        <td class="slds-text-align_right"><lightning:formattedNumber value="{!v.data.planAmt}"/></td>
+                        <td class="slds-text-align_right"><lightning:formattedNumber value="{!v.data.performanceAmt}"/></td>
+                        <td class="slds-text-align_right"><lightning:formattedNumber value="{!v.data.goalPercent}"/>%</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'Purchase'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--fixed-layout slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th>{!v.data.targetYear} 목표</th>
+                        <th>{!v.data.targetYear} 누적</th>
+                        <th>달성률</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="slds-hint-parent">
+                        <td class="slds-text-align_right"><lightning:formattedNumber value="{!v.data.planAmt}"/></td>
+                        <td class="slds-text-align_right"><lightning:formattedNumber value="{!v.data.performanceAmt}"/></td>
+                        <td class="slds-text-align_right"><lightning:formattedNumber value="{!v.data.goalPercent}"/>%</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'MarketInfoThis'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th>업체명</th>
+                        <th>건수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.data}" var="row">
+                        <tr class="slds-hint-parent">
+                            <td>{!row.company}</td>
+                            <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.qty}"/></td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'MarketInfoLast'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th>업체명</th>
+                        <th>건수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.data}" var="row">
+                        <tr class="slds-hint-parent">
+                            <td>{!row.company}</td>
+                            <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.qty}"/></td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'Delivery'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th>기대번호</th>
+                        <th>모델명</th>
+                        <th>상차일</th>
+                        <th>차량번호</th>
+                        <th>운송기사 연락처</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.data}" var="row">
+                        <tr class="slds-hint-parent">
+                            <td>{!row.AssetId__r.Name}</td>
+                            <td>{!row.ProductName__r.Name}</td>
+                            <td><lightning:formattedDateTime value="{!row.DateOfLoading__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true" /></td>
+                            <td>{!row.CarNumber__c}</td>
+                            <td>{!row.CarrierContact__c}</td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+                <br/>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'AR'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                    <tr class ="slds-table_bordered">
+                        <th>년도</th>
+                        <th>총 채권</th>
+                        <th>정상채권</th>
+                        <th>6개월 미만</th>
+                        <th>6~12개월</th>
+                        <th>1년 초과</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:if isTrue="{!and(not(empty(v.data)), v.data.length > 0)}">
+                        <aura:iteration items="{!v.data}" var="row">
+                            <tr class="slds-hint-parent">
+                                <td class="slds-text-align_center">{!row.year}</td>
+                                <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.total}"/></td>
+                                <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.normal}"/></td>
+                                <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.sixMonthBelow}"/></td>
+                                <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.sixMonthMore}"/></td>
+                                <td class="slds-text-align_right"><lightning:formattedNumber value="{!row.oneYearOver}"/></td>
+                            </tr>
+                        </aura:iteration>
+                    </aura:if>
+                    </tbody>
+                </table>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'DealerStock'}">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th>모델명</th>
+                        <th>기대번호</th>
+                        <th>입고일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:if isTrue="{!and(not(empty(v.data)), v.data.length > 0)}">
+                    <aura:iteration items="{!v.data}" var="row">
+                        <tr class="slds-hint-parent">
+                            <td>{!row.ModelName__c}</td>
+                            <td>{!row.MachineNo__c}</td>
+                            <td><lightning:formattedDateTime value="{!row.StockInDate__c}"/></td>
+                        </tr>
+                    </aura:iteration>
+                    <aura:set attribute="else">
+                        <tr>
+                            <td colspan="3" class="slds-text-align_center">{!v.noDataFound}</td>
+                        </tr>
+                    </aura:set>
+                    </aura:if>
+                    </tbody>
+                </table>
+                <div class="slds-m-around_x-small">
+                    <span>&nbsp;</span>
+                </div>
+            </aura:if>
+            </div>
+<!--            <div>
+                <span>&nbsp;</span>
+            </div>-->
+        </div>
+
+
+</aura:component>

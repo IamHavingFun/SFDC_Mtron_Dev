@@ -1,0 +1,95 @@
+<!--
+  * @filename       : i2SEMA_ManualSendReceiverSearch
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-08 오후 4:14
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 4:14     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_ManualSendReceiverSearch"
+                extends="c:i2SEMA_Base"
+                controller="i2SEMA_ManualSendReceiverSearch">
+
+    <!-- Attribute -->
+    <aura:attribute name="referenceData"
+                    type="Object"
+                    description="[i2SEMA_ManualSendReceiverSearch.ReferenceData] 컴포넌트 참조정보"/>
+
+    <aura:attribute name="requestData"
+                    type="Object"
+                    description="[i2SEMA_ManualSendReceiverSearch.RequestData] 컴포넌트 요청정보"/>
+
+    <!-- Handler -->
+    <aura:handler name="init"
+                  action="{!c.doInit}"
+                  value="{!this}"/>
+
+    <aura:registerEvent name="receiverEvent"
+                        type="c:i2SEMA_ManualSendReceiverEvent"/>
+
+    <!-- Markup -->
+    <div role="dialog" class="slds-modal slds-fade-in-open" tabindex="-1" >
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading--medium"><lightning:formattedText value="{!$Label.c.i2SEMA_LAB_SELECT_RECEIVER}"/></h2>
+            </header>
+            <div class="slds-modal__content">
+                <!-- Members-->
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                    <thead>
+                    <tr>
+                        <th><div class="noLabel slds-align_absolute-center"><lightning:input type="checkbox" label="" onchange="{!c.checkAllToggle}"/></div></th>
+                        <aura:iteration items="{!v.referenceData.tableHeader}" var="header">
+                            <th><div class="slds-align_absolute-center"><lightning:formattedText value="{!header}"/></div></th>
+                        </aura:iteration>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:if isTrue="{!v.referenceData.records.length > 0}">
+                        <aura:iteration items="{!v.referenceData.records}" var="record">
+                            <tr>
+                                <td><div class="noLabel slds-align_absolute-center"><lightning:input type="checkbox" label="" checked="{!record.selected}" disabled="{!record.disabled}"/></div></td>
+                                <aura:iteration items="{!record.fieldValues}" var="fieldValue">
+                                    <td>
+                                        <div class="noLabel slds-align_absolute-center">
+                                            <!-- Booealn 형태의 데이터 타입을 표기할 경우 -->
+                                            <aura:if isTrue="{!fieldValue.fieldType == 'BOOLEAN'}">
+                                                <lightning:input label="" type="checkbox" disabled="true" checked="{!fieldValue.value == 'true'}"/>
+                                                <!-- 그 외 타입  -->
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedText value="{!fieldValue.value}"/>
+                                                </aura:set>
+                                            </aura:if>
+
+                                        </div>
+                                    </td>
+                                </aura:iteration>
+                            </tr>
+                        </aura:iteration>
+                        <aura:set attribute="else">
+                            <tr>
+                                <td colspan="{!v.referenceData.tableHeader.length + 1}"><div class="slds-align_absolute-center"><lightning:formattedText value="{!$Label.c.i2SEMA_LAB_NO_ITEMS}"/></div></td>
+                            </tr>
+                        </aura:set>
+                    </aura:if>
+                    </tbody>
+                </table>
+            </div>
+            <div class="slds-modal__footer">
+                <lightning:button type="button" label="Done" variant="brand" onclick="{!c.fireReceiverEvent}"/>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+
+</aura:component>

@@ -1,0 +1,32 @@
+<!--
+  * @filename       : i2SEMA_SearchDropBox
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-14 오전 10:19
+  * @group          :
+  * @group-content  :
+  * @description    :
+  * @reference      :
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오전 10:19     i2max_byeon.jw       Create
+ -->
+
+<!-- I 2 Sema Search Drop Box -->
+<template>
+    <!-- Search Input -->
+    <lightning-input type="search" label={dropBoxLabel} onchange={search} value={inputValue} disabled={disabled}></lightning-input>
+    <!-- Drop Box -->
+    <template if:true={renderCondition}>
+        <div class="itemContainer">
+            <template for:each={filteredItems} for:item="item">
+                <div class="item" key={item.value} data-item={item.value} onmousedown={itemSelect}>
+                    <p><lightning-formatted-text value={item.label}></lightning-formatted-text></p>
+                </div>
+            </template>
+        </div>
+    </template>
+</template>

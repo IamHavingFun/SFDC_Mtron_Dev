@@ -1,0 +1,58 @@
+<!--
+  * @filename      : orderCancelQa
+  * @author        : I2MAX
+  * @date          : 2021-05-10
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-05-10         I2MAX          Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                controller="OrderCancelQa"
+                description="orderCancelQa">
+
+    <!-- =============================================================================================================
+    ==== public attribute
+    ============================================================================================================== -->
+    <aura:attribute name="order" type="Order__c" access="public" description=""/>
+    <aura:attribute name="wasCanceled" type="Boolean" access="public" default="{#false}" description=""/>
+
+    <!-- =============================================================================================================
+    ==== handler
+    ============================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- =============================================================================================================
+    ==== component
+    ============================================================================================================== -->
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <!-- =============================================================================================================
+    ==== content
+    ============================================================================================================== -->
+
+    <c:lacComQuickAction title="주문 취소" aura:id="quickAction" hasSelfFooter="{#false}">
+        <div class="slds-align_absolute-center">
+            <aura:if isTrue="{!v.wasCanceled}">
+                이미 종료된 주문 입니다.
+
+                <aura:set attribute="else">
+                    해당 주문을 취소 하시겠습니까?
+                </aura:set>
+            </aura:if>
+        </div>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}" disabled="{!v.wasCanceled}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

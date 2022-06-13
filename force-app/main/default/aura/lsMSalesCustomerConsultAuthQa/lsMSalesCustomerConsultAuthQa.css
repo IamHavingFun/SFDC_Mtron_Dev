@@ -1,0 +1,10 @@
+/**
+ * Created by MS on 2021-05-10.
+ */
+
+.THIS {
+}
+
+.THIS .custom-input {
+    width: calc(100% - 135px);
+}

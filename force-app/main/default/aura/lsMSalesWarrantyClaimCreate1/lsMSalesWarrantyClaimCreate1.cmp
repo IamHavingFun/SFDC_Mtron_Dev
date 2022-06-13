@@ -1,0 +1,214 @@
+<!--
+ - Created by MS on 2021-05-18.
+ -->
+
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesWarrantyClaimCreate"
+                description="lsMSalesWarrantyClaimCreate1">
+
+
+    <aura:attribute name="claimData" type="LsMSalesWarrantyClaimCreate.ClaimData" description="개인정보문구"/>
+    <aura:attribute name="privacyText" type="String" description="개인정보문구"/>
+    <aura:attribute name="customerName" type="String" description="표현식이 작동 안해서 해당 att에 받아 저장 전 필요한 값에 할당"/>
+    <aura:attribute name="farmingForm" type="String" description="사용형태"/>
+    <aura:attribute name="farmingSize" type="String" description="영농규모"/>
+    <aura:attribute name="accountRecordTypeId" type="String" description="영농규모"/>
+    <aura:attribute name="phoneNumber" type="List" description="휴대폰 번호"/>
+    <aura:attribute name="isPhoneCheck" type="Boolean" description="전화번호 인증 여부"/>
+    <aura:attribute name="contactPhoneNumber" type="List" description="휴대폰 번호"/>
+    <aura:attribute name="closeDateList" type="List" description="희망구매일 리스트"/>
+    <aura:attribute name="farmingFormList" type="List" description="영농규모 리스트"/>
+    <aura:attribute name="farmingAreaList" type="List" description="영농면적 리스트"/>
+    <aura:attribute name="prefixPhoneNumber" type="List" default="[
+            {'label':'010', 'value':'010'}, {'label':'011', 'value':'011'},
+            {'label':'016', 'value':'016'}, {'label':'017', 'value':'017'}
+    ]" description="휴대폰 앞자리 고정번호"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <!-- ============================================================================
+    ==== System 이벤트 핸들러
+    ============================================================================= -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+
+    <!-- ============================================================================
+    ==== Header 영역
+    ============================================================================= -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">고객카드 작성</article>
+        <article class="TopRright"></article>
+    </header>
+    <!-- ============================================================================
+    ==== Body 영역
+    ============================================================================= -->
+    <div id="container">
+        <article class="content mt40">
+            <section>
+                <dl class="customerRBox">
+                    <dt class="left">
+                        사업형태
+                    </dt>
+                    <dd class="right">
+                        <lightning:combobox label=""
+                                            class="combobox1"
+                                            options="{!v.claimData.accountRecordTypeList}"
+                                            value="{!v.claimData.customerVO.customer.RecordTypeId}"
+                                            onchange="{!c.doGetCustomerTypeOptions}"
+                                            />
+
+                        <lightning:combobox label=""
+                                            class="combobox2"
+                                            options="{!v.claimData.accountCustomerTypeList}"
+                                            value="{!v.claimData.customerVO.customer.CustomerType__c}"
+                                            placeholder="선택"
+                                            onchange="{!c.doGetFarmInfoOptions}"/>
+                    </dd>
+                </dl>
+                <dl class="customerRBox">
+                    <dt class="left">
+                        {!v.claimData.customerVO.isPersonAccount ? '고객' : '상호'}
+                    </dt>
+                    <dd class="right">
+                        <lightning:input label="" type="text" placeholder="이름 혹은 상호 입력"
+                                         disabled="{!not(empty(v.claimData.customerVO.customer.Id))}"
+                                         value="{!v.customerName}"
+                                         style="width:calc(100% - 160px);"
+                                         onblur="{!c.doReplaceWhiteSpace}"/>
+                        <lightning:button label="고객 조회" class="btn_search" onclick="{!c.doSearchCustomer}"/>
+                    </dd>
+                </dl>
+                <dl class="customerRBox">
+                    <dt class="left">
+                        {!v.claimData.customerVO.isPersonAccount ? '전화번호' : '대표번호'}
+                    </dt>
+                    <dd class="right">
+                        <span class="input_phoneBox">
+                            <div class="slds-list_horizontal">
+                                <aura:if isTrue="{!v.claimData.customerVO.isPersonAccount}">
+                                    <lightning:combobox label="" class="input_phone1" options="{!v.prefixPhoneNumber}" value="{!v.phoneNumber[0]}" placeholder="선택" disabled="{!v.claimData.isAuthenticated}"/>
+                                    <lightning:input label="" class="input_phone2_with_authenticate" type="text" maxlength="4" minlength="3" value="{!v.phoneNumber[1]}" onblur="{!c.doReplaceWhiteSpace}" disabled="{!v.claimData.isAuthenticated}"/>
+                                    <lightning:input label="" class="input_phone3_with_authenticate" type="text" maxlength="4" minlength="4" value="{!v.phoneNumber[2]}" onblur="{!c.doReplaceWhiteSpace}" disabled="{!v.claimData.isAuthenticated}"/>
+                                    <aura:set attribute="else">
+                                        <lightning:input label="" class="input_phone1" value="{!v.phoneNumber[0]}" placeholder="지역번호"/>
+                                        <lightning:input label="" class="input_phone2" type="text" maxlength="4" minlength="3" value="{!v.phoneNumber[1]}" onblur="{!c.doReplaceWhiteSpace}"/>
+                                        <lightning:input label="" class="input_phone3" type="text" maxlength="4" minlength="4" value="{!v.phoneNumber[2]}" onblur="{!c.doReplaceWhiteSpace}"/>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </span>
+                    </dd>
+                </dl>
+                <aura:if isTrue="{!and(v.claimData.customerVO.isPersonAccount, not(v.claimData.isAuthenticated))}">
+                    <dl class="customerRBox">
+                        <dt class="left">
+                            &nbsp;
+                        </dt>
+                        <dd class="right">
+                        <span class="input_phoneBox">
+                                <div class="slds-list_horizontal">
+                                    <lightning:button label="인증" class="btn_search" onclick="{!c.doPhoneAuthenticate}" disabled="{!v.claimData.isAuthenticated}"/>
+                                </div>
+                        </span>
+                        </dd>
+                    </dl>
+                </aura:if>
+
+                <aura:if isTrue="{!not(v.claimData.customerVO.isPersonAccount)}">
+                    <dl class="customerRBox">
+                        <dt class="left">
+                            이름
+                        </dt>
+                        <dd class="right">
+                            <lightning:input aura:id="contactName" label="" type="text" value="{!v.claimData.customerVO.customerContact.LastName}"/>
+                        </dd>
+                    </dl>
+                    <dl class="customerRBox">
+                        <dt class="left">
+                            휴대폰
+                        </dt>
+                        <dd class="right">
+                            <span class="input_phoneBox">
+                                <div class="slds-list_horizontal">
+                                    <lightning:combobox label="" class="input_phone1" options="{!v.prefixPhoneNumber}" value="{!v.contactPhoneNumber[0]}" placeholder="선택" disabled="{!v.claimData.isAuthenticated}"/>
+                                    <lightning:input label="" class="input_phone2_with_authenticate" type="text" maxlength="4" minlength="3" value="{!v.contactPhoneNumber[1]}" onblur="{!c.doReplaceWhiteSpace}" disabled="{!v.claimData.isAuthenticated}"/>
+                                    <lightning:input label="" class="input_phone3_with_authenticate" type="text" maxlength="4" minlength="4" value="{!v.contactPhoneNumber[2]}" onblur="{!c.doReplaceWhiteSpace}" disabled="{!v.claimData.isAuthenticated}"/>
+                                </div>
+                            </span>
+                        </dd>
+                    </dl>
+                    <aura:if isTrue="{!and(not(v.claimData.customerVO.isPersonAccount), not(v.claimData.isAuthenticated))}">
+                        <dl class="customerRBox">
+                            <dt class="left">
+                                &nbsp;
+                            </dt>
+                            <dd class="right">
+                            <span class="input_phoneBox">
+                                <div class="slds-list_horizontal">
+                                    <lightning:button label="인증" class="btn_search" onclick="{!c.doPhoneAuthenticate}" disabled="{!v.claimData.isAuthenticated}"/>
+                                </div>
+                            </span>
+                            </dd>
+                        </dl>
+                    </aura:if>
+                </aura:if>
+
+                <dl class="customerRBox">
+                    <dt class="left">
+                        사용형태
+                    </dt>
+                    <dd class="right">
+                        <lightning:combobox label="" class="" options="{!v.farmingFormList}" value="{!v.claimData.customerVO.customer.FarmingForm__c}" placeholder="선택" onchange="{!c.doSelectFarmForm}"/>
+                    </dd>
+                </dl>
+                <dl class="customerRBox">
+                    <dt class="left">
+                        영농규모
+                    </dt>
+                    <dd class="right">
+                        <lightning:combobox label="" class="" options="{!v.farmingAreaList}" value="{!v.claimData.customerVO.customer.FarmingArea__c}" placeholder="선택"/>
+                    </dd>
+                </dl>
+            </section>
+
+
+            <!-- B2C -->
+            <section class="lineBar"><span>구분선</span></section>
+            <section class="">
+                <div class="slds-list_horizontal mb40">
+                    <lightning:input label="" type="checkbox" variant="label-hidden" checked="{!v.claimData.customerVO.cupi.IsCUPI__c}"  value="{!v.claimData.customerVO.cupi.IsCUPI__c}"/>
+                    <label for="check_box1" class="checkTxt"><span></span>개인정보 수집 동의</label>
+                </div>
+                <div class="slds-list_horizontal mb40">
+                    <lightning:input label="" type="checkbox" variant="label-hidden" checked="{!v.claimData.customerVO.cupi.ReceiveSMS__c}"  value="{!v.claimData.customerVO.cupi.ReceiveSMS__c}"/>
+                    <label for="check_box2" class="checkTxt"><span></span>개인정보 활용 동의(SMS)</label>
+                </div>
+
+                <aura:if isTrue="{!v.claimData.customerVO.isPersonAccount}">
+                    <span class="">
+    <!--                    <lightning:formattedText value="
+                        LS엠트론에서 고객님께 더 나은 구매조건을 제공하기 위해
+    위와 같은 개인정보활용에 동의를 구하고 합니다
+    개인정보 활용동의는 개인정보보호법 등의 법률에 따라 반드시 필요한 절차이며, LS엠트론에서 판매하는 제품의 판매/상담/서비스/마케팅제공을 위해 최소한의 정보만 수집/이용하게 됩니다.
+
+    LS엠트론 개인정보 처리방침 확인
+    https://www.lsmtron.co.kr/page/popup/privacy.asp
+        " linkify="true"/>-->
+                        <lightning:textarea label="" readonly="true" style="white-space: pre-line;" value="{!v.privacyText}"/>
+                    </span>
+                </aura:if>
+            </section>
+
+
+            <!-- ============================================================================
+            ==== 하단 버튼 영역
+            ============================================================================= -->
+            <section class="bbtnBox">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="고객저장" class="bbtn btn_50" onclick="{!c.doCustomerSave}"/>
+            </section>
+        </article>
+    </div>
+</aura:component>

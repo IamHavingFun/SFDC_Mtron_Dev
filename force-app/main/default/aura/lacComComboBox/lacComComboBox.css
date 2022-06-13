@@ -1,0 +1,14 @@
+.THIS {
+}
+
+.THIS.custom-input__small input {
+    width: 200px;
+}
+
+.THIS.custom-input__medium input {
+    width: 250px;
+}
+
+.THIS.custom-input__large input {
+    width: 300px;
+}

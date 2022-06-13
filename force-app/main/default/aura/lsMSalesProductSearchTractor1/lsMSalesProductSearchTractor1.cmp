@@ -1,0 +1,64 @@
+<!--
+  * @filename      : lsMSalesProductSearchTractor1
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-19
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] 제품검색 : 트랙터 : Step1 : 제품 시리즈 선택
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-19     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesProductSearchTractor"
+                description="lsMSalesProductSearchTractor1">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+        <aura:iteration items="{!v.recordList}" var="vo">
+            <article class="{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Id == vo.productSeries.Id ? 'PSelect3 box_select' : 'PSelect3'}"
+                        aura:id="productSeriesItem"
+                        data-value="{!vo.productSeries.Id}"
+                        onclick="{!c.doSelectProductSeries}">
+                <div class="left_img">
+                    <img src="{! '/' + vo.sitePathPrefix + '/sfc/servlet.shepherd/version/download/' + vo.contentVersion.Id}"/>
+                </div>
+                <div class="right_txt">
+                    <!-- 20200803: Series__c 에서 Name으로 변경 -->
+                    <span class="tit">{!vo.productSeries.Name}</span>
+                    <ul>
+                        <li>
+                            <div class="name">마력(PS)</div>
+                            <div class="name_right">:</div>
+                            <div class="txt">{!vo.productSeries.HorsePower__c}</div>
+                        </li>
+                        <li>
+                            <div class="name">중량(KG)</div>
+                            <div class="name_right">:</div>
+                            <div class="txt">{!vo.productSeries.Weight__c}</div>
+                        </li>
+                        <li>
+                            <div class="name">전장(MM)</div>
+                            <div class="name_right">:</div>
+                            <div class="txt">{!vo.productSeries.Length__c}</div>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+        </aura:iteration>
+        <aura:set attribute="else">
+            <c:lsMSalesNoDataFound/>
+        </aura:set>
+    </aura:if>
+    
+    <section class="bbtnBox mb60">
+        <lightning:button label="닫기" class="bbtn" onclick="{!c.doClose}"/>
+    </section>
+    
+</aura:component>

@@ -1,0 +1,67 @@
+<!--
+  * @filename      : orderAssetDeliveryQa
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-04-16
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-04-16     	i2max          Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                controller="OrderAssetDeliveryQa"
+                description="orderAssetDeliveryQa">
+
+    <!-- ============================================================================
+    ==== 저장을 위한 임시 출하 레코드
+    ============================================================================= -->
+    <aura:attribute name="deliveryRecord" type="Delivery__c" default="{}" description="Custom 출하 SObject"/>
+    <aura:attribute name="order" type="Order__c"  description="주문"/>
+    <aura:attribute name="notiTargetOrders" type="List"  description="주문"/>
+    <aura:attribute name="orderKeep" type="OrderKeep__c"  description="보관주문"/>
+    <aura:attribute name="transferOrder" type="TransferOrder__c"  description="반품주문"/>
+    <aura:attribute name="isProcess" type="Boolean"  description="처리 가능 여부"/>
+    <aura:attribute name="isCustomNoti" type="Boolean"  description="이전 출하 대기자에게 알림 여부"/>
+    <aura:attribute name="validMessage" type="String"  description="체크 메세지"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="출하 지시" aura:id="quickAction" hasSelfFooter="{!false}" isSmall="{!true}">
+
+        <aura:if isTrue="{!v.isProcess}">
+            <div class="slds-m-around_x-large slds-text-align_center">
+               <h2>{!v.order.Division__c} 출하 지시를 진행 하시겠습니까?</h2>
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-m-around_x-large slds-text-align_center">
+                   <h2>{!v.validMessage}</h2>
+                </div>
+            </aura:set>
+
+        </aura:if>
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isProcess}">
+                <aura:if isTrue="{!v.order.Division__c == '전수배'}">
+                    <lightning:button aura:id="btnTransSave" label="저장" variant="brand" onclick="{!c.doTransSave}"/>
+                </aura:if>
+                <aura:if isTrue="{!and(v.order.Division__c != '전수배', v.order.IsKeepProcess__c == false)}">
+                    <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}"/>
+                </aura:if>
+                <aura:if isTrue="{!and(v.order.Division__c != '전수배', v.order.IsKeepProcess__c == true)}">
+                    <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doKeepSave}"/>
+                </aura:if>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+
+</aura:component>

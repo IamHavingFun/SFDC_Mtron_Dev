@@ -1,0 +1,25 @@
+/**
+ * Created by ms on 2020-05-28.
+ */
+
+.THIS {
+}
+.THIS li {list-style: none;}
+.THIS a {text-decoration: none;}
+.THIS .mapArea {width:100%; height:770px; background-color:#fff; box-sizing: border-box; padding: 10px 0 0 10px; }
+.THIS .mapBox {width: 680px; margin: 50px auto 0 auto; display: flex;}
+.THIS .mapBox .mapTit {width: 240px; height: 170px; display: inline-block; margin-top: 70px;}
+.THIS .mapBox .mapTit li {width: 100%; height: 16px; margin-bottom: 30px; font-size:24px; display: flex;}
+.THIS .mapBox .mapTit li div {margin:2px 0 0 30px;}
+.THIS .mapBox .mapTit li .map_color1 {width: 68px; height: 22px; margin-top: 5px; background: #000;}
+.THIS .mapBox .mapTit li .map_color2 {width: 68px; height: 22px; margin-top: 5px; background: #eeba8f;}
+.THIS .mapBox .mapTit li .map_color3 {width: 68px; height: 22px; margin-top: 5px; background: #dbe8af;}
+.THIS .mapBox .mapTit li .map_color4 {width: 68px; height: 22px; margin-top: 5px; background: #8aa0d1;}
+.THIS .mapBox .mapTit li .map_color5 {width: 68px; height: 22px; margin-top: 5px; background: #a1c1e6;}
+.THIS .mapBox .mapTit li .map_color6 {width: 68px; height: 22px; margin-top: 5px; background: #c3ba6b;}
+.THIS .mapBox .mapTit li .map_color7 {width: 68px; height: 22px; margin-top: 5px; background: #dbd299;}
+.THIS .mapBox .mapTit li .map_color8 {width: 68px; height: 22px; margin-top: 5px; background: #e0cce4;}
+.THIS .mapBox .mapTit li .map_color9 {width: 68px; height: 22px; margin-top: 5px; background: #c8a9d3;}
+
+
+.THIS .mapBox .mapImg {width: 430px; height: 700px; display: inline-block; background: url(/resource/img_map) center center no-repeat;}

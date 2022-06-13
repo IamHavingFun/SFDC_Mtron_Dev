@@ -1,0 +1,117 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultGuidedSelling2
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일]고객상담 : Step2 : Guided Selling Step2
+  *                : 맟춤형 추천(제품 시리즈 선택)
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesCustomerConsult"
+                description="lsMSalesCustomerConsultGuidedSelling2">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- ============================================================================
+    ==== Header 영역
+    ============================================================================= -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">고객상담</article>
+        <article class="TopRright"></article>
+    </header>
+    <!-- ============================================================================
+    ==== Body 영역
+    ============================================================================= -->
+    <div id="container">
+        <article class="content">
+            <!-- ============================================================================
+            ==== 스텝 영역
+            ============================================================================= -->
+            <div class="stepBox">
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step_check.png'}" alt=""/>
+                    <div class="txt on">Step1</div>
+                </div>
+                <div class="line on"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step2_on.png'}" alt=""/>
+                    <div class="txt on">Step2</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step3.png'}" alt=""/>
+                    <div class="txt">Step3</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step4.png'}" alt=""/>
+                    <div class="txt">Step4</div>
+                </div>
+            </div>
+            <!-- ============================================================================
+            ==== 선택사항 영역
+            ============================================================================= -->
+            <ul class="btn_tab mt70">
+                <li>{!v.mobileStepVO.bizData.prodSerRecStd.FarmingForm__c}</li>
+                <aura:if isTrue="{!not(empty(v.mobileStepVO.bizData.prodSerRecStd.FarmingSize__c))}">
+                    <li>{!v.mobileStepVO.bizData.prodSerRecStd.FarmingSize__c}</li>
+                </aura:if>
+            </ul>
+            <!-- ============================================================================
+            ==== 주업무 영역
+            ============================================================================= -->
+            <section class="PSelect3Box">
+                <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+                    <aura:iteration items="{!v.recordList}" var="vo" indexVar="idx" start="0">
+                        <article class="{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Id == vo.productSeries.Id ? 'PSelect3 box_select' : 'PSelect3'}"
+                                 aura:id="productSeriesItem"
+                                 data-value="{!vo.productSeries.Id}"
+                                 onclick="{!c.doSelectProductSeries}">
+                            <div class="left_img">
+                                <img src="{! '/' + vo.sitePathPrefix + '/sfc/servlet.shepherd/version/download/' + vo.contentVersion.Id}"/>
+                            </div>
+                            <div class="right_txt">
+                                <!-- 20200803: Series__c 에서 Name으로 변경 -->
+                                <span class="tit">{!vo.productSeries.Name}</span>
+                                <ul>
+                                    <li>
+                                        <div class="name">마력(PS)</div>
+                                        <div class="name_right">:</div>
+                                        <div class="txt">{!vo.productSeries.HorsePower__c}</div>
+                                    </li>
+                                    <li>
+                                        <div class="name">중량(KG)</div>
+                                        <div class="name_right">:</div>
+                                        <div class="txt">{!vo.productSeries.Weight__c}</div>
+                                    </li>
+                                    <li>
+                                        <div class="name">전장(MM)</div>
+                                        <div class="name_right">:</div>
+                                        <div class="txt">{!vo.productSeries.Length__c}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </article>
+                    </aura:iteration>
+                </aura:if>
+            </section>
+            <!-- ============================================================================
+            ==== 하단 버튼 영역
+            ============================================================================= -->
+            <section class="bbtnBox">
+                <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+            </section>
+        </article>
+    </div>
+</aura:component>

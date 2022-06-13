@@ -1,0 +1,86 @@
+<!--
+  * @filename       : i2SEMA_NotificationGroupList
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-05-06 오전 10:40
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-05-06 오전 10:40     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_NotificationGroupList"
+                extends="c:i2SEMA_Base"
+                controller="i2SEMA_NotificationGroupList"
+                access="global"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+    <aura:attribute name="recordId"         type="String"  access="global"/>
+    <aura:attribute name="totalCount"       type="Integer" access="global" default="0" description="전체 조회건수"/>
+    <aura:attribute name="totalPage"        type="Integer" access="global" default="0" description="전체 페이지 건수"/>
+    <aura:attribute name="pages"            type="Integer[]" access="global" default="[]" description="화면에 표현되는 페이지 목록"/>
+    <aura:attribute name="pageBlockSize"    type="Integer" access="global" default="5" description="화면에 표현되는 페이지 목록 건수"/>
+    <aura:attribute name="pageNumber"       type="Integer" access="global" default="1" description="페이지 번호"/>
+    <aura:attribute name="dataSize"         type="Integer" access="global" default="5" description="페이지 별 데이터 건수"/>
+
+    <aura:attribute name="notificationGroups" type="NotificationGroup__c[]" access="global" default="[]" description="조회 데이터"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <lightning:card variant="base" class="slds-card_boundary">
+        <!-- Title -->
+        <aura:set attribute="title">
+            <div class="slds-grid slds-page-header forceRelatedListCardHeader" style="background:rgb(243, 242, 242)">
+                <lightning:icon iconName="standard:email_chatter" size="small"/>
+                <b class="slds-card__header-title slds-truncate slds-m-left--medium">Notification Group</b>
+            </div>
+        </aura:set>
+        <!-- Body Table -->
+        <div>
+            <table class="slds-table slds-table--cell-buffer slds-table--bordered">
+                <thead>
+                    <tr>
+                        <th><lightning:formattedText value="Name"/></th>
+                        <th><lightning:formattedText value="Request Date"/></th>
+                        <th><lightning:formattedText value="Total"/></th>
+                        <th><lightning:formattedText value="Pending"/></th>
+                        <th><lightning:formattedText value="Requested"/></th>
+                        <th><lightning:formattedText value="Completed"/></th>
+                        <th><lightning:formattedText value="Failed"/></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.notificationGroups}" var="group">
+                        <tr id="{!group.Id}" onclick="{!c.navigate}" style="cursor:pointer;">
+                            <td><a>{!group.Name}</a></td>
+                            <td>{!group.IF_RequestedDate__c}</td>
+                            <td>{!group.ru_NumberOfTotalNotification__c}</td>
+                            <td>{!group.ru_NumberOfTotalPending__c}</td>
+                            <td>{!group.ru_NumberOfTotalRequests__c}</td>
+                            <td>{!group.ru_NumberOfTotalComplete__c}</td>
+                            <td>{!group.ru_NumberOfTotalFail__c}</td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+
+            <!-- Paging -->
+            <div class="slds-align_absolute-center slds-m-top--medium slds-m-bottom--medium">
+                <lightning:button label="Prev" iconName="utility:chevronleft" iconPosition="left"
+                                  onclick="{!c.previous}" disabled="{!v.pageNumber == 1}"/>
+                <aura:iteration items="{!v.pages}" var="page">
+                    <lightning:button label="{!page}" variant="{!v.pageNumber == page ? 'brand' : 'Neutral'}" value="{!page}"
+                                      onclick="{!v.pageNumber == page ? '' : c.move}"/>
+                </aura:iteration>
+                <lightning:button label="Next" iconName="utility:chevronright" iconPosition="right"
+                                  onclick="{!c.next}" disabled="{!equals(v.totalPage,v.pageNumber)}"/>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,55 @@
+<!--
+  * @filename      : orderApprovalRequestQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-04-16 오후 1:32
+  * @group         :
+  * @group-content :
+  * @description   : 파트너 주문 승인 요청.
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 1:32    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:actionOverride"
+                controller="OrderApprovalRequestQa"
+                description="orderApprovalRequestQa">
+
+    <aura:attribute name="orderRecord" type="Order__c" default="{}" description="Order__c SObject"/>
+    <aura:attribute name="requestComment" type="String" default=""/>
+    <aura:attribute name="isApprovalRequest" type="Boolean" default="false" description="승인 가능 여부 체크."/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        textarea {
+            height:200px;
+        }
+    </aura:html>
+
+    <c:lacComQuickAction title="주문 제출" aura:id="quickAction" isSmall="{#true}" hasSelfFooter="{#false}">
+        <aura:if isTrue="{!v.isApprovalRequest}">
+            <div class="slds-text-align_center">
+                <div class="slds-p-around_medium">
+                    <lightning:badge label="요청 내용" />
+                    <br/><br/>
+                    <lightning:TextArea value="{!v.requestComment}" label="cc" variant="label-hidden"/>
+                </div>
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-text-align_center">본사 주문 검토중이거나 완료된 건입니다.</div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isApprovalRequest}">
+                <lightning:button aura:id="btnSave" label="제출" variant="brand" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

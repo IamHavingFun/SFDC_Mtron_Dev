@@ -1,0 +1,120 @@
+<!--
+  * @filename      : assetManageforAccountQa
+  * @projectname   :
+  * @author        : Choi SeongWon
+  * @date          : 2020-05-14 오전 09:05
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-05-14 오전 09:05    Choi SeongWon         Create
+    0.2     2020-07-08 오전 09:00     SEOKHO LEE           Modify
+ -->
+
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                controller="AssetManageforAccountQa"
+                description="assetManageforAccountQa">
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComTableEvent" action="{!c.util_Move}"/>
+    <aura:attribute name="labelMap" type="Map" description=""/>
+    <aura:attribute name="customerData" type="AssetManageforAccountQa.CustomerData" description="고객 + 자산 정보"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="자산정보 관리" aura:id="Action" isWide="{#true}" hasSelfFooter="{#false}">
+
+        <!--검색 영역-->
+        <div class="slds-form--inline slds-m-bottom_medium" >
+            <lightning:input label="{!v.labelMap.Asset.name}" type="search" value="{!v.reqData.name}"/>
+            <lightning:button label="조회" variant="brand" onclick="{!c.doSearch}"/>
+        </div>
+
+
+        <c:lacComTableFrame aura:id="table" isPaging="{!true}" simple="{!true}">
+                <c:lacComTable aura:id="dataTable" >
+
+                <colgroup>
+                    <col width="5%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="20%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                </colgroup>
+                <thead>
+                  <tr>
+                      <c:lacComTh>선택</c:lacComTh>
+                      <c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>
+                      <c:lacComTh title="{!v.labelMap.Asset.brand__c}">{!v.labelMap.Asset.brand__c}</c:lacComTh>
+                      <c:lacComTh title="{!v.labelMap.Product2.name}">{!v.labelMap.Product2.name}</c:lacComTh>
+                      <c:lacComTh title="{!v.labelMap.Asset.inventorytype__c}">{!v.labelMap.Asset.inventorytype__c}</c:lacComTh>
+                      <c:lacComTh title="{!v.labelMap.Asset.customer__c}">{!v.labelMap.Asset.customer__c}</c:lacComTh>
+                      <c:lacComTh title="{!v.labelMap.Asset.dealer__c}">{!v.labelMap.Asset.dealer__c}</c:lacComTh>
+                  </tr>
+                </thead>
+
+                <tbody>
+                <aura:iteration items="{!v.recordList}" var="record">
+                    <tr>
+                        <c:lacComTd>
+                            <lightning:input aura:id="mycheck" label="" type="checkbox" onchange="{!c.onCheck}" value="{!record}"
+                                             disabled="{!
+                                                 or(
+                                                    and(
+                                                        equals(record.Brand__c, 'LS'),
+                                                        or(
+                                                            not(empty(record.Customer__c)),
+                                                            notequals(v.customerData.account.Dealer__c,record.Dealer__c)
+                                                        )
+                                                    ),
+                                                    and(
+                                                        notequals(record.Brand__c, 'LS'),
+                                                        or(
+                                                            not(empty(record.Customer__c)),
+                                                            and(
+                                                                notequals(v.customerData.account.Dealer__c,record.Dealer__c),
+                                                                not(empty(record.Dealer__c))
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                                ? true : false}"
+                            />
+                        </c:lacComTd>
+                        <c:lacComTd title="{!record.Name}">
+                            {!record.Name}
+                        </c:lacComTd>
+                        <c:lacComTd title="{!record.Brand__c}">{!record.Brand__c}</c:lacComTd>
+                        <c:lacComTd title="{!record.Product2.Name}">{!record.Product2.Name}</c:lacComTd>
+                        <c:lacComTd title="{!record.InventoryType__c}">{!record.InventoryType__c}</c:lacComTd>
+                        <c:lacComTd title="{!record.Customer__r.Name}">{!record.Customer__r.Name}</c:lacComTd>
+                        <c:lacComTd title="{!record.Dealer__r.Name}">{!record.Dealer__r.Name}</c:lacComTd>
+                        </tr>
+                </aura:iteration>
+                </tbody>
+
+            </c:lacComTable>
+        </c:lacComTableFrame>
+        <div class="slds-text-align_center">
+            <span style="color: red; font-weight: bold">※ 참조사항<br/>
+                1. LS 브랜드 자산은 자산을 등록하는 대리점에 속한 자산이고, 실고객이 없는 경우 등록 가능합니다.<br/>
+                2. 타 브랜드 자산은 다른 대리점에 등록되어 있지 않고, 실고객이 없는 경우 등록 가능합니다.
+            </span>
+        </div>
+
+        <aura:set attribute="footer">
+            <lightning:button name="button" aura:id="btnSave" variant="brand" label="저장" onclick="{!c.doSave}"
+                              disabled="{!empty(v.customerData.asset)}"/>
+        </aura:set>
+
+    </c:lacComQuickAction>
+</aura:component>

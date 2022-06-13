@@ -1,0 +1,26 @@
+<!--
+ - Created by MS on 2020-07-02.
+ -->
+
+<aura:component description="lsMSalesAccountDetailOpptyList">
+
+    <aura:attribute name="recordList"  type="List" description="DataList"/>
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <div class="row_board_sale mt20" id="opportunity">
+        <ul>
+            <aura:iteration items="{!v.recordList}" var="rec" indexVar="idx">
+                <li data-recordid="{!rec.Id}" onclick="{!c.doMoveNextPage}">
+                    <div class="tit">관심모델 : <b>{!rec.InterestModel__r.Name}</b><span class="bar"></span>최근수정일자 : <lightning:formattedDateTime value="{!rec.LastModifiedDate}"/></div>
+                    <div class="stxt">진행상태 : <b>{!rec.StageName}</b><span class="bar"></span><span class="gtxt">고객제안가격 : <lightning:formattedNumber value="{!rec.Amount}"/></span></div>
+                    <div class="stxt">프로모션 : <b>{!rec.Campaign.Name}</b></div>
+                </li>
+            </aura:iteration>
+            <aura:if isTrue="{!v.recordList.length == 0}">
+                <li>판매기회(상담)건이 없습니다.</li>
+            </aura:if>
+        </ul>
+    </div>
+
+</aura:component>

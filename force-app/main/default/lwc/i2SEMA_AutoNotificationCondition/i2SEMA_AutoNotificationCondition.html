@@ -1,0 +1,234 @@
+<!--
+  * @filename       : i2SEMA_AutoNotificationCondition
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-14 오전 10:18
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오전 10:18     i2max_byeon.jw       Create
+ -->
+<template>
+    <!-- Condition Alias -->
+    <div class="slds-grid">
+        <b>{condition.Alias__c}</b>
+        <p onclick={removeCondition} style="color:#7F7E76;cursor:pointer;padding-left:1rem;">Remove</p>
+    </div>
+    <!-- Remove Icon -->
+    <div class="removeBtn slds-col--bump-left" onclick={removeCondition}>
+
+    </div>
+
+    <div class="rowHolder">
+        <!-- Field__c -->
+        <div class="item">
+            <c-i2-s-e-m-a_-search-drop-box drop-box-label="Field"
+                                   drop-box-api="Field__c"
+                                   drop-box-items={fields}
+                                   drop-box-value={condition.Field__c}
+                                   ondropboxselect={handleDropBoxEvent}
+                                   disabled={emptyFields}>
+            </c-i2-s-e-m-a_-search-drop-box>
+        </div>
+        <!-- CompareWith__c -->
+        <div class="item">
+            <lightning-combobox label="Compare With"
+                                value={condition.CompareWith__c}
+                                options={compareWithOptions}
+                                onchange={handleCompareChange}
+                                disabled={emptyFields}>
+            </lightning-combobox>
+        </div>
+        <!-- Operator__c -->
+        <div class="item">
+            <lightning-combobox label="Operator"
+                                value={condition.Operator__c}
+                                options={operationOptions}
+                                onchange={handleOperatorChange}
+                                disabled={emptyFields}>
+            </lightning-combobox>
+        </div>
+
+        <div class="item">
+            <!-- CompareField__c -->
+            <template if:true={compareFieldRender}>
+                <c-i2-s-e-m-a_-search-drop-box drop-box-label="Compare Field"
+                                       drop-box-api="CompareField__c"
+                                       drop-box-items={compareFields}
+                                       drop-box-value={condition.CompareField__c}
+                                       ondropboxselect={handleDropBoxEvent}
+                                       disabled={emptyFields}>
+                </c-i2-s-e-m-a_-search-drop-box>
+            </template>
+
+            <template if:true={valueRender}>
+                <!-- BOOLEAN -->
+                <template if:true={BOOLEAN_Render}>
+                    <lightning-input label="Checked"
+                                     type="checkbox"
+                                     checked={condition.BOOLEAN__c}
+                                     name="BOOLEAN__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- CURRENCY -->
+                <template if:true={CURRENCY_Render}>
+                    <lightning-input label="Currency"
+                                     type="number"
+                                     formatter="currency"
+                                     step="0.01"
+                                     value={condition.CURRENCY__c}
+                                     name="CURRENCY__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- DATETIME -->
+                <template if:true={DATETIME_Render}>
+                    <lightning-input label="Date"
+                                     type="datetime"
+                                     value={condition.DATETIME__c}
+                                     name="DATETIME__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- DATE -->
+                <template if:true={DATE_Render}>
+                    <lightning-input label="Date"
+                                     type="date"
+                                     value={condition.DATE__c}
+                                     name="DATE__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- TIME -->
+                <template if:true={TIME_Render}>
+                    <lightning-input label="Time"
+                                     type="time"
+                                     value={condition.TIME__c}
+                                     name="TIME__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- EMAIL -->
+                <template if:true={EMAIL_Render}>
+                    <lightning-input label="Email"
+                                     type="text"
+                                     value={condition.EMAIL__c}
+                                     name="EMAIL__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- DOUBLE -->
+                <template if:true={DOUBLE_Render}>
+                    <lightning-input label="Double"
+                                     type="number"
+                                     step="0.01"
+                                     value={condition.DOUBLE__c}
+                                     name="DOUBLE__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- LONG -->
+                <template if:true={LONG_Render}>
+                    <lightning-input label="Long"
+                                     type="number"
+                                     step="0.01"
+                                     value={condition.LONG__c}
+                                     name="LONG__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- INTEGER -->
+                <template if:true={INTEGER_Render}>
+                    <lightning-input label="Integer"
+                                     type="number"
+                                     step="0.01"
+                                     value={condition.INTEGER__c}
+                                     name="INTEGER__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- PERCENT -->
+                <template if:true={PERCENT_Render}>
+                    <lightning-input label="Percent"
+                                     type="number"
+                                     formatter="percent"
+                                     step="0.01"
+                                     value={condition.PERCENT__c}
+                                     name="PERCENT__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- PHONE -->
+                <template if:true={PHONE_Render}>
+                    <lightning-input label="Phone"
+                                     type="tel"
+                                     value={condition.PHONE__c}
+                                     name="PHONE__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- PICKLIST -->
+                <template if:true={PICKLIST_Render}>
+                    <lightning-input label="Text"
+                                     type="text"
+                                     value={condition.PICKLIST__c}
+                                     name="PICKLIST__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- STRING -->
+                <template if:true={STRING_Render}>
+                    <lightning-input label="Text"
+                                     type="text"
+                                     value={condition.STRING__c}
+                                     name="STRING__c"
+                                     onchange={handleFieldValue}
+                                     disabled={emptyFields}>
+                    </lightning-input>
+                </template>
+
+                <!-- REFERENCE -->
+                <template if:true={REFERENCE_Render}>
+                    <lightning-record-edit-form object-api-name={objectType}>
+                        <lightning-input-field field-name={condition.Field__c}
+                                               value={condition.REFERENCE__c}
+                                               name="REFERENCE__c"
+                                               onchange={handleFieldValue}>
+                        </lightning-input-field>
+                    </lightning-record-edit-form>
+                </template>
+            </template>
+        </div>
+    </div>    
+</template>

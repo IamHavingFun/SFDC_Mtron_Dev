@@ -1,0 +1,48 @@
+<!--
+  * @filename      : lacComTable
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes">
+
+    <aura:attribute name="id" type="String" default="table"/>
+    <aura:attribute name="isNotDefaultTableBorder" type="Boolean" default="false" description="border 여부"/>
+    <aura:attribute name="style" type="String" default=""/>
+    <aura:attribute name="hasScroll" type="Boolean" default="false" description="스크롤 여부"/>
+    <aura:attribute name="fixedHeader" type="Boolean" default="false" description="Y 스크롤 헤더 고정 여부"/>
+    <aura:attribute name="left" type="Integer"/>
+    <aura:attribute name="scrollHeight" type="String" description="Y 스크롤 높이(원하는 값만 입력 ex: 1px)"/>
+    <aura:attribute name="scrollLeft" type="Integer"/>
+
+    <!-- 내부적으로만 사용 -->
+    <aura:attribute name="leftCol" type="List" description="style이 지정 될 컬럼"/>
+    <aura:attribute name="header" type="List" description="style이 지정 될 header"/>
+
+    <aura:if isTrue="{!v.hasScroll}">
+        <!-- Has Scroll -->
+        <div class="slds-scrollable--y" style="{#'height:'+v.scrollHeight}" onscroll="{!v.fixedHeader ? c.doScrollY : ''}">
+            <div class="slds-scrollable_x" onscroll="{!!empty(v.left) ? c.doScrollX : ''}">
+                <table aura:id="dataTable" id="{#v.id}" style="{#v.style}" class="{!'slds-table slds-table_cell-buffer slds-table_fixed-layout ' + (v.isNotDefaultTableBorder ? '' : ' slds-table_bordered')}">
+                    {!v.body}
+                </table>
+            </div>
+        </div>
+        <!-- None Scroll -->
+        <aura:set attribute="else">
+            <table aura:id="dataTable" id="{#v.id}" style="{#v.style}" class="{!'slds-table slds-table_cell-buffer slds-table_fixed-layout ' + (v.isNotDefaultTableBorder ? '' : ' slds-table_bordered')}">
+                {!v.body}
+            </table>
+        </aura:set>
+    </aura:if>
+</aura:component>

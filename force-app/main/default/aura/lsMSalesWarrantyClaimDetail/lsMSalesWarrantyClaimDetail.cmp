@@ -1,0 +1,112 @@
+<!--
+* @filename      : lsMSalesWarrantyClaimDetail
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-06-19 오후 3:01 
+* @group         :
+* @group-content :
+* @description   : [모바일] LWS 클레임 상세 조회
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+   0.1     2020-06-19 오후 3:01     SEOKHO LEE          Create
+   0.2     2020-07-09 오후 11:02    i2max_park          init 데이터 표시 로직 변경
+   0.3     2020-07-17 오후 10:56    i2max_park          init 데이터 표시 로직 변경
+-->
+<aura:component
+        extends="c:lsMSalesBase"
+        implements="force:appHostable,forceCommunity:availableForAllPageTypes,force:hasRecordId,lightning:isUrlAddressable"
+        description="LsMSalesWarrantyClaimDetail"
+        controller="LsMSalesWarrantyClaimDetail">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="detailData" type='LsMSalesWarrantyClaimDetail.DetailData' description="LWC클레임 WrapperClass"/>
+    <aura:attribute name="labelMap" type="Map" description="label관련 data를 담는 attribute"/>
+    <aura:attribute name="editFlag" type="Boolean" Default="{!false}" description="이미지 편집 여부"/>
+    <aura:attribute name="filetype" type="List" default="['.png', '.jpg', '.jpeg']" />
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .w120 {
+        width: 120px !important;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">LWS 클레임 상세 조회</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 타이틀영역 -->
+        <!--        <article class="top_grayBox">
+                    클레임 사진 등록 기능입니다.
+                </article>-->
+        <!-- //상단 타이틀영역 -->
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name w120">고객명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.detailData.warrantyClaim.Customer__r.Name} ({!v.detailData.warrantyClaim.Customer__r.fm_Mobile__c})</span>
+                </li>
+
+                <li>
+                    <span class="name w120">모델명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">[{!v.detailData.warrantyClaim.ProductId__r.ProductType__c}] {!v.detailData.warrantyClaim.ProductId__r.Name}({!v.detailData.warrantyClaim.fm_ProductCode__c})</span>
+                </li>
+                <li>
+                    <span class="name w120">{!v.labelMap.WarrantyClaim__c.assetid__c}</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.detailData.warrantyClaim.AssetId__r.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <!-- 2020-07-17 오후 10:56 변경 -->
+        <article class="content">
+            <section class="lwsImgBox">
+                <aura:iteration items="{!v.detailData.contentVersions}" var="record" indexVar="idx2">
+                    <div class="lwsTitImg">
+                        <div class="lwsTit">{!record.LWSImageType__c}</div>
+                        <aura:if isTrue="{! v.editFlag}">
+                            <lightning:fileUpload label=""
+                                                  title="{!(idx2+1) + '/' + record.LWSImageType__c + '/' + record.Id}"
+                                                  multiple="false"
+                                                  class="{!record.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.detailData.warrantyClaim.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="{!'p' + (idx2+1)}"
+                            />
+                        </aura:if>
+                        <div class="lwsImg">
+                            <aura:if isTrue="{!notequals(record.Title, null)}">
+                                <img src="{!'/Partner/sfc/servlet.shepherd/document/download/' + record.ContentDocumentId}"/>
+                            </aura:if>
+                        </div>
+                    </div>
+                </aura:iteration>
+            </section>
+
+            <section class="bbtnBox">
+                <aura:if isTrue="{! v.editFlag}">
+                    <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="목록으로" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                    </aura:set>
+                </aura:if>
+                <lightning:button label="편집" class="bbtn btn_50" onclick="{!c.doSave}"/>
+            </section>
+        </article>
+        <!-- 2020-07-09 오후 11:02 변경 -->
+    </div>
+</aura:component>

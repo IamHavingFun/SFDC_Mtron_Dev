@@ -1,0 +1,125 @@
+<!--
+  * @filename      : lsMSalesEFormQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-06-23 오후 4:19
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-23 오후 4:19    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="LsMSalesEFormQa"
+                description="lsMSalesEFormQa">
+
+    <aura:attribute name="contract" type="Contract__c" access="public" default="{'sobjectType':'Contract__c'}" description=""/>
+    <aura:attribute name="dealerSign" type="String"/>
+    <aura:attribute name="dealerPad" type="Object"/>
+    <aura:attribute name="customerSign" type="String"/>
+    <aura:attribute name="customerPad" type="Object"/>
+    <aura:attribute name="signList" type="List" default=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <ltng:require styles="{!join(','
+							, $Resource.signature + '/docs/css/signature-pad.css')}"
+
+                  scripts="{!join(','
+				  			, $Resource.signature + '/docs/js/signature_pad.umd.js')}"
+                  afterScriptsLoaded="{!c.scriptsLoaded}" />
+
+    <aura:html tag="style">
+        .slds-modal__container {
+            margin: 0 auto;
+            width: 90% !important;
+            <!--height: 90% !important;-->
+            max-width: 70rem !important;
+            min-width: 20rem;
+        }
+        .slds-p-around--medium {
+            padding: 0rem !important;
+        }
+    </aura:html>
+
+    <div class="cLsMSalesThemeLayout">
+        <header class="modal_header">
+            <article class="left"></article>
+            <article class="center">
+                <div class="tit">매매계약서 생성</div>
+            </article>
+            <article class="right"></article>
+        </header>
+
+        <article class="modal_body">
+            <section class="body_contBox">
+                <!-- 계약정보 -->
+                <label class="form_tit" style="display:block;">계약정보</label>
+                <div class="slds-text-align_center">
+                    {!v.resData.Contract.fm_CustomerName}({!v.resData.Contract.fm_CustomerMobile}) 고객님의<br/>
+                    <strong style="color: #0081C4">{!v.resData.Contract.ProductType1}&nbsp;{!v.resData.Contract.Model1} (외 {!v.resData.Contract.ContactLineItemCount})</strong>의<br/>
+                    매매 계약서가 생성됩니다.<br/><br/>
+                </div>
+
+                <!-- 개인정보제공 동의 -->
+                <span class="slds-list_horizontal mb40">
+                    <label class="form_tit" style="display:block;">서류대행 작업을 위한 개인정보제공에 동의함.</label>
+                    <span style="margin-top: 33px;">
+                        <lightning:input aura:id="isCUPI" label="" type="checkbox" variant="label-hidden" value="{!v.resData.Contract.isCUPI}"/>
+                    </span>
+                </span>
+
+                <!-- 주민 등록 번호 -->
+                <div class="mt20">
+                    <aura:if isTrue="{!v.resData.Contract.isCorporationAccount}">
+                        <label class="form_tit">사업자 등록 번호</label>
+                        <lightning:input aura:id="bizNo" label="" class="input-bizNo" type="text" minlength="3" maxlength="3"/>
+                        <span class="bar-socialNo">-</span>
+                        <lightning:input aura:id="bizNo2" label="" class="input-bizNo2" type="text" minlength="2" maxlength="2"/>
+                        <span class="bar-socialNo">-</span>
+                        <lightning:input aura:id="bizNo3" label="" class="input-bizNo3" type="text" minlength="5" maxlength="5"/>
+
+                        <aura:set attribute="else">
+                            <label class="form_tit">주민 등록 번호</label>
+                            <span class="slds-list_horizontal">
+                                <lightning:input aura:id="socialNo" label="" class="input-socialNo" type="text" value="{!v.resData.Contract.birthdate}" minlength="6" maxlength="6"/>
+                                <span class="bar-socialNo">-</span>
+                                <lightning:input aura:id="socialNo2" label="" class="input-socialNo2" type="text" minlength="7" maxlength="7"/>
+                            </span>
+                        </aura:set>
+                    </aura:if>
+                </div>
+
+                <!-- Sign -->
+                <article aura:id="sizeCanvas" class="content">
+                    <div>
+                        <label class="form_tit" style="display:block;">대리점 주 서명</label>
+                        <canvas aura:id="dealerCanvas" style="border:1px solid black"></canvas>
+                    </div>
+
+                    <div>
+                        <label class="form_tit" style="display:block;">고객 서명</label>
+                        <canvas aura:id="customerCanvas" style="border:1px solid black"></canvas>
+                    </div>
+                </article>
+
+
+                <section class="bbtnBox mb60">
+                    <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                    <lightning:button label="전자계약서 서명" class="bbtn btn_50" onclick="{!c.doSave}"/>
+                </section>
+            </section>
+
+
+        </article>
+    </div>
+</aura:component>

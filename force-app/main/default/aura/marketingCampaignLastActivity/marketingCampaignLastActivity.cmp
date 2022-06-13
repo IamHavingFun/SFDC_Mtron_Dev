@@ -1,0 +1,72 @@
+<!--
+  * @filename      : marketingCampaignLastActivity
+  * @author        : I2MAX
+  * @date          : 2021-02-23 오후 1:43
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-02-23 오후 1:43         I2MAX          Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,flexipage:availableForAllPageTypes"
+                description="marketingCampaignLastActivity" 
+                controller="MarketingCampaignLastActivityController">
+
+    <aura:attribute name="campaigns" type="List" />
+    <aura:attribute name="totalPrice" type="Decimal" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComHeader title="지난 캠페인 활동" type="">지난 캠페인 활동</c:lacComHeader>
+    <c:lacComDetailCard isFooter="{#false}">
+        <lightning:layout horizontalAlign="center" class="slds-m-top_medium c-margin-bottom15">
+            <lightning:layoutItem size="2" class="slds-align-middle slds-m-right__large">
+                <label for="division" class="slds-m-top_medium">총 투입 비용</label>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="8">
+                <lightning:formattedNumber style="currency" currencyCode="KRW" value="{!v.totalPrice}" />
+            </lightning:layoutItem>
+        </lightning:layout>
+        <aura:iteration items="{!v.campaigns}" var="Campaign">
+        <lightning:card class="card-border">
+            <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                <lightning:layoutItem size="2" class="slds-align-middle slds-m-right__large">
+                    <label for="division" class="slds-m-top_medium">활동명</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="8">
+                     <label for="division" class="slds-m-top_medium">{!Campaign.Name}</label>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                <lightning:layoutItem size="2" class="slds-align-middle slds-m-right__large">
+                    <label for="division" class="slds-m-top_medium">투입 비용</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="8">
+                    <label for="division" class="slds-m-top_medium">
+                        <lightning:formattedNumber value="{!Campaign.ActualCost__c}" style="currency" currencyCode="KRW" /></label>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                <lightning:layoutItem size="2" class="slds-align-middle slds-m-right__large">
+                    <label for="division" class="slds-m-top_medium">운영 일자</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="8">
+                    <lightning:formattedDateTime value="{!Campaign.StartDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                     minute="2-digit" hour12="false"/> ~
+                    <lightning:formattedDateTime value="{!Campaign.EndDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                     minute="2-digit" hour12="false"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:card>
+        </aura:iteration>
+        <aura:if isTrue="{!or((empty(v.campaigns)), v.campaigns.length == 0)}">
+            영업활동 이력이 없습니다.
+        </aura:if>
+    </c:lacComDetailCard>
+</aura:component>

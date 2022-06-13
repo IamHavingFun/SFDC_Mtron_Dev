@@ -1,0 +1,14 @@
+.THIS {
+}
+
+.THIS .bbtnBox {
+    padding: 40px 50px 40px 50px;
+    background: #f1f1f1; 
+}
+.THIS .bbtn,
+.THIS .bbtn_white {
+    margin-top: 0 !important;
+}
+.THIS .slds-textarea {
+    min-height: 150px !important;
+}

@@ -1,0 +1,13 @@
+/**
+ * Created by MS on 2020-06-30.
+ */
+
+.THIS td,.THIS th{
+    font-size: 15px !important;
+}
+.THIS .leftBorder {
+    border-left:1px solid #d4d4d4;
+    padding-left:8px !important;
+}
+.THIS .sticky-table-wrap {max-height:290px; overflow-y:auto;}
+.THIS .sticky-table-wrap .slds-table thead th, .THIS .sticky-table-wrap .slds-table tbody th {position:sticky; top:0; background:white;z-index:2;}

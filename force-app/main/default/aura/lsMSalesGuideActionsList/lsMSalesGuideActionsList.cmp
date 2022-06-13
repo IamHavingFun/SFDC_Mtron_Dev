@@ -1,0 +1,94 @@
+<!--
+  * @filename      : lsMSalesGuideActionsList
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-03-27
+  * @group         :
+  * @group-content :
+  * @description   : GuideActionsList
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-03-27     	i2max          Create
+ -->
+
+<aura:component extends="c:lacComBase"
+                controller="GuideActionsList"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="guideActionsList">
+
+    <aura:attribute name="targetObject" type="String" default="Home" required="true" description="대상 개체"/>
+    <aura:attribute name="recordId" type="String" description="대상 개체 레코드 ID"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:dependency resource="markup://force:editRecord" type="EVENT" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+
+    <c:lacComService aura:id="lacComService"/>
+    <aura:html tag="style">
+        <!-- 커뮤니티에서는 좌측 공지사항 위치와 맞추기 위해서 TOP 조정 처리 필요 -->
+        <aura:if isTrue="{!v.isCommunity}">
+            .cGuideActionsList {
+            margin-top: 12px;
+            }
+            a {
+                vertical-align: ;
+            }
+        </aura:if>
+    </aura:html>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">가이드 액션 목록</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div class="forceChatterRecommendationListWidget forceChatterRecommendations forceChatterRelatedCardContainer loaded" data-aura-class="forceChatterRecommendationListWidget forceChatterRecommendations forceChatterRelatedCardContainer">
+
+        <article class="rec-widget slds-card-wrapper" >
+
+<!--
+            <div class="einstein-header" >
+                <h2 class="slds-text-heading&#45;&#45;small header" title="Guided Actions" >Guided Actions</h2>
+                <span class="uiImage" data-aura-class="uiImage">
+                    <img src="/img/einstein/einstein_header_icon.svg" class="header-icon" alt=""/>
+                </span>
+            </div>
+-->
+
+            <div class="cuf-body forceChatterRecommendationListCard" data-aura-class="forceChatterRecommendationListCard">
+                <div class="uiAbstractList" data-aura-class="uiAbstractList">
+                    <aura:if isTrue="{!not(empty(v.recordList))}">
+                        <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                            <lightning:card iconName="standard:announcement">
+                                <aura:set attribute="title">
+                                    <!--<a data-recordid="{!record.task.Id}" onclick="{!c.doNaviDetail}">{!record.task.Subject}</a>-->
+                                    {!record.task.Subject}
+                                    <aura:if isTrue="{!not(empty(record.task.ActivityDate))}">
+                                        : <lightning:formattedDateTime value="{!record.task.ActivityDate}" year="numeric" month="numeric" day="numeric" hour12="false"/>
+                                    </aura:if>
+                                </aura:set>
+                                <aura:set attribute="actions">
+                                    <aura:if isTrue="{!record.task.OwnerId == v.initData.currentUserId}">
+                                        <lightning:input type="checkbox-button" label="완료체크" variant="label-hidden" value="{!idx}" checked="{!record.task.IsClosed}" onchange="{!c.doCheckedComplete}"/>
+                                    </aura:if>
+                                </aura:set>
+                                <div class="slds-box slds-box_small">
+                                    <lightning:formattedRichText value="{!record.content}"/>
+                                </div>
+                            </lightning:card>
+                        </aura:iteration>
+                        <aura:set attribute="else">
+                            {!$Label.c.GuideAction_NoDataFound}
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </div>
+        </article>
+
+    </div>
+
+</aura:component>

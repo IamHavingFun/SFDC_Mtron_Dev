@@ -1,0 +1,55 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultSwiper
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-07-03
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-07-03     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                description="lsMSalesCustomerConsultSwiper">
+
+    <aura:attribute name="productContentsData" type="LsMSalesProductVO.ProductContentsData" description="productContentsData"/>
+    <aura:attribute name="sitePathPrefix" type="String" description="cummunity site prefix"/>
+
+    <ltng:require styles="{!$Resource.publish + '/css/swiper.min.css'}"
+                  scripts="{!$Resource.publish + '/js/swiper.min.js'}"
+                  afterScriptsLoaded="{!c.scriptsLoaded}"/>
+
+    <aura:if isTrue="{!not(empty(v.productContentsData))}">
+        <article class="ps_result_product slds-m-around_xxx-small">
+            <!-- Swiper -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <aura:if isTrue="{!and(not(empty(v.productContentsData.contentVersions)), v.productContentsData.contentVersions.length > 0)}">
+                        <aura:iteration items="{!v.productContentsData.contentVersions}" var="contentVersion">
+                            <div class="swiper-slide">
+                                <img src="{! '/' + v.sitePathPrefix + '/sfc/servlet.shepherd/version/download/' + contentVersion.Id}" alt=""/>
+                            </div>
+                        </aura:iteration>
+                    </aura:if>
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Add scrollbar -->
+                <div class="swiper-scrollbar"></div>
+            </div>
+            <div class="txtBox">
+                <div class="tit">{!v.productContentsData.productContents.HeadTitle__c}</div>
+                <div class="txt">{!v.productContentsData.productContents.Description__c}</div>
+            </div>
+        </article>
+    </aura:if>
+
+</aura:component>

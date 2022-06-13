@@ -1,0 +1,23 @@
+<!--
+  * @filename      : lsMSalesNoDataFound
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-07-06 오후 5:12
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-07-06 오후 5:12    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                description="lsMSalesNoDataFound">
+
+    <div class="slds-align_absolute-center">
+        {!v.noDataFound}
+    </div>
+</aura:component>

@@ -1,0 +1,6 @@
+<apex:page id="MobileAppVersionCheck" controller="MobileAppVersionCheck"
+           showHeader="false" sideBar="false" standardStylesheets="false"
+           cache="false"
+           contentType="application/json; charset=utf-8" >
+{!appVersionJsonString}
+</apex:page>

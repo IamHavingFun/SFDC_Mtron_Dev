@@ -1,0 +1,76 @@
+<!--****************************************************************************************
+  * @filename      : supplyPriceDisplay
+  * @projectname   : LS
+  * @author        : ms
+  * @date          : 2020-04-08 10 43
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @tester        : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-04-08 10 43        Park He              Create
+****************************************************************************************/
+-->
+<aura:component extends="c:lsSalesBase"
+                controller="SupplyPriceDisplayController"
+                description="supplyPriceDisplay"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="labelMap" type="Map" description="label관련 data를 담는 attribute"/>
+    <aura:html tag="style">
+        .slds-card__header {
+            padding: 0rem !important;
+        }
+    </aura:html>
+
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComDetailCard isFooter="{!false}">
+
+        <!--<div>
+            <h1 class="slds-text-heading_medium slds-text-title_bold" title="대리점 공급 가격">
+                <lightning:icon iconName="standard:pricebook" alternativeText="대리점 공급 가격" size="small" />&nbsp; 대리점 공급 가격</h1>
+        </div>-->
+        <c:lacComHeader type="" title="대리점 공급 가격" aura:id="header" iconName="standard:pricebook" isDetailCard="{!false}"/>
+
+        <c:lacComTableFrame aura:id="table" isPaging="{!false}" simple="{!true}" isCommunity="{#v.isCommunity}">
+            <c:lacComTable aura:id="dataTable" style="width:100%" hasScroll="false" left="1" fixedHeader="{!false}" >
+                <tbody>
+                <tr> <!--대리점 기준가-->
+                    <c:lacComTh title="{!v.labelMap.Order__c.ru_unitprice__c}">{!v.labelMap.Order__c.ru_unitprice__c}</c:lacComTh>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.resData.ru_UnitPrice__c}" style="currency" currencyCode="KRW" currencyDisplayAs="code"/></c:lacComTd>
+                </tr>
+                <tr> <!--수수료 최소-->
+                    <c:lacComTh title="{!v.labelMap.Order__c.ru_minfee__c}">{!v.labelMap.Order__c.ru_minfee__c}</c:lacComTh>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.resData.ru_MinFee__c}" style="currency" currencyCode="KRW" currencyDisplayAs="code"/></c:lacComTd>
+                </tr>
+                <tr class="custom-price-background"> <!--대리점 공급가 최소-->
+                    <c:lacComTh title="{!v.labelMap.Order__c.ru_minnetprice__c}">{!v.labelMap.Order__c.ru_minnetprice__c}</c:lacComTh>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.resData.ru_MinNetPrice__c}" style="currency" currencyCode="KRW" currencyDisplayAs="code"/></c:lacComTd>
+                </tr>
+                <!--<tr> &lt;!&ndash;권장소비자가&ndash;&gt;
+                    <c:lacComTh title="{!v.labelMap.Order__c.ru_listprice__c}">{!v.labelMap.Order__c.ru_listprice__c}</c:lacComTh>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.resData.ru_ListPrice__c}" style="currency" currencyCode="KRW" currencyDisplayAs="code"/></c:lacComTd>
+                </tr>-->
+                <tr> <!--수수료 최대-->
+                    <c:lacComTh title="{!v.labelMap.Order__c.ru_maxfee__c}">{!v.labelMap.Order__c.ru_maxfee__c}</c:lacComTh>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.resData.ru_MaxFee__c}" style="currency" currencyCode="KRW" currencyDisplayAs="code"/></c:lacComTd>
+                </tr>
+                <tr class="custom-price-background"> <!--대리점공급가 최대-->
+                    <c:lacComTh title="{!v.labelMap.Order__c.ru_maxnetprice__c	}">{!v.labelMap.Order__c.ru_maxnetprice__c}</c:lacComTh>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.resData.ru_MaxNetPrice__c}" style="currency" currencyCode="KRW" currencyDisplayAs="code"/></c:lacComTd>
+                </tr>
+                </tbody>
+            </c:lacComTable>
+        </c:lacComTableFrame>
+
+    </c:lacComDetailCard>
+</aura:component>

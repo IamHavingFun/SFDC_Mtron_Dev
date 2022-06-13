@@ -1,0 +1,8 @@
+<!--
+ - Created by MS on 2020-08-26.
+ - SFDC 커뮤니티 정상 동작 여부 체크.
+ -->
+
+<apex:page id="SFDCHealthCheck" showHeader="false" sideBar="false" controller="SFDCHealthCheck">
+    <div> SFDC System Alive : <apex:outputText value=" {0,date,yyyy-MM-dd HH:mm:ss a}"><apex:param value="{!currentDatetime}"/></apex:outputText> </div>
+</apex:page>

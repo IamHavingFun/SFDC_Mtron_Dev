@@ -1,0 +1,322 @@
+<apex:page id="PartnerIncentiveListExcel" controller="PartnerIncentiveListExcel" action="{!doGetData}"
+           contenttype="application/vnd.ms-excel"
+           showheader="false"
+           sideBar="false"
+>
+
+    <head>
+        <style>
+            .txtR {
+                text-align: right;
+                padding-right: 2px;
+            }
+            .txtL {
+                text-align: left;
+                padding-left: 2px;
+            }
+            .txtC {
+                text-align: center;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+            .p15 {
+                padding-top: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <apex:outputPanel layout="block" styleClass="p15">
+            <table style="width:2000px" border="1" cellpadding="1" cellspacing="1">
+                <tbody>
+                    <tr>
+                        <td colspan="2">지급연월</td>
+                        <td colspan="4">{!processYearMonth}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">영업소</td>
+                        <td colspan="4">{!dealerAccount.BusinessOffice__r.Name}&nbsp;{!dealerAccount.Owner.Name}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">대리점</td>
+                        <td colspan="4">{!dealerAccount.Name}&nbsp;{!dealerAccount.ErpName__c}&nbsp;{!dealerAccount.ERPCode__c}&nbsp;{!dealerAccount.DealerOwner__r.Name}님</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">대상 대수</td>
+                        <td colspan="4" class="txtL">
+                            <apex:outputText value="{0, number, ###,###,##0}">
+                                <apex:param value="{!assetCount}" />
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">수수료 총계</td>
+                        <td colspan="4" class="txtL">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!totalIncentiveAmount}" />
+                            </apex:outputText> /
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!totalIncentiveRate}" />
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </apex:outputPanel>
+        <apex:outputPanel layout="block" styleClass="p15">
+            <div><h2>대리점 판매장려</h2></div>
+            <table style="width:2000px" border="1" cellpadding="1" cellspacing="1">
+                <thead>
+                <tr>
+                    <th style="width:100px"  title="입고일자">입고일자</th>
+                    <th style="width:100px" title="기대번호" colspan="2" >기대번호</th>
+                    <th style="width:150px" title="모델">모델</th>
+                    <th style="width:80px" title="제품구분">제품구분</th>
+                    <th style="width:70px" title="기표유형">기표유형</th>
+                    <th style="width:100px" title="공급가격" class="txtR">공급가격</th>
+                    <th style="width:100px" title="소계" class="txtR">소계<br/><span class="THSUBTIT">(금액)</span></th>
+                    <th style="width:60px" title="소계" class="txtR">소계<br/><span class="THSUBTIT">(%)</span></th>
+                    <th style="width:100px" title="부가세" class="txtR">부가세</th>
+                    <th style="width:100px" title="총계" class="txtR">총계<br/><span class="THSUBTIT">(부가세포함)</span></th>
+                    <th style="width:160px" title="PDI 등록" colspan="2" class="txtC">PDI 등록<br/>(과세)</th>
+                    <th style="width:160px" title="Sales I.Q 등록" colspan="2" class="txtC">Sales I.Q 등록<br/>(과세)</th>
+                    <th style="width:160px" title="조기판매장려" colspan="2" class="txtC">조기판매장려</th>
+                    <th style="width:160px" title="조기안착지원" colspan="2" class="txtC">조기안착지원<br/>(과세)</th>
+                    <th style="width:160px" title="시승체험지원" colspan="2" class="txtC">시승체험지원<br/>(과세)</th>
+                    <th style="width:160px" title="사양차액지원" colspan="2" class="txtC">사양차액지원</th>
+                    <th style="width:160px" title="특별판촉지원" colspan="2" class="txtC">특별판촉지원</th>
+                    <th style="width:160px" title="작업기지원" colspan="2" class="txtC">작업기지원</th>
+                    <th style="width:160px" title="과거판매장려" colspan="2" class="txtC">과거판매장려<br/>(과세)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <apex:dataList value="{!dealerDataList}" var="row">
+                    <tr>
+                        <td style="width:100px" title="{!row.DealerReceiptDate}">{!row.DealerReceiptDate}</td>
+                        <td style="width:100px" class="txtC" colspan="2" title="{!row.AssetName}">{!row.AssetName}</td>
+                        <td style="width:150px" title="{!row.ProductName}">{!row.ProductName}</td>
+                        <td style="width:70px" title="{!row.ProductDivision}">{!row.ProductDivision}</td>
+                        <td style="width:70px" title="{!row.DealerIncentiveInput.PaymentType__c}">{!row.DealerIncentiveInput.PaymentType__c}</td>
+                        <td style="width:100px" title="{!row.SalesSellingAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.SalesSellingAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.SubTotalAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.SubTotalAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.SubTotalRate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.SubTotalRate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.TaxAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.TaxAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.TotalAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.TotalAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC3Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC3Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC3Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC3Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC4Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC4Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC4Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC4Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC6Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC6Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC6Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC6Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC8Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC8Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC8Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC8Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC12Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC12Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC12Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC12Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC13Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC13Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC13Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%" >
+                                <apex:param value="{!row.DIC13Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC14Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC14Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC14Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC14Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC15Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC15Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC15Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC15Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:100px" title="{!row.DIC1Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC1Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.DIC1Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ###,###,##0}%">
+                                <apex:param value="{!row.DIC1Rate}" />
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:dataList>
+                </tbody>
+            </table>
+        </apex:outputPanel>
+
+        <apex:outputPanel layout="block" styleClass="p15">
+            <div><h2>서비스 판매장려</h2></div>
+            <table  style="width:2000px"  border="1" cellpadding="1" cellspacing="1">
+                <thead>
+                <tr>
+                    <th style="width:100px"  title="입고일자">입고일자</th>
+                    <th style="width:200px" title="고객">고객</th>
+                    <th style="width:100px" title="기대번호">기대번호</th>
+                    <th style="width:180px" title="모델">모델</th>
+                    <th style="width:80px" title="제품구분">제품구분</th>
+                    <th style="width:70px" title="기표유형">기표유형</th>
+                    <th style="width:120px" title="공급가격" class="txtR">공급가격</th>
+                    <th style="width:120px" title="소계" class="txtR">수수료 소계<br/><span class="THSUBTIT">(금액)</span></th>
+                    <th style="width:60px" title="소계" class="txtR">수수료 소계<br/><span class="THSUBTIT">(%)</span></th>
+                    <th style="width:120px" title="부가세" class="txtR">부가세</th>
+                    <th style="width:120px" title="총계" class="txtR">총계<br/><span class="THSUBTIT">(부가세포함)</span></th>
+                    <th style="width:200px" title="농협사후봉사" colspan="2" class="txtC">농협사후봉사<br/>(과세)</th>
+                    <th style="width:200px" title="관납사후봉사" colspan="2" class="txtC">관납사후봉사<br/>(과세)</th>
+                    <th style="width:200px" title="중개영업지원" colspan="2" class="txtC">중개영업지원<br/>(과세)</th>
+                    <th style="width:200px" title="과거판매장려" colspan="2" class="txtC">과거판매장려<br/>(CS수수료,판매수수료)<br/>(과세)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <apex:dataList value="{!serviceDataList}" var="row">
+                    <tr>
+                        <td style="width:100px" >{!row.DealerReceiptDate}</td>
+                        <td style="width:200px" >{!row.AccountName}</td>
+                        <td style="width:100px" >{!row.AssetName}</td>
+                        <td style="width:180px" >{!row.ProductName}</td>
+                        <td style="width:80px" >{!row.ProductDivision}</td>
+                        <td style="width:70px" >{!row.DealerIncentiveInput.PaymentType__c}</td>
+                        <td style="width:120px" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.SalesSellingAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.SubTotalAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.SubTotalAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:60px" title="{!row.SubTotalRate}" class="txtR">
+                            <apex:outputText value="{0, number, ##0}%">
+                                <apex:param value="{!row.SubTotalRate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.TaxAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.TaxAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.TotalAmount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.TotalAmount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.DIC10Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC10Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:80px" title="{!row.DIC10Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ##0}%">
+                                <apex:param value="{!row.DIC10Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.DIC9Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC9Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:80px" title="{!row.DIC9Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ##0}%">
+                                <apex:param value="{!row.DIC9Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.DIC11Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC11Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:80px" title="{!row.DIC11Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ##0}%">
+                                <apex:param value="{!row.DIC11Rate}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:120px" title="{!row.DIC1Amount}" class="txtR">
+                            <apex:outputText value="₩{0, number, ###,###,##0}">
+                                <apex:param value="{!row.DIC1Amount}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="width:80px" title="{!row.DIC1Rate}" class="txtR">
+                            <apex:outputText value="{0, number, ##0}%">
+                                <apex:param value="{!row.DIC1Rate}" />
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:dataList>
+                </tbody>
+            </table>
+        </apex:outputPanel>
+    </body>
+</apex:page>

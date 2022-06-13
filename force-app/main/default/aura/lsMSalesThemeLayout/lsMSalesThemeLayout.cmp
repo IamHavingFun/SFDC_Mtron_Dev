@@ -1,0 +1,45 @@
+<!--
+  * @filename      : lsMSalesThemeLayout
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-05 오후 1:01
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-05 오후 1:01    i2max_my.Seo      Create
+ -->
+<aura:component implements="forceCommunity:themeLayout"
+                access="global"
+                description="lsMSalesThemeLayout">
+
+
+    <ltng:require styles="{!join(',',
+                            $Resource.publish + '/css/common.css',
+                            $Resource.publish + '/css/font.css')}"
+                  scripts="{!join(',',
+                            $Resource.publish + '/js/jquery-2.1.3.min.js',
+                            $Resource.publish + '/js/bootstrap.min.js')}"
+    />
+
+    <aura:html tag="style">
+        .uiContainerManager {
+            width: 0%;
+            width: 0%;
+        }
+
+        .comm-layout-column:not(:empty){
+            padding: 0px !important;
+        }
+    </aura:html>
+
+
+    <div>
+        {!v.body}
+    </div>
+</aura:component>

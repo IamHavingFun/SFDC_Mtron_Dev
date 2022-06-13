@@ -1,0 +1,113 @@
+<!--
+  * @filename      : lsMSalesProductSearchQa
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-19
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] 제품선택 QA
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-19     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                description="lsMSalesProductSearchQa">
+
+    <aura:attribute name="tabName"  type="String" default="tractor"  description="탭 명"/>
+    <!-- ============================================================================
+    ==== 바인딩 productVO
+    ==== QA에서 최종 선택한 제품 VO를 바인딩하기 위한 속성
+    ============================================================================= -->
+    <aura:attribute name="product" type="Product2" required="true" default="{}" description="바인딩 제품"/>
+    <aura:attribute name="productSeries" type="ProductSeries__c" description="바인딩 제품시리즈"/>
+    <!-- ============================================================================
+    ==== 제품처리 Action
+    ==== QA를 호출한 페이지에서 최종 선택시 수행할 Action
+    ============================================================================= -->
+    <aura:attribute name="finalAction" type="Aura.Action" required="true" description="제품 최종선택 처리 Action"/>
+    <!-- ============================================================================
+    ==== 제품처리 Action
+    ==== QA를 호출한 페이지에서 최종 선택시 수행할 Action
+    ============================================================================= -->
+    <aura:attribute name="header" type="String" required="true" default="제품 검색" description="Header 표시명"/>
+    <!-- ============================================================================
+    ==== Only 트랙터 여부
+    ============================================================================= -->
+    <aura:attribute name="isOnlyTractor" type="Boolean" required="true" default="{!false}" description="트랙터 제품 tab만 유용 여부"/>
+
+    <!-- ============================================================================
+    ==== 제품선택시 최종선택 이벤트 핸들러
+    ==== includeFacets="true" 처리를 하여 본 container에서 hanldler 처리되게끔 함.
+    ============================================================================= -->
+    <aura:handler name="fianlSelectProduct" event="c:lacComEvent" action="{!c.handleFinalSelectProduct}" includeFacets="true"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+
+        .uiContainerManager {
+        width: 0%;
+        height: 0%;
+        }
+        
+        .slds-modal_large .slds-modal__container {
+        width: 98% !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">제품검색</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <section class="modal_body">
+        <!-- 탭 형태 -->
+        <div class="top_tabBox">
+            <ul class="box_tab min_tab col3">
+
+                <aura:if isTrue="{!not(empty(v.recordList))}">
+                    <aura:iteration items="{!v.recordList}" var="option" indexVar="idx" start="0">
+                        <aura:if isTrue="{#option.label == '트랙터'}">
+                            <li class="{!equals(v.tabName, 'tractor') ? 'active' : ''}" onclick="{!c.doTabActive}" data-tabid="tractor" data-id="{#option.value}"><a href="javascript:void(0);">{#option.label}</a></li>
+                        </aura:if>
+                        <aura:if isTrue="{#and(option.label == '콤바인', not(v.isOnlyTractor))}">
+                            <li class="{!equals(v.tabName, 'combine') ? 'active' : ''}" onclick="{!c.doTabActive}" data-tabid="combine" data-id="{#option.value}"><a href="javascript:void(0);">{#option.label}</a></li>
+                        </aura:if>
+                        <aura:if isTrue="{#and(option.label == '이앙기', not(v.isOnlyTractor))}">
+                            <li class="{!equals(v.tabName, 'riceplanter') ? 'active' : ''}" onclick="{!c.doTabActive}" data-tabid="riceplanter" data-id="{#option.value}"><a href="javascript:void(0);">{#option.label}</a></li>
+                        </aura:if>
+                    </aura:iteration>
+                </aura:if>
+
+            </ul>
+        </div>
+
+        <div class="body_contBox" style="height: calc(100% - 134px); overflow: auto;">
+
+            <aura:if isTrue="{!not(empty(v.recordList))}">
+                <aura:iteration items="{!v.recordList}" var="option" indexVar="idx" start="0">
+                    <aura:if isTrue="{!and(equals(v.tabName, 'tractor'), option.label == '트랙터')}">
+                        <c:lsMSalesProductSearchTractor productType="{#option.value}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!and(equals(v.tabName, 'combine'), and(not(v.isOnlyTractor), option.label == '콤바인'))}">
+                        <c:lsMSalesProductSearchCombine productType="{#option.value}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!and(equals(v.tabName, 'riceplanter'), and(not(v.isOnlyTractor), option.label == '이앙기'))}">
+                        <c:lsMSalesProductSearchRiceTransplanter productType="{#option.value}"/>
+                    </aura:if>
+                </aura:iteration>
+            </aura:if>
+
+        </div>
+    </section>
+</aura:component>

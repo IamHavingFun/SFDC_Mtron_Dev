@@ -1,0 +1,54 @@
+<!--
+  * @filename      : lsMSalesOrderAssetTransfer
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-06-15 오전 10:26
+  * @group         :
+  * @group-content :
+  * @description   : 모바일 = 견적/계약 리스트.
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-15 오전 10:26    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="forceCommunity:availableForAllPageTypes"
+                description="lsMSalesOrderAssetTransfer">
+
+
+    <aura:attribute name="tabName"  type="String" default="Agree"  description="탭 명"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">전수배 주문 승인</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 탭 형태 -->
+        <div class="top_tabBox">
+            <ul class="box_tab min_tab col2">
+                <li class="{!equals(v.tabName, 'Agree') ? 'active' : ''}" onclick="{!c.doTabChange}" data-tabid="Agree"><a href="javascript:void(0);">전수배 전환 동의</a></li>
+                <li class="{!equals(v.tabName, 'Approval') ? 'active' : ''}" onclick="{!c.doTabChange}" data-tabid="Approval"><a href="javascript:void(0);">전배 승인</a></li>
+            </ul>
+        </div>
+
+        <article class="content">
+            <aura:if isTrue="{!equals(v.tabName, 'Agree')}">
+                <c:lsMSalesOrderAssetTransferAgree />
+                <aura:set attribute="else">
+                    <c:lsMSalesOrderAssetTransferApproval />
+                </aura:set>
+            </aura:if>
+        </article>
+    </div>
+</aura:component>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <description>기본 Lightning 플랫폼 사이트 머리글 구성 요소</description>
+    <label>SiteHeader</label>
+</ApexComponent>

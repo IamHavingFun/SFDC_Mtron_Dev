@@ -1,0 +1,104 @@
+<!--
+  * @filename      : lsMSalesQuoteItemModifyQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-07-06 오전 9:24
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-07-06 오전 9:24    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesQuoteItemModifyQa"
+                description="lsMSalesQuoteItemModifyQa">
+
+    <aura:attribute name="quoteWp" type="LsMSalesQuoteData" description=""/>
+    <aura:attribute name="qli" type="QuoteLineItem__c" description=""/>
+    <aura:attribute name="index" type="Integer" description=""/>
+
+    <aura:attribute name="initUnitPrice" type="Integer" description=""/>
+    <aura:attribute name="initNetPrice" type="Integer" description=""/>
+    <aura:attribute name="initDiscount" type="Integer" description="" default="0"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">견적품목추가</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <section class="modal_body">
+
+        <div class="body_contBox" style="height: calc(100% - 134px); overflow: scroll;">
+            <div class="top_row2Box">
+                <div class="tit">{!v.qli.Product__r.Name}</div>
+                <aura:if isTrue="{!equals(v.qli.Product__r.Type__c, '본체')}">
+                    <div class="txt">{!v.qli.Product__r.Option1__c}/{!v.qli.Product__r.Option2__c}/{!v.qli.Product__r.Option3__c}/{!v.qli.Product__r.Option4__c}</div>
+                </aura:if>
+            </div>
+
+            <!-- 테이블 -->
+            <div class="col_board2 mt20">
+                <ul>
+                    <li>
+                        <div class="left">
+                            소비자가
+                        </div>
+                        <div class="right">
+                            <lightning:formattedNumber value="{!v.qli.ListPrice__c}"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="left">
+                            대리점가
+                        </div>
+                        <div class="right">
+                            <lightning:input aura:id="unitPrice" label="" class="" type="number"  style="width: 100%; text-align: right;" value="{!v.qli.UnitPrice__c}" onfocus="{!c.doInputFocusNumber}" onblur="{!c.doInputBlurNumber}" onkeyup="{!c.doChange}"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="left">
+                            할인가격
+                        </div>
+                        <div class="right">
+                            <!-- 할인 가격만 받는다. -->
+                            <lightning:input aura:id="discount" label="" class="" type="number"  style="width: 100%; text-align: right;" value="{!v.qli.AdditionalDisc__c}" onfocus="{!c.doInputFocusNumber}" onblur="{!c.doInputBlurNumber}" onkeyup="{!c.doChange}"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="left tcolorR">
+                            판매가격
+                        </div>
+                        <div class="right tcolorR">
+                            <lightning:formattedNumber value="{!v.qli.NetPrice__c}"/>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- // 테이블 -->
+
+            <article class="bbtnBox mb60">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="견적 추가" class="bbtn btn_50" onclick="{!c.doMoveRegister}"/>
+            </article>
+        </div>
+
+    </section>
+</aura:component>

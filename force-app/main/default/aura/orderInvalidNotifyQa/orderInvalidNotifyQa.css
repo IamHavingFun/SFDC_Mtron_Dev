@@ -1,0 +1,14 @@
+/**
+ * Created by MS on 2020-07-21.
+ */
+
+.THIS {
+}
+
+.THIS .center-align {
+    text-align: center;
+}
+.THIS .left-align {
+    display: inline-block;
+    text-align: left;
+}

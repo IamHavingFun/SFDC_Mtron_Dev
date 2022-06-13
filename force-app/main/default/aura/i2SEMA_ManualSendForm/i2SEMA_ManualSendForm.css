@@ -1,0 +1,214 @@
+/****************************************************************************************
+  * File Name   : NotificationSendConfigure.css
+  * ProjectName : i2SEMA
+  * Group       :
+  * Description :
+  * Copyright   : Copyright © I2max. All Rights Reserved.
+  * Modification Log
+  * ===============================================================
+  * Ver     Date                Author              Modification
+  * ===============================================================
+    1.0     2020-02-04 오후 3:55     i2max_byeon.jw       Create
+****************************************************************************************/
+/*-------------------------------------------------------
+ * Root
+ -------------------------------------------------------*/
+@media only screen and (min-width : 1200px){
+    .THIS {
+        font-size       : 14px !important;
+        /*background      : #fff;*/
+    }
+    /* 반응형 항목 기본너비 */
+    .THIS .titleHolder {
+        flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+        flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+        flex-basis      : 20%;             /* Flex 기본 너비 */
+    }
+    .THIS .itemHolder {
+        flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+        flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+        flex-basis      : 80%;              /* Flex 기본 너비 */
+    }
+}
+@media only screen and (min-width:601px) and (max-width : 1199px){
+    .THIS {
+        font-size       : 12px !important;
+        background      : #fff;
+    }
+    /* 반응형 항목 기본너비 */
+    .THIS .titleHolder {
+        flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+        flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+        flex-basis      : 20%;             /* Flex 기본 너비 */
+    }
+    .THIS .itemHolder {
+        flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+        flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+        flex-basis      : 80%;              /* Flex 기본 너비 */
+    }
+}
+@media only screen and (min-width:0px) and (max-width : 600px){
+    .THIS {
+        font-size       : 8px !important;
+        background      : #fff;
+    }
+    /* 반응형 항목 기본너비 */
+    .THIS .titleHolder {
+        flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+        flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+        flex-basis      : 100%;             /* Flex 기본 너비 */
+    }
+    .THIS .itemHolder {
+        flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+        flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+        flex-basis      : 100%;              /* Flex 기본 너비 */
+    }
+}
+/*-------------------------------------------------------
+ * Label
+  - 표준 라벨 제거
+ -------------------------------------------------------*/
+.THIS.noLabel.slds-form-element__label , .THIS .noLabel .slds-form-element__label {
+    display         : none !important;
+    visibility      : hidden !important;
+}
+/*-------------------------------------------------------
+ * Delete Icon
+  - 삭제 아이콘 CSS
+ -------------------------------------------------------*/
+.THIS.deleteIcon , .THIS .deleteIcon {
+    padding-left    : 1rem;
+    cursor          : pointer;
+    opacity         : 0.5;
+}
+.THIS.deleteIcon:hover, .THIS .deleteIcon:hover{
+    opacity : 1;
+}
+.THIS.deleteIcon:hover svg use, .THIS .deleteIcon:hover svg use {
+    fill : rgba(255, 0, 0,0.85);
+}
+/*-------------------------------------------------------
+ * Text Area
+  - 기본 높이 설정
+ -------------------------------------------------------*/
+.THIS .slds-textarea {
+    height : 10rem;
+}
+/*-------------------------------------------------------
+ * Required
+    - 선언된 요소의 앞쪽에 필수표시
+ -------------------------------------------------------*/
+.THIS .required::before {
+    content         : '* ';
+    color           : red;
+    font-size       : 0.8rem;
+}
+/*-------------------------------------------------------
+ * Container
+ -------------------------------------------------------*/
+.THIS.container, .THIS .container {
+    position        : relative;
+    padding-left    : 2%;
+    padding-right   : 2%;
+}
+/*-------------------------------------------------------
+ * Row
+  - Flex Container
+ -------------------------------------------------------*/
+.THIS .rowHolder {
+    display         : flex;
+    flex-direction  : row;              /* 하위요소 Row 기준 정렬 (Default) */
+    flex-wrap       : wrap;             /* 하위요소 반응형 처리 */
+    justify-content : flex-start;       /* 하위요소 Row 시작 위치부터 정렬 */
+    align-content   : space-around;     /* 하위요소(복수) 개행될 시, 상하간격 조절 */
+    align-items     : center;           /* 하위요소(단수) 개행될 시, 상하간격 조절 */
+}
+.THIS .rowHolder:not(:first-child){
+    /*border-top      : 1px solid #ccc;*/
+}
+.THIS .rowHolder + .noTopBorder {
+    border-top      : none !important;
+}
+.THIS .largeIndent {
+    margin-top     : 1.5rem;
+    margin-bottom  : 1.5rem;
+}
+.THIS .smallIndent {
+    margin-top     : 0.75rem;
+    margin-bottom  : 0.75rem;
+}
+/*-------------------------------------------------------
+ * Title
+  - Flex Item
+ -------------------------------------------------------*/
+.THIS .titleHolder {
+    text-align      : right;
+    padding-right   : 5%;
+}
+.THIS .title {
+    width           : 100%;
+    font-size       : 0.8rem;
+    font-weight     : 600;
+    color           : #7F7E76;
+}
+/*-------------------------------------------------------
+ * Items
+  - Flex Item
+ -------------------------------------------------------*/
+.THIS .itemHolder {
+
+}
+/*-------------------------------------------------------
+ * Inline Flex Box
+ -------------------------------------------------------*/
+.THIS .inlineFlexContainer {
+    display         : inline-flex;
+    flex-direction  : row;
+    flex-wrap       : nowrap;
+    justify-content : flex-start;
+    align-content   : space-around;
+    align-items     : center;
+}
+.THIS .largeInlineItem {
+    flex-grow       : 0;
+    flex-shrink     : 1;
+    flex-basis      : 80%;
+}
+
+.THIS .mediumInlineItem {
+    flex-grow       : 0;
+    flex-shrink     : 1;
+    flex-basis      : 50%;
+}
+
+.THIS .smallInlineItem {
+    flex-grow       : 0;
+    flex-shrink     : 1;
+    flex-basis      : 20%;
+}
+
+/*.THIS .inlineFlexItem:first-child {*/
+/*    flex-grow       : 0;*/
+/*    flex-shrink     : 1;*/
+/*    flex-basis      : 80%;*/
+/*}*/
+/*.THIS .inlineFlexItem:last-child {*/
+/*    flex-grow       : 0;*/
+/*    flex-shrink     : 1;*/
+/*    flex-basis      : 20%;*/
+/*}*/
+
+/*-------------------------------------------------------
+ * Buttons
+ -------------------------------------------------------*/
+.THIS .addButton {
+    border : 1px solid #ccc;
+    height : 2.5rem;
+    width : 100%;
+    cursor : pointer;
+}
+.THIS .addbutton:hover {
+    border : none;
+    color : white;
+    background : black;
+}

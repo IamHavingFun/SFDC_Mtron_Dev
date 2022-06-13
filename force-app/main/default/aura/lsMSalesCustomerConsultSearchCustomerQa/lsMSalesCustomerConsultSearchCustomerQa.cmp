@@ -1,0 +1,83 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultSearchCustomerQa
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-08
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-08     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="lsMSalesCustomerConsultSearchCustomerQa"
+                description="lsMSalesCustomerConsultSearchCustomerQa">
+
+    <aura:attribute name="modelAccountList" type="ModelAccount[]" description="고객 Wrapper List"/>
+    <aura:attribute name="customer" type="Account" description="조회 고객"/>
+    <aura:attribute name="phoneNumber" type="List" description="전화번호"/>
+
+    <!-- 고객 상담 카드에서 pop up 띄울때만 사용. -->
+    <aura:attribute name="accountRecordTypeId" type="String" access="public" description=""/>
+    <aura:attribute name="customerName" type="String" access="public" description=""/>
+    <aura:attribute name="action" type="Aura.Action" access="public" description=""/>
+    <aura:attribute name="contactPhoneNumber" type="List" description="전화번호"/>
+    <aura:attribute name="customerContact" type="Contact" description="조회 고객의 contact"/>
+    <aura:attribute name="isPhoneCheck" type="Boolean" description="전화번호 인증 여부"/>
+
+
+    <!-- 고객 상담 카드에서 A type으로 들어올때만 사용 -->
+    <aura:attribute name="guidedSellingType" type="String" access="public" description=""/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lsMSalesQuickAction>
+        <!-- ============================================================================
+        ==== header
+        ============================================================================= -->
+        <aura:set attribute="headers">
+            <div class="tit">고객 검색</div>
+        </aura:set>
+        <!-- 상단 검색영역 -->
+        <aura:set attribute="search">
+            <span style="">
+                <lightning:input type="text" label="" class="slds-form_horizontal" variant="label-hidden" placeholder="고객명 입력" value="{!v.reqData.name}"/>
+                <lightning:button class="btn_search_icon" onclick="{!c.doSearch}"/>
+            </span>
+        </aura:set>
+        <!-- //상단 검색영역 -->
+        <aura:set attribute="contents">
+            <!-- 테이블 -->
+            <div class="col_board mt20 mb60">
+                <aura:if isTrue="{!and(not(empty(v.modelAccountList)), v.modelAccountList.length > 0)}">
+                    <ul>
+                        <aura:iteration items="{!v.modelAccountList}" var="record">
+                            <li>
+                                <div class="left">
+                                    <div class="tit">{!record.account.Name}<span class="bar"></span>{!record.isPersonAccount ? record.account.PersonMobilePhone : record.account.Phone}</div>
+                                    <div class="stxt">{!record.account.CustomerStatus__c}</div>
+                                </div>
+                                <div class="right">
+                                    <lightning:button class="btn" label="선택" value="{!record.account}" onclick="{!c.doChoice}"/>
+                                </div>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                    <aura:set attribute="else">
+                        <c:lsMSalesNoDataFound/>
+                    </aura:set>
+                </aura:if>
+            <!-- // 테이블 -->
+            </div>
+        </aura:set>
+        <aura:set attribute="btnSet">
+            <lightning:button label="닫기" class="bbtn" onclick="{!c.doCancel}"/>
+        </aura:set>
+    </c:lsMSalesQuickAction>
+</aura:component>

@@ -1,0 +1,497 @@
+<!--
+ - Created by ms on 2020-03-31.
+ -->
+
+<apex:page id="ContractPdf" showHeader="false" sideBar="false" standardStylesheets="false" applyBodyTag="false"
+           applyHtmlTag="false" controller="ContractPDFController" renderAs="{!contentType}"><!--renderAs="pdf"-->
+
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <style type="text/css">
+        body { font-family: Arial Unicode MS; font-size:13px;}
+        @page {
+                size: A4; /* ISO/JIS A4 (210mm�297mm) */
+                margin: 5mm;
+                @bottom-center {
+                    content: counter(page) "/" counter(pages);
+                }
+        }
+        @page:first {
+             size: A4 ; /* ISO/JIS A4 (210mm�297mm) */
+             margin: 5mm;
+             margin-top: 3mm;
+        }
+
+        .labelToRight{
+            margin-right: 15px;
+            text-align: right;
+            float: right;
+        }
+        .headerToLeft{
+            margin-left: 15px;
+            text-align: left;
+            width: 25%;
+            float: left;
+            font-size: 10px;
+        }
+        .headerToRight{
+            margin-right: 15px;
+            text-align: right;
+            width: 10%;
+            float: right;
+            font-size: 10px;
+        }
+        .header_title{
+            text-align:center;
+            width: 50%;
+            padding: 10px;
+            margin: 0 auto;
+            text-decoration : underline;
+            font-weight: bold;
+            font-size : 22px;
+        }
+        .textWrap{
+            width: 70%;
+            margin: 2px;
+        }
+        .firstText{
+            float: left;
+            width:10%;
+        }
+        .underlineText{
+            border-bottom:1px solid;
+            width: 400px;
+            float: left;
+            text-align: center;
+        }
+        .secondText{
+            float: right;
+        }
+        table{
+            border-collapse:collapse;
+            text-align: center;
+            border:1.5px solid black;
+        }
+        .tableHeader{
+            font-weight: bold;
+        }
+        th{
+            border-bottom:2px solid black;
+        }
+        tr, td, th{
+            padding: 1.5px;
+            word-break:inherit;
+        }
+        .vertical {
+            writing-mode: vertical-rl !important;
+        }
+        .alignLeft{
+            vertical-align:top;
+            padding: 0px;
+            text-align:left;
+        }
+        .alignCenter{
+            text-align:center;
+        }
+        .underBorderline{
+            border-bottom: solid 1px !important;
+        }
+        .makewordBold{
+            font-weight:bold;
+        }
+        .page-break {
+            display:block;
+            page-break-after:always;
+        }
+        .dealerSign {
+
+        }
+        .no-border-left {
+              border-left-color: #FFF;
+        }
+        .set-bottom{
+            margin-top: 15px;
+        }
+        </style>
+
+    </head>
+    <body>
+<!--    <apex:form >-->
+    <div class="page-break">
+    <div class="headerToLeft">{!contract.Name}</div>
+    <div class="headerToRight"></div>
+    <div class="header_title" style="underline">매 매 계 약 서</div>
+    <br/>
+    <br/>
+    <table width="100%">
+        <tr>
+            <td width="10%">매 수 인</td>
+            <td width="70%" style="border-bottom: solid 1px !important;">
+                <apex:outputText value="{!contract.fm_CustomerName__c}"/>
+            </td>
+            <td width="20%">(이하 '갑'이라 칭함.)과</td>
+        </tr>
+        <tr>
+            <td>매 도 인</td>
+            <td style="border-bottom: solid 1px !important;">인)
+                <apex:outputText value="{!contract.fm_DealerRepName__c}"/>
+            </td>
+            <td>(이하 '을'이라 칭함.)은</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align:left;"><br/>&nbsp;&nbsp;아래 표시 물품의 매매에 관하여 다음과 같이 계약을 체결한다.</td>
+        </tr>
+    </table>
+    <br/>
+    <span>1. 물품의 표시 및 대금정산조건 </span>
+    <table cellspacing="0" cellpadding="0" border="1px solid" width="100%">
+        <caption style="font-size:10px; text-align:right;"> (단위: 원, 부가세별도)</caption>
+        <tr>
+            <th class="tableHeader" width="15%">기 종 명</th>
+            <th class="tableHeader" width="15%">형 식 명</th>
+            <th class="tableHeader" width="8%">수 량</th>
+            <th class="tableHeader" width="20%">금 액</th>
+        </tr>
+        <apex:repeat value="{!contract.ContractLineItem__r}" var="items"
+                     rendered="{!contract.ContractLineItem__r.size > 0}">
+            <tr>
+                <td>{!items.ProductId__r.ProductType__c}</td>
+                <td>{!items.ProductId__r.Name}</td>
+                <td>{!items.Quanitity__c}</td>
+                <td>
+                    <div class="labelToRight">
+                        <apex:outputText value="{0, Number,  ###,###,###,###}">
+                            <apex:param value="{!items.TotalPrice__c}"/>
+                        </apex:outputText>
+                    </div>
+                </td>
+            </tr>
+        </apex:repeat>
+        <apex:repeat value="{!contract.ContractOtherItem__r}" var="item" rendered="{!contract.ContractOtherItem__r.size > 0}">
+            <tr>
+                <td>{!item.ProductType__c}</td>
+                <td>{!item.ProductName__c}</td>
+                <td>{!item.Quantity__c}</td>
+                <td>
+                    <div class="labelToRight">
+                        <apex:outputText value="{0, Number,  ###,###,###,###}">
+                            <apex:param value="{!item.NetPrice__c}"/>
+                        </apex:outputText>
+                    </div>
+                </td>
+            </tr>
+        </apex:repeat>
+        <tr>
+            <th colspan="2">계</th>
+            <th>{!totalCnt}</th>
+            <th>
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!totalAmt}"/>
+                    </apex:outputText>
+                </div>
+            </th>
+        </tr>
+
+    </table>
+    <br/>
+    <table cellspacing="0" cellpadding="0" border="1px" width="100%">
+        <tr>
+            <td rowspan="10" class="vertical tableHeader" style="width:3%">대 금 정 산 조 건</td>
+            <td class="tableHeader" style="width:10%">계 약 금</td>
+            <td style="width:10%">금 액</td>
+            <td style="width:40%">
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.ContractAmt__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+            <td class="tableHeader" style="width:10%">지급일</td>
+            <td style="width:15%">
+                <apex:outputText value="{0,date,yyyy'년 'MM'월 'dd'일'}">
+                    <apex:param value="{!contract.ContractAmtCollectDueDate__c}"/>
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">융 자 금</td>
+            <td>금 액</td>
+            <td>
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.LoanContractAmt__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+            <td class="tableHeader">지급일</td>
+            <td>
+                <apex:outputText value="{0,date,yyyy'년 'MM'월 'dd'일'}">
+                    <apex:param value="{!contract.LoanApplyDate__c}"/>
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">보 조 금</td>
+            <td>금 액</td>
+            <td>
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.SubsidyContractAmt__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+            <td class="tableHeader">지급일</td>
+            <td>
+                <apex:outputText value="{0,date,yyyy'년 'MM'월 'dd'일'}">
+                    <apex:param value="{!contract.SubsidyCollectDueDate__c}"/>
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">자 부 담</td>
+            <td>금 액</td>
+            <td>
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.SelfPayContractAmt__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+            <td class="tableHeader">지급일</td>
+            <td>
+                <apex:outputText value="{0,date,yyyy'년 'MM'월 'dd'일'}">
+                    <apex:param value="{!contract.SelfPayCollectDueDate__c}"/>
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">중고인수</td>
+            <td>인수금액</td>
+            <td colspan="3">
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.UsedUndertakingAmt__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">기 타</td>
+            <td colspan="4">
+                <apex:outputText value="{!left(contract.Remarks__c,1000)}" escape="false"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">할 인 액</td>
+            <td colspan="4">
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.fm_AdditionalDisc__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">지불총액</td>
+            <td colspan="4">일금
+                <div class="labelToRight">
+                    <apex:outputText value="{0, Number,  ###,###,###,###}">
+                        <apex:param value="{!contract.fm_TotalPayAmt__c}"/>
+                    </apex:outputText>
+                    (원)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">인도기일</td>
+            <td colspan="4">
+                <apex:outputText value="{0,date,yyyy'년 'MM'월 'dd'일'}">
+                    <apex:param value="{!contract.CustomerExpectedDate__c}"/>
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="tableHeader">특약사항</td>
+            <td colspan="4">
+                <apex:outputText value="{!left(contract.AdditionalTerms__c,1000)}" escape="false"/>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <br/>
+<!--    <div class="page-break">-->
+
+        <div class="headerToLeft">{!contract.Name}</div>
+        <div class="header_title" style="underline">매 매 계 약 서</div>
+        <br/>
+        <br/>
+        <div>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr class="alignLeft">
+                    <td width="15px">2.</td>
+                    <td>"갑"은 융자실행약속일까지 "갑"의 책임하에 관할 농협 등 융자 실행 금융기관 (이하 '융자기관')을 통하여 융자 수속을
+                        완료하여야 하며, 융자금 및 보조금 수령에 관한 모든 권한을 "을"에게 전적으로 위임한다.
+                        단, 융자금 수령자는 융자기관, 갑, 을 및 LS엠트론㈜ 간의 별도 협약에 따른다.
+                    </td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>3.</td>
+                    <td>물품대금 완납 시까지 상기 물품의 소유권은 "을" 에게 있으며, 대금정산 약정 불이행 시 매매 물품의 회수 및 이에 관련하는 법적 강제 회수에 "갑"은 일체 이의를 제기하지
+                        않는다. 단, 융자기관이 융자조건으로 물품의 소유권을 이전 받는 경우, 별도의 약정 없이는 그러하지 아니한다.
+                    </td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>4.</td>
+                    <td>"갑"은 상기 물품대금을 전액 완불 시까지 상기 물품을 "을"의 사전 서면 동의 없이 타인에게 양도, 대여, 질권 설정 등의 임의 처분을 할 수 없다.</td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>5.</td>
+                    <td>"을"은 물품공급 후 무상보증기간 중 품질보증서에 의한 품질보증 및 무상으로 사후봉사를 하되, 소모성 부품 및 "갑"의 과실이나 부주의로 발생한 하자에 대해서는 실비로
+                        수리하기로 한다.
+                    </td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>6.</td>
+                    <td>본 계약 체결 후 계약내용 진행 전 또는 이행 중 당사자 일방에 의한 계약 파기 시 계약을 파기한 당사자는 본 계약의 위약에 따른 배상 책임 및 위약에 동반하는 각종
+                        부대비용을 배상할 책임을 진다.
+                        <br/>(계약 파기 당사자의 책임 및 권리상실내용 : ①계약금의 상실 ②운반비 및 부대설치비용의 배상)
+                    </td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>7.</td>
+                    <td>"갑"은 본 계약 체결 및 물품을 인도 받은 후, 1개월 이내에 대금 지급을 완납하기로 한다. 완납이 지연되는 경우, "을"은 "갑"에게 법정 지연 이자를 요구할 수 있고,
+                        "갑"은 이에 응하여야 한다.
+                    </td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>8.</td>
+                    <td>본 계약과 관련된 소송의 관할은 "갑" 또는 "을"의 주소지 관할법원으로 한다.</td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>9.</td>
+                    <td>기타 본 계약서에 명시 되지 않은 사항은 일반상관례에 준한다.</td>
+                </tr>
+                <tr class="alignLeft">
+                    <td>10.</td>
+                    <td>
+                        <div>"갑"은 "을"의 고객관리(온/오프라인) 및 서류대행 작업을 위한 개인정보제공에 동의함.
+                            <img src="/img/checkbox_checked.gif"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="alignLeft">
+                        <span class="makewordBold">"갑" 과 "을" 은 상기 계약사항을 성실히 이행할 것을 약속하며, <br/>이를 증명하기 위하여 본 계약서에 서명 날인하고 상호 1부씩 보관한다.</span><br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="alignCenter">
+                        <span class="makewordBold">
+                            <br/>
+                            <apex:outputText value="{0,date,yyyy'년 'MM'월 'dd'일'}">
+                                <apex:param value="{!contract.ContractStartDate__c}"/>
+                            </apex:outputText>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <br/>
+        <br/>
+        <div>
+            <table border="1" width="100%">
+                <colgroup>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="50%"/>
+                    <col width="20%"/>
+                </colgroup>
+                <tr>
+                    <td rowspan="4" class="tableHeader">매 수 인 "갑"</td>
+                    <td class="tableHeader">주 소</td>
+                    <td colspan="2">
+                        <apex:outputText value="{!contract.fm_CustomerAddr__c}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableHeader">성 명</td>
+                    <td>
+                        <apex:outputText value="{!contract.fm_CustomerName__c}"/>
+                    </td>
+                    <td class="dealerSign no-border-left">
+                        <apex:outputPanel rendered="{!customerSignId != ''}">
+                            <img src="/Partner/sfc/servlet.shepherd/document/download/{!customerSignId}" height="50px" width="80px"/>
+                        </apex:outputPanel>
+                        <div class="labelToRight set-bottom">(인)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableHeader">전 화 번 호</td>
+                    <td>
+                        <apex:outputText value="{!contract.fm_CustomerMobile__c}"/>
+                    </td>
+                    <td class="no-border-left">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableHeader">주민등록번호</td>
+                    <td>
+                        <apex:outputText value="{!socialNumber}"/>
+                    </td>
+                    <td class="no-border-left">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <div>
+            <table border="1" width="100%" align="center">
+                <colgroup>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="50%"/>
+                    <col width="20%"/>
+                </colgroup>
+                <tr>
+                    <td rowspan="3" class="tableHeader">매 도 인 "을"</td>
+                    <td class="tableHeader" style="border-bottom-style:dotted; ">주 소</td>
+                    <td colspan="2">
+                        <apex:outputText value="{!contract.fm_SalesRepAddr__c}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableHeader" style="border-bottom-style:dotted;">상 호</td>
+                    <td style="border-bottom-style:dotted;">
+                        <apex:outputText value="{!contract.fm_DealerName__c}"/>
+                    </td>
+                    <td class="dealerSign no-border-left">
+                        <apex:outputPanel rendered="{!dealerSignId != ''}">
+                            <img src="/Partner/sfc/servlet.shepherd/document/download/{!dealerSignId}" height="50px" width="80px"/>
+                        </apex:outputPanel>
+                        <div class="labelToRight set-bottom">(인)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableHeader">대 표 자</td>
+                    <td>
+                        <apex:outputText value="{!contract.fm_DealerRepName__c}"/>
+                    </td>
+                    <td class="no-border-left">
+                    </td>
+                </tr>
+            </table>
+        </div>
+<!--    </div>-->
+<!--    </apex:form>-->
+    </body>
+    </html>
+</apex:page>

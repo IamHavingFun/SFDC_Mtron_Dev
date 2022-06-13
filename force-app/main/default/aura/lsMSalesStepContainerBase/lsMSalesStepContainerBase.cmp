@@ -1,0 +1,24 @@
+<!--
+  * @filename      : lsMSalesStepContainerBase
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-05 오후 12:52
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-05 오후 12:52    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase" extensible="true" implements="c:lsMSalesStepInf" description="lsMSalesStepContainerBase">
+
+    <!-- ==============================================================================
+    실제 데이터가 들어가는 부분
+    ============================================================================== -->
+    {!v.body}
+
+</aura:component>

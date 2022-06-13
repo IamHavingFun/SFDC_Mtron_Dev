@@ -1,0 +1,8 @@
+.THIS {
+}
+
+.THIS .PSelect_radio span {width: 100%; margin:0;}
+
+.THIS .list_vTitBox .left {
+    width: calc(100% - 290px);
+}

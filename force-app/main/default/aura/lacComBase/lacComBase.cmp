@@ -1,0 +1,63 @@
+<!--
+  * @filename      : lacComBase
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component extensible="true" implements="c:lacComBaseInf" description="lacComBase">
+    <!-- 공통 Init 처리 -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- ================================================================================
+    ==== formFactor 를 이용한 isDeskTop 과 isDeskTopOrTable 만 변수처리
+    ==== 나머지 판단은 $Browser의 정해진 속성을 이용하여 판단함
+    ================================================================================= -->
+    <!-- isDeskTop 여부 -->
+    <aura:attribute name="isDeskTop" type="Boolean" default="{!$Browser.formFactor == 'DESKTOP'}" description="DeskTop 여부"/>
+    <!-- isDeskTopOrTablet 여부 -->
+    <aura:attribute name="isDeskTopOrTablet" type="Boolean" default="{! or(v.isDeskTop, $Browser.isTablet)}" description="DeskTop or Tablet 여부"/>
+
+    <!-- 커뮤니티 여부 -->
+    <aura:attribute name="isCommunity" type="Boolean" default="{!false}" description="커뮤니티 사이트 여부"/>
+
+    <!-- 데이터 속성 -->
+    <aura:attribute name="initData" type="Map" default="{}" description="초기 Init 데이터" />
+    <aura:attribute name="reqData" type="Map" default="{}" description="요청 데이터"/>
+    <aura:attribute name="resData" type="Map" default="{}" description="결과 데이터"/>
+    <aura:attribute name="recordList" type="List" default="[]" description="결과 데이터중 리스트 데이터"/>
+
+    <!-- ==============================================================================
+    Global Spinner 처리
+    ============================================================================== -->
+    <aura:attribute name="isSpinner" type="Boolean" default="{!false}" description="Global Spinner"/>
+
+    <!-- ==============================================================================
+    toast multi line 처리용
+    ============================================================================== -->
+    <aura:html tag="style">
+        .toastMessage.forceActionsText{
+            white-space : pre-line !important;
+        }
+    </aura:html>
+
+    <!-- ==============================================================================
+    실제 데이터가 들어가는 부분
+    ============================================================================== -->
+    <div class="slds-is-relative">
+        <aura:if isTrue="{!v.isSpinner}">
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand" />
+        </aura:if>
+        {!v.body}
+    </div>
+
+</aura:component>

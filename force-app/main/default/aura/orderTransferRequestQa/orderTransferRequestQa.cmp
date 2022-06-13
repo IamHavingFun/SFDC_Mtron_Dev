@@ -1,0 +1,97 @@
+<!--
+  * @filename      : orderTransferRequestQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-11-19 오전 11:10
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-19 오전 11:10    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="OrderTransferRequestQa"
+                description="orderTransferRequestQa">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="assetTransferRequest" type="AssetTransferRequest__c" access="public" description=""/>
+    <aura:attribute name="isTransferAgree" type="Boolean" access="public" description=""/>  <!-- 전수배 전환 동의 상태 -->
+    <aura:attribute name="isRequestProcess" type="Boolean" access="public" description=""/> <!-- 전배 처리 상태 -->
+    <aura:attribute name="notiMessage" type="String" access="public" description=""/>
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComQuickAction title="전배 요청 정보" aura:id="quickAction" hasSelfFooter="{#false}">
+        <!--{!v.isTransferAgree} || {!v.isRequestProcess} ||-->
+        <aura:if isTrue="{!v.isTransferAgree}">
+            <aura:if isTrue="{!not(v.isRequestProcess)}">
+                <lightning:layout horizontalAlign="center" class="">
+                    <lightning:layoutItem size="3" class="slds-align-middle slds-m-right_large">
+                        <label for="division" class="slds-m-top_medium">전배 요청 기대 조회</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3">
+                        <lightning:button label="전배 요청 기대 조회"
+                                          type="button"
+                                          class="{!v.isCommunity ? 'left-side slds-m-bottom_medium custom-box2' : 'left-side slds-m-bottom_medium custom-box3'}"
+                                          variant="brand"
+                                          onclick="{!c.doCreateOrderTransferSearchQa}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="">
+                    <lightning:layoutItem size="3" class="slds-align-middle slds-m-right_large">
+                        <label for="division" class="slds-m-top_medium">전배 대리점</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3">
+                        <lightning:input label="" value="{!v.assetTransferRequest.AssetNo__r.Dealer__r.Name}" class="slds-m-bottom_medium" disabled="{#true}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="">
+                    <lightning:layoutItem size="3" class="slds-align-middle slds-m-right_large">
+                        <label for="division" class="slds-m-top_medium">대상 기대번호</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3">
+                        <lightning:input label="" value="{!v.assetTransferRequest.AssetNo__r.Name}" class="slds-m-bottom_medium" disabled="{#true}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                    [요청] 제출 時 전배 대리점에 대한 전배 동의 요청이 발송됩니다
+                </lightning:layout>
+
+                <aura:set attribute="else">
+                    <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                        {!v.notiMessage}
+                    </div>
+                </aura:set>
+            </aura:if>
+
+            <aura:set attribute="else">
+                <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                    {!v.notiMessage}
+                </div>
+            </aura:set>
+        </aura:if>
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!and(v.isTransferAgree, not(v.isRequestProcess))}">
+                <lightning:button aura:id="btnSave" label="요청" variant="brand" onclick="{!c.doSave}" />
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

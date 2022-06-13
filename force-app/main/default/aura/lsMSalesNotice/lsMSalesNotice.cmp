@@ -1,0 +1,55 @@
+<!--
+  * @filename      : 
+  * @projectname   :
+  * @author        : Choi SeongWon
+  * @date          : 2020-06-23 오후 2:43
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] 공지사항
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================a
+    0.1    2020-06-23 오후 2:43     Choi SeongWon           Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="LsMSalesNotice">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">공지사항</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="content">
+        <!-- 테이블 -->
+        <c:lsMSalesTableFrame  aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}">
+            <div class="row_board mt20">
+                <ul>
+                    <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                        <li>
+                                <div class ="tit"><a data-recordid="{!record.Id}" onclick="{!c.doDetail}">{!record.Name}</a></div>
+                                <div class ="date">
+                                    <lightning:formattedDateTime value="{!record.CreatedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                 minute="2-digit" hour12="false"/>
+                                </div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+                
+            </div>
+        </c:lsMSalesTableFrame>
+        </article>
+    </div>
+
+</aura:component>

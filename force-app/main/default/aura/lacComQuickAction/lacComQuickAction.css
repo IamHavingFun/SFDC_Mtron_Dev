@@ -1,0 +1,78 @@
+/****************************************************************************************
+  * @filename      : lacComQuickAction.css
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-03-10 오전 9:56
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @tester        : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-03-10 오전 9:56     i2max_my.Seo           Create
+****************************************************************************************/
+.THIS {
+}
+
+/*
+    공통쪽에서 일괄적으로 css를 잡을 건지 개별건으로 할 건지 생각 필요.
+    공통에서 잡을거라면 얼마나 detail하게 잡을 수 있는지...
+*/
+/*---------------------------------------------------------------
+    Media Query
+---------------------------------------------------------------*/
+/* 너비 */
+@media only screen and (min-width: 1750px) {
+
+    .THIS.slds-modal__content {
+        /*background-color: aqua;*/
+        overflow-y: auto !important;
+        min-height: 250px !important;
+        max-height: 600px !important;
+    }
+}
+
+/* 높이 */
+@media only screen and (max-height: 400px) {
+
+    .THIS.slds-modal__content {
+        /*background-color: red;*/
+        overflow-y:auto !important;
+        min-height: 50px !important;
+        max-height: 100px !important;
+    }
+}
+
+@media only screen and (min-height: 400px) and (max-height: 600px) {
+
+    .THIS.slds-modal__content {
+        /*background-color: purple;*/
+        overflow-y:auto !important;
+        min-height: 150px !important;
+        max-height: 300px !important;
+    }
+}
+
+@media only screen and (min-height: 600px) and (max-height: 800px) {
+
+    .THIS.slds-modal__content {
+        /*background-color: purple;*/
+        overflow-y:auto !important;
+        min-height: 150px !important;
+        max-height: 495px !important;
+    }
+}
+
+@media only screen and (min-height: 800px) and (max-height: 900px) {
+
+    .THIS.slds-modal__content {
+        /*background-color: red;*/
+        overflow-y:auto !important;
+        min-height: 200px !important;
+        max-height: 600px !important;
+    }
+}

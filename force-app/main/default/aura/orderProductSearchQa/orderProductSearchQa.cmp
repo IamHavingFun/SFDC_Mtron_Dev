@@ -1,0 +1,99 @@
+<!--
+  * @filename      : orderProductSearchQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-04-16 오후 1:13
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 1:13    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader"
+                controller="OrderProductSearchQa"
+                description="orderProductSearchQa">
+
+    <aura:attribute name="productTypeList" type="List" description="combobox data" default="[
+        {'label': '전체', 'value': ''},
+        {'label': '트랙터', 'value': '트랙터'},
+        {'label': '이앙기', 'value': '이앙기'},
+        {'label': '콤바인', 'value': '콤바인'},
+        {'label': 'MINI', 'value': 'MINI'}
+    ]"/>
+    <aura:attribute name="seriesList" type="List" description="combobox data"/>
+    <aura:attribute name="productLabel" type="Map" description="product 필드 label 다국어 지원"/>
+    <aura:attribute name="orderLineItemList" type="OrderLineitem__c[]" description=""/>
+    <aura:attribute name="wrapperData" type="OrderNewQa.WrapperData" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:handler name="tableEvent" event="c:lacComTableEvent" action="{!c.util_Move}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="제품 조회" aura:id="quickAction" hasSelfFooter="{#false}" isWide="{#true}">
+        <!-- 조회 영역 -->
+        <div class="slds-form--inline slds-m-top_x-small">
+            <c:lacComComboBox label="{!v.productLabel.producttype__c}" option="{!v.productTypeList}" value="{!v.reqData.productType}" onchange="{!c.doChangeProductSeries}"/>
+            <c:lacComComboBox label="{!v.productLabel.series__c}" option="{!v.seriesList}" value="{!v.reqData.series}" disabled="{!empty(v.reqData.productType)}"/>
+            <lightning:input label="" type="search" placeholder="제품 검색" value="{!v.reqData.name}"/>
+            <lightning:button label="조회" variant="brand" onclick="{!c.doSearch}"/>
+        </div>
+
+        <c:lacComBody>
+            <c:lacComTableFrame aura:id="table" isPaging="{#true}" simple="{#true}">
+                <c:lacComTable aura:id="dataTable" hasScroll="{#true}" scrollHeight="300px">
+                    <colgroup>
+                        <col width="10%"/>
+                        <col width=""/>
+                        <col width="15%"/>
+                        <col width="15%"/>
+                        <col width="10%"/>
+                        <col width="20%"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <c:lacComTh/>
+                            <c:lacComTh>{!v.productLabel.name}</c:lacComTh>
+                            <c:lacComTh>기준가격</c:lacComTh>
+                            <c:lacComTh>{!v.productLabel.productdivision__c}</c:lacComTh>
+                            <c:lacComTh>{!v.productLabel.horsepowerstandard__c}</c:lacComTh>
+                            <c:lacComTh>{!v.productLabel.productcode}</c:lacComTh>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.recordList}" var="prod">
+                            <tr>
+                                <c:lacComTd><lightning:input aura:id="mycheck" label="" name="options" type="radio" value="{!prod}"/></c:lacComTd>
+                                <c:lacComTd title="{#prod.Name}">{#prod.Name}</c:lacComTd>
+                                <c:lacComTd>
+                                    <lightning:formattedNumber value="{#prod.DealerListPrice__c}" maximumFractionDigits="3"/>
+                                </c:lacComTd>
+                                <c:lacComTd>
+                                    <lightning:formattedText value="{#prod.ProductDivision__c}" maximumFractionDigits="3"/>
+                                </c:lacComTd>
+                                <c:lacComTd>
+                                    <lightning:formattedText value="{#prod.HorsePowerStandard__c}" />
+                                </c:lacComTd>
+                                <c:lacComTd>
+                                    <lightning:formattedText value="{#prod.ProductCode}" />
+                                </c:lacComTd>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </c:lacComTable>
+            </c:lacComTableFrame>
+        </c:lacComBody>
+
+        <aura:set attribute="footer">
+            <lightning:button title="선택" label="선택"  variant="brand" onclick="{!c.doSelect}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

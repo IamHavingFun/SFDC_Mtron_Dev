@@ -1,0 +1,77 @@
+<!--
+  * @filename      : lsMSalesAddWorkingMachineQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-23 오후 7:32
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-23 오후 7:32    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesAddWorkingMachineQa"
+                description="lsMSalesAddWorkingMachineQa">
+
+    <aura:attribute name="quoteWp" type="LsMSalesQuoteData" description="" />
+    <aura:attribute name="prodFeatureOptions" type="List" description=""/>
+    <aura:attribute name="oemCompanyOptions" type="List" description=""/>
+    <aura:attribute name="wrapperDataList" type="List" description=""/>
+    <aura:attribute name="targetId" type="String" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+            padding: 0px !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">일반 작업기 추가</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <section class="modal_body">
+        <section class="body_topBox alignC">
+            <span>제품명 : {!v.quoteWp.product.Name}({!v.quoteWp.product.HorsePowerStandard__c})</span><br/>
+            <span class="stxt">{!v.quoteWp.product.Option1__c}/{!v.quoteWp.product.Option2__c}/{!v.quoteWp.product.Option3__c}/{!v.quoteWp.product.Option4__c}</span>
+        </section>
+
+        <div class="body_contBox">
+            <lightning:combobox aura:id="pfOption" label="" class="form_select mt40" options="{!v.prodFeatureOptions}" onchange="{!c.doChangeProdFeature}"/>
+            <lightning:combobox aura:id="ocOption" label="" class="form_select mt40" options="{!v.oemCompanyOptions}" onchange="{!c.doChangeOemCompany}"/>
+
+            <section class="col_board_option">
+                <ul>
+                    <aura:iteration items="{!v.recordList}" var="item">
+                        <li class="{!v.targetId == item.OptionalProduct__c ? 'select' : ''}"
+                            aura:id="optionalProduct"
+                            data-value="{#item.OptionalProduct__c}"
+                            onclick="{!c.doSelectOptionalProduct}"><!-- 클릭했을때 적용될 클래스 'select' -->
+                            <div class="left">{#item.OptionalProduct__r.Name}</div>
+                            <div class="right">{#item.OptionalProduct__r.BodyAppliedHorsepower__c}</div>
+                            <div class="option">{#item.OptionalProduct__r.OEMCompany__c}</div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </section>
+
+            <section class="bbtnBox mb60">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="선택" class="bbtn btn_50" onclick="{!c.doSelect}"/>
+            </section>
+
+        </div>
+    </section>
+</aura:component>

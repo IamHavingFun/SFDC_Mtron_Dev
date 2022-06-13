@@ -1,0 +1,43 @@
+/****************************************************************************************
+* @filename      : TransferApprovalQa.css
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-11-23 오전 9:45
+* @group         :
+* @group-content :
+* @description   : 전배 승인 처리
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+0.1     2020-11-23 오전 9:45        SEOKHO LEE          Create
+****************************************************************************************/
+
+.THIS {
+}
+
+.THIS .radio_horizontal .slds-form-element__control {
+    display: flex;
+}
+
+@media only screen and (min-height: 400px) and (max-height: 800px) {
+    .THIS .slds-modal__content {
+        overflow-y: hidden !important;
+        min-height: 200px !important;
+        max-height: 400px !important;
+    }
+}
+@media only screen and (min-height: 800px) and (max-height: 900px) {
+    .THIS .slds-modal__content {
+        overflow-y: hidden !important;
+        min-height: 200px !important;
+        max-height: 400px !important;
+    }
+}
+.THIS .custom-checkbox-margin{
+    margin-left : 6px !important;
+    margin-top : 1px !important;
+}

@@ -1,0 +1,90 @@
+<!--
+* @filename      : lsMSalesWarrantyClaim
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-06-19 오후 2:06 
+* @group         :
+* @group-content :
+* @description   : [모바일] LWS 클레임
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+ 0.1     2020-06-19 오후 2:06     SEOKHO LEE          Create
+-->
+<aura:component
+        extends="c:lsMSalesBase"
+        implements="force:appHostable,forceCommunity:availableForAllPageTypes"
+        controller="LsMSalesWarrantyClaim"
+        description="lsMSalesWarrantyClaim">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+    <aura:attribute name="searchBox" type="String" description="검색 박스"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">LWS 클레임 조회</article>
+        <article class="TopRright"></article>
+    </header>
+
+
+    <div id="container" class="bgW">
+        <!-- 상단 검색영역 -->
+        <div class="top_searchBox">
+            <span class="">
+                <div class="slds-list_horizontal">
+                    <lightning:input label="" style="width:calc(100% - 66px);" type="text" value="{!v.reqData.searchBox}" placeholder="기대번호 입력"/>
+                    <lightning:button class="btn_search_icon" onclick="{!c.doSearch}"/>
+                </div>
+            </span>
+        </div>
+
+
+        <article class="content">
+            <!-- 테이블 -->
+            <c:lsMSalesTableFrame aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}" isPaging="true">
+            <div class="row_board_result">
+                <!-- iteration 돌리기 전 체크 로직. -->
+                <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+                <ul>
+                    <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                    <li>
+                        <div class="tit"><a data-recordid="{!record.Id}" onclick="{!c.doViewDetail}">{!record.ProductId__r.Name}({!record.fm_ProductCode__c})</a></div>
+                        <div class="stxt">{!record.AssetId__r.Name}<span class="bar"></span>{!record.Customer__r.Name}<span class="bar"></span>
+                            <lightning:formattedDateTime value="{!record.LWSRegDate__c}" year="numeric" month="short" day="2-digit" />
+                        </div>
+
+                        <div class="resultGrayBox">
+                            <div class="top">
+                                <div class="left">{!record.ClaimStatus__c}</div>
+                                <div class="right">
+                                    <lightning:formattedDateTime value="{!record.LastModifiedDate}" year="numeric" month="short" day="2-digit" />
+                                </div>
+                            </div>
+                            <div class="txt">
+                               {!record.ClaimResult__c}
+                            </div>
+                        </div>
+                    </li>
+                    </aura:iteration>
+                </ul>
+                    <aura:set attribute="else">
+                        <br/>
+                        <c:lsMSalesNoDataFound/>
+                    </aura:set>
+                </aura:if>
+
+            </div>
+            </c:lsMSalesTableFrame>
+        </article>
+    </div>
+</aura:component>

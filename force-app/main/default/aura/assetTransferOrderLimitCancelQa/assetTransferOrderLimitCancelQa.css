@@ -1,0 +1,23 @@
+/****************************************************************************************
+ * @filename      : assetTransferOrderLimitCancelQa.css
+ * @author        : I2MAX
+ * @date          : 2021-03-24
+ * @group         :
+ * @group-content :
+ * @description   :
+ * @tester        :
+ * @reference     :
+ * @release       : v1.0.0
+ * @copyright     : Copyright © I2max. All Rights Reserved.
+ * @modification Log
+ * ===============================================================
+ * ver     date          author        description
+ * ===============================================================
+   0.1     2021-03-24       I2MAX          Create
+ ****************************************************************************************/
+.THIS {
+}
+
+.THIS .slds-textarea {
+    height: 13rem;
+}

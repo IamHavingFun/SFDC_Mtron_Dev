@@ -1,0 +1,47 @@
+<!--
+  * @filename      : lsSalesBase
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-03-27 오전 9:07
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-03-27 오전 9:07     i2max_my.Seo           Create
+ -->
+<aura:component extends="c:lacComBase" extensible="true" description="lsSalesBase">
+    <!-- ============================================================================
+    ==== Login User LDS 객체
+    ============================================================================= -->
+    <aura:attribute name="currentUser" type="User"/>
+    <!-- ============================================================================
+    ==== Login User LDS 객체의 Fields 정의
+    ============================================================================= -->
+    <aura:attribute name="currentUserFields" type="List" default="Id, Name, Profile.Name, UserRole.Name"/>
+    <!-- ============================================================================
+    ==== Login User LDS 여부 : 기본 false : 필요한 컴포넌트에서만 사용
+    ============================================================================= -->
+    <aura:attribute name="isCurrentUserLDS" type="Boolean" default="{!false}"/>
+    <!-- ==============================================================================
+    Current Login User LDS
+    ============================================================================== -->
+    <aura:if isTrue="{!v.isCurrentUserLDS}">
+        <force:recordData aura:id="currentUserLoader"
+                          recordId="{!$SObjectType.CurrentUser.Id}"
+                          fields="{!v.currentUserFields}"
+                          targetFields="{!v.currentUser}"
+                          recordUpdated="{!c.doRecordUpdated}"/>
+    </aura:if>
+
+    <!-- ==============================================================================
+    실제 데이터가 들어가는 부분
+    ============================================================================== -->
+    <div class="slds-is-relative">
+        {!v.body}
+    </div>
+</aura:component>

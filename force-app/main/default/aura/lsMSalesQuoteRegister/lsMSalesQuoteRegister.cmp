@@ -1,0 +1,176 @@
+<!--
+  * @filename      : lsMSalesQuoteRegister
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-19 오후 3:03
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-19 오후 3:03    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="forceCommunity:availableForAllPageTypes"
+                controller="LsMSalesQuoteRegister"
+                description="lsMSalesQuoteRegister">
+
+    <aura:attribute name="quoteWp" type="LsMSalesQuoteData" description=""/>
+    <aura:attribute name="unchangedData" type="LsMSalesQuoteRegister.UnchangedData" description=""/>
+    <aura:attribute name="deleteIds" type="List" description=""/>
+    <aura:attribute name="type" type="String" description="수정인지 단순 보기 화면인지 구분 하는 값,
+                                                            i : 초기 생성 화면
+                                                            m : 수정 화면
+                                                            v : 단순 보기 화면" default="i"/>
+    <aura:attribute name="isInit" type="Boolean" description="" default="true"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- Header -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">{!equals(v.type, 'i') ? '견적서 저장' : (equals(v.type, 'v')) ? '견적서 상세조회' : '견적서 수정'}</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <!-- Body -->
+    <div id="container" class="bgW">
+        <div class="top_searchBox">
+            <span class="slds-list_horizontal">
+                <lightning:input label="" type="text" placeholder="매수자 검색" style="width:calc(100% - 66px);" value="{!v.quoteWp.quote.CustomerName__r.Name}" disabled="true"/>
+                <lightning:button class="btn_search_icon" onclick="{!c.doSearchCustomer}" disabled="{!equals(v.type, 'i') ? false : true}"/>
+            </span>
+        </div>
+
+        <article class="content">
+            <!-- 테이블 -->
+            <label class="board_titBox mt70">
+                <section class="bbtnBox">
+                    <lightning:button label="본체" class="bbtn btn_33" onclick="{!c.doAddMainItem}"/>
+                    <lightning:button label="일반 작업기" class="bbtn btn_33" onclick="{!c.doAddWorkingMachine}"/>
+                    <lightning:button label="기타 작업기" class="bbtn btn_33" onclick="{!c.doAddOtherWorkingMachine}"/>
+                </section>
+            </label>
+
+            <div class="col_board_amount">
+                <ul>
+                    <aura:iteration items="{!v.quoteWp.qliWpList}" var="record" indexVar="idx">
+                        <li>
+                            <aura:if isTrue="{!not(record.isOtherWorkingMachine)}">
+                                <div class="left">
+                                    <div class="tit">[{!record.qliProductType}]</div>
+                                    <div class="tit">{!record.qliName}</div>
+                                    <div class="stxt">
+                                        <aura:if isTrue="{!not(equals(record.qliProductType, '작업기'))}">
+                                            {!record.option1}/{!record.option2}/{!record.option3}/{!record.option4}
+                                        </aura:if>
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <div class="row"><div class="mark">대리점가</div><lightning:formattedNumber value="{!record.unitPrice}" maximumFractionDigits="3"/></div>
+                                    <div class="row"><div class="mark">판매가</div><lightning:formattedNumber value="{!record.netPrice}" maximumFractionDigits="3"/></div>
+                                    <div class="row"><div class="mark">융자한도</div><lightning:formattedNumber value="{!record.loanSupport}" maximumFractionDigits="3"/></div>
+                                </div>
+
+                                <div class="btnBox">
+                                    <aura:if isTrue="{!equals(v.type, 'v') ? false : true}">
+                                        <lightning:button label="수정" class="sbtn_gray" value="{#idx}" onclick="{!c.doModify}"/>
+                                        <lightning:button label="삭제" class="sbtn_gray" name="{#idx}" value="{!v.quoteWp}" onclick="{!c.doDelete}"/>
+                                    </aura:if>
+                                </div>
+
+                                <aura:set attribute="else">
+                                    <div class="left">
+                                        <div class="tit">[{!record.qliProductType}]</div>
+                                        <div class="tit">{!record.qliName}</div>
+                                        <div class="stxt"></div>
+                                    </div>
+                                    <div class="right">
+                                        <div class="row"></div>
+                                        <div class="row"><div class="mark">판매가</div><lightning:formattedNumber value="{!record.netPrice}" maximumFractionDigits="3"/></div>
+                                        <div class="row"></div>
+                                    </div>
+
+                                    <div class="btnBox">
+                                        <aura:if isTrue="{!equals(v.type, 'v') ? false : true}">
+                                            <lightning:button label="수정" class="sbtn_gray" value="{#record}" onclick="{!c.doModifyForOtherWorkingMachine}"/>
+                                            <lightning:button label="삭제" class="sbtn_gray" title="{#record}" name="{#idx}" value="{!v.quoteWp}" onclick="{!c.doDelete}"/>
+                                        </aura:if>
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </li>
+                    </aura:iteration>
+
+                    <!-- 총 금액 -->
+                    <div class="total_amount">
+                        <dl>
+                            <dt class="left">합계 금액</dt>
+                            <dd class="right">
+                                <div class="row bold" >
+                                    <lightning:formattedNumber value="{!v.quoteWp.amtWrapper.totalPrice}" maximumFractionDigits="3"/>
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt class="left">최종견적가</dt>
+                            <dd class="right">
+                                <!-- 최종 결제 금액(계약 총액) -->
+                                <lightning:input aura:id="lastQuoteAmt" label="" type="number" class="custom-input-text__right" value="{!v.quoteWp.quote.LastQuoteAmt__c}" onfocus="{!c.doInputFocusNumber}" onblur="{!c.doCheckValidLastQuoteAmt}" onkeyup="{!c.doCalculate}" disabled="{!equals(v.type, 'v')}" min="1" />
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt class="except-left"></dt>
+                            <dd class="except-right">
+                                <div class="row">
+                                    (할인금액 <lightning:formattedNumber value="{!equals(v.type, 'v') ? v.quoteWp.quote.fm_DiscountAmt__c : v.quoteWp.amtWrapper.totalDiscount}" maximumFractionDigits="3"/> / 할인율 <lightning:formattedNumber value="{!equals(v.type, 'v') ? v.quoteWp.quote.fm_Discount__c : v.quoteWp.amtWrapper.discountRate}"/>%)
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt class="left">중고기대인수가</dt>
+                            <dd class="right">
+                                <lightning:input label="" type="number" class="custom-input-text__right" value="{!v.quoteWp.quote.UsedUndertakingAmt__c}" onfocus="{!c.doInputFocusNumber}" onblur="{!c.doInputBlurNumber}" onkeyup="{!c.doCalculate}" disabled="{!equals(v.type, 'v')}"/>
+                            </dd>
+                        </dl>
+                        <dl class="totalBox">
+                            <dt class="left">중고기대 인수가 차감후 금액</dt>
+                            <dd class="right" style="padding-right: 60px">
+                                <lightning:formattedNumber value="{!equals(v.type, 'v') ? v.quoteWp.quote.fm_UsedUndertakingDiscountAmt__c : v.quoteWp.amtWrapper.resultPrice}" maximumFractionDigits="3"/>
+                            </dd>
+                        </dl>
+                    </div>
+                </ul>
+            </div>
+
+            <section class="bbtnBox">
+                <!-- 초기 생성 -->
+                <aura:if isTrue="{!equals(v.type, 'i')}">
+                    <lightning:button label="목록으로" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                    <lightning:button label="견적서 저장" class="bbtn btn_50" onclick="{!c.doSave}"/>
+                </aura:if>
+
+                <!-- 수정 및 계약서 생성 -->
+                <aura:if isTrue="{!equals(v.type, 'm')}">
+                    <lightning:button label="목록으로" class="bbtn_white btn_33" onclick="{!c.doPrev}"/>
+                    <lightning:button label="견적서 저장" class="bbtn btn_33" onclick="{!c.doSave}"/>
+                    <lightning:button label="계약서 작성" class="bbtn btn_33" onclick="{!c.doRegisterContract}"/>
+                </aura:if>
+
+                <!-- 단순 보기 -->
+                <aura:if isTrue="{!equals(v.type, 'v')}">
+                    <lightning:button label="이전 화면" class="bbtn bbtn_white" onclick="{!c.doPrev}"/>
+                </aura:if>
+            </section>
+        </article>
+
+    </div>
+</aura:component>

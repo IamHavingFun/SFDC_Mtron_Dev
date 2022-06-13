@@ -1,0 +1,129 @@
+<!--
+  * @filename      : orderAssetTransferRequestQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-11-19 오전 11:10
+  * @group         :
+  * @group-content :
+  * @description   : 주문 : 전수배 주문 전환 동의 요청
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-19 오전 11:10    i2mOrderTransferRequestQaax_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="OrderAssetTransferRequestQa"
+                description="orderAssetTransferRequestQa">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="order" type="Order__c" access="public" description=""/>
+    <aura:attribute name="isRequested" type="Boolean" access="public" description=""/>
+    <aura:attribute name="isOpportunityOrder" type="Boolean" access="public" description=""/>
+    <aura:attribute name="isPossible" type="Boolean" access="public" description=""/>
+    <aura:attribute name="isNhGovAccount" type="Boolean" access="public" description=""/>
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComQuickAction title="전수배 주문 전환" aura:id="quickAction" hasSelfFooter="{#false}">
+
+        <aura:if isTrue="{!v.isNhGovAccount}">
+            <!-- 농협/관납 -->
+            <aura:if isTrue="{!not(v.isRequested)}">
+                <aura:if isTrue="{!v.isPossible}">
+                    <lightning:layout horizontalAlign="center" class="">
+                        <div class="slds-align-middle slds-m-top_medium">
+                            <span>
+                                본 주문에 대해서 전수배 주문으로의 전환을 진행 하시겠습니까?
+                            </span>
+                        </div>
+                    </lightning:layout>
+                    <aura:set attribute="else">
+                        <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                             주문 상태가 [영업소 주문 검토] 단계인 경우에 한해 가능합니다.
+                        </div>
+                    </aura:set>
+                </aura:if>
+                <aura:set attribute="else">
+                    <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                        이미 전수배 주문으로의 전환이 되었습니다.
+                    </div>
+                </aura:set>
+            </aura:if>
+
+            <aura:set attribute="else">
+                <!-- 대리점 -->
+                <aura:if isTrue="{!v.isOpportunityOrder}">
+                    <aura:if isTrue="{!not(v.isRequested)}">
+                        <aura:if isTrue="{!v.isPossible}">
+                            <lightning:layout horizontalAlign="center" class="">
+                                <div class="slds-align-middle slds-m-top_medium">
+                            <span>
+                                본 주문에 대한 전수배 주문으로의 전환을 주문 대리점에 승인 요청 하시겠습니까?<br/>
+                                전배/수배 대리점 양측의 확정 이후 주문 구분이 전수배 주문으로 변경됩니다.
+                            </span>
+                                </div>
+                            </lightning:layout>
+                            <aura:set attribute="else">
+                                <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                                    전수배 주문으로의 전환은 주문 목적이 판매기회이고, <br/>
+                                    주문 상태가 [영업소 주문 검토] 단계인 경우에 한해 가능합니다.
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                                <aura:if isTrue="{!v.order.AssetTransferAgreeStatus__c == '요청'}">
+                                    주문 대리점의 전수배 주문으로의 전환 승인을 대기 중입니다.
+                                    <aura:set attribute="else">
+                                        주문 대리점이 이미 전수배 주문으로의 전환에 [{!v.order.AssetTransferAgreeStatus__c}] 하였습니다.
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+
+                    <aura:set attribute="else">
+                        <div class="slds-text-body_regular slds-text-align_center" style="font-size: 16px; margin-top: 100px;">
+                            <span>전수배 주문으로의 전환은 주문 목적이 판매기회인 경우에 한해 가능합니다.</span>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+
+        </aura:if>
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!
+                and(
+                    and(not(v.isRequested),v.isPossible),
+                    or(
+                        and(
+                            not(v.isNhGovAccount),
+                            v.isOpportunityOrder
+                        ),
+                        and(
+                            v.isNhGovAccount
+                        )
+                    )
+                )
+            }">
+                <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}" disabled="{!v.hasAssetTransferRequest}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

@@ -1,0 +1,72 @@
+<!--
+  * @filename      : weeklyReportHome
+  * @projectname   :
+  * @author        : jy.Kim
+  * @date          : 2020-03-25
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-03-25     	jy.Kim          Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                controller="WeeklyReportHomeController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                description="weeklyReportHome">
+
+    <aura:attribute name="wrapperClass" type="WeeklyReportHomeController.WeeklyReportWrapper[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!--  Header -->
+    <c:lacComHeader isCommunity="{!v.isCommunity}" type="WeeklyReport" title="주간보고" aura:id="header" iconName="custom:custom97" isDetailCard="{!true}">
+        <!-- button 영역에 그 외 나머지 custom button을 넘긴다. -->
+        <aura:set attribute="button">
+        </aura:set>
+    </c:lacComHeader>
+
+    <lightning:card>
+        <!-- Table 또는 Body -->
+        <c:lacComTableFrame aura:id="table" isPaging="{!false}" simple="{!true}" isCommunity="{#v.isCommunity}">
+            <c:lacComTable aura:id="dataTable" style="width:100%" hasScroll="{!false}" left="1" fixedHeader="{!false}" scrollHeight="100%">
+                <colgroup>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="40%"/>
+                </colgroup>
+                <thead>
+                <tr>
+                    <c:lacComTh title="영업소">영업소</c:lacComTh>
+                    <c:lacComTh title="금주">금주</c:lacComTh>
+                    <c:lacComTh title="전주">전주</c:lacComTh>
+                    <c:lacComTh title="담당자">담당자</c:lacComTh>
+                </tr>
+                </thead>
+                <tbody>
+                <aura:iteration items="{!v.wrapperClass}" var="row" indexVar="idx">
+                    <tr>
+                        <c:lacComTd title="{!if(row.ThisWeeklyReport.BusinessOffice__c != null,row.ThisWeeklyReport.BusinessOffice__c,row.LastWeeklyReport.BusinessOffice__c)}">{!if(row.ThisWeeklyReport.BusinessOffice__c != null,row.ThisWeeklyReport.BusinessOffice__c,row.LastWeeklyReport.BusinessOffice__c)}</c:lacComTd>
+                        <c:lacComTd title="{!row.ThisWeeklyReport.Name}">
+                            <a data-recordid="{!row.ThisWeeklyReport.Id}" data-recordtype="{!row.objectName}" onclick="{!c.doNaviService}">
+                                {!row.ThisWeeklyReport.ThisWeekStartDate__c}
+                            </a>
+                        </c:lacComTd>
+                        <c:lacComTd title="{!row.LastWeeklyReport.Name}">
+                            <a data-recordid="{!row.LastWeeklyReport.Id}" data-recordtype="{!row.objectName}" onclick="{!c.doNaviService}">
+                                {!row.LastWeeklyReport.ThisWeekStartDate__c}
+                            </a>
+                        </c:lacComTd>
+                        <c:lacComTd title="{!if(row.ThisWeeklyReport.Owner.Name != null,row.ThisWeeklyReport.Owner.Name,row.LastWeeklyReport.Owner.Name)}">{!if(row.ThisWeeklyReport.Owner.Name != null,row.ThisWeeklyReport.Owner.Name,row.LastWeeklyReport.Owner.Name)}</c:lacComTd>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+            </c:lacComTable>
+        </c:lacComTableFrame>
+    </lightning:card>
+</aura:component>

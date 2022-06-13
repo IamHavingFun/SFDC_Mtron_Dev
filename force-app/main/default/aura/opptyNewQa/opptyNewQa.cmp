@@ -1,0 +1,85 @@
+<!--
+  * @filename      : opptyNewQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-04-14 오전 9:59
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-14 오전 9:59    i2max_my.Seo      Create
+-->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader"
+                controller="OpptyNewQa"
+                description="opptyNewQa">
+
+    <aura:attribute name="oppty" type="Opportunity" default="{'sobjectType':'Opportunity'}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="새 영업기회 생성" aura:id="quickAction" hasSelfFooter="{#true}" >
+        <lightning:recordEditForm objectApiName="Opportunity">
+
+            <lightning:layout>
+                <lightning:layoutItem size="2" class="slds-align-middle slds-text-align_right slds-p-around_small">
+                    <label for="accountId" >고객명</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" class="slds-p-around_small">
+                    <lightning:inputField aura:id="accountId" fieldName="AccountId" variant="label-hidden"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="2" class="slds-align-middle slds-text-align_right slds-p-around_small">
+                    <label for="accountId" >관심모델</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" class="slds-p-around_small">
+                    <lightning:inputField fieldName="InterestModel__c" variant="label-hidden" value="{!v.oppty.InterestModel__c}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="2" class="slds-align-middle slds-text-align_right slds-p-around_small">
+                    <label for="accountId" >구매예정일</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" class="slds-p-around_small">
+                    <lightning:inputField fieldName="CloseDate" class="slds-m-top_medium" variant="label-hidden" value="{!v.oppty.CloseDate}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="2" class="slds-align-middle slds-text-align_right slds-p-around_small">
+                    <label for="accountId" >프로모션</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" class="slds-p-around_small">
+                    <lightning:inputField aura:id="promotion" fieldName="Promotion__c" variant="label-hidden"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" class="slds-p-around_small">
+                    <lightning:button label="진행중인 프로모션 보기"  variant="brand" onclick=""/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="2" class="slds-align-middle slds-text-align_right slds-p-around_small">
+                    <label for="accountId" >메모</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="9" class="slds-p-around_small">
+                    <lightning:inputField fieldName="Description" variant="label-hidden" value="{!v.oppty.Description}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+        </lightning:recordEditForm>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnCancel" label="취소" onclick="{!c.doNaviObjHome}"/>
+            <lightning:button aura:id="btnSave" label="영업 기회 생성" variant="brand" onclick="{!c.doSave}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

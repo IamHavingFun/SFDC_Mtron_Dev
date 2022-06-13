@@ -1,0 +1,67 @@
+<!--
+  * @filename      : partnerShare
+  * @projectname   :
+  * @author        : jy.Kim
+  * @date          : 2020-06-09
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-09     	jy.Kim          Create
+ -->
+
+<aura:component extends="c:lsSalesBase"
+                description="partnerShare"
+                implements="forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName"
+                controller="NoticeBoardPartnerShareController">
+    <aura:attribute name="resShareData" type="NoticeBoardPartnerShareController.ResData" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit }" />
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+    <aura:html tag="style">
+        .slds-page-header {
+            padding-bottom:4px !important;
+        }
+    </aura:html>
+    <!-- Header Start -->
+    <c:lacComHeader type="" title="공개 범위" aura:id="header" iconName="custom:custom62" isDetailCard="{!false}">
+        <aura:set attribute="button">
+            <lightning:button label="공개 범위 설정" onclick="{!c.doPopup}"/>
+        </aura:set>
+    </c:lacComHeader>
+    <!-- Header End -->
+
+    <!-- Body Start -->
+    <c:lacComTableFrame aura:id="table" isPaging="{!false}" simple="{!true}" isCommunity="{#v.isCommunity}">
+        <c:lacComTable aura:id="dataTable" hasScroll="true" fixedHeader="{!true}" isNotDefaultTableBorder="{!false}" scrollHeight="600px">
+            <thead>
+            <tr>
+                <c:lacComTh class="slds-text-align_center" style="width:80px;">[{!v.resShareData.ShareSetting_List.length}건]</c:lacComTh>
+                <c:lacComTh class="slds-text-align_center" style="width:100px;">지역</c:lacComTh>
+                <c:lacComTh>대리점</c:lacComTh>
+                <c:lacComTh style="width:120px;">등록일자</c:lacComTh>
+            </tr>
+            </thead>
+            <tbody>
+            <aura:iteration items="{!v.resShareData.ShareSetting_List}" var="row">
+                <tr>
+                    <c:lacComTd class="slds-text-align_center"><lightning:buttonIcon iconName="utility:delete" variant="bare" value="{!row.Id}" alternativeText="삭제" onclick="{!c.doDelete}"/></c:lacComTd>
+                    <c:lacComTd class="slds-text-align_center">{!row.BusinessOfficeApex__c}</c:lacComTd>
+                    <c:lacComTd>
+                        <a data-recordid="{!row.Account__c}" onclick="{!c.doNaviService}">
+                            {!row.DealerApex__c}
+                        </a>
+                    </c:lacComTd>
+                    <c:lacComTd><lightning:formattedDateTime value="{!row.CreatedDate}" /></c:lacComTd>
+                </tr>
+            </aura:iteration>
+            </tbody>
+        </c:lacComTable>
+    </c:lacComTableFrame>
+</aura:component>

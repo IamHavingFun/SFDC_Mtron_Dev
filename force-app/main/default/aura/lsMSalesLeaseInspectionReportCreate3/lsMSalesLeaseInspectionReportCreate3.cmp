@@ -1,0 +1,75 @@
+<!--
+  * @filename      : lsMSalesLeaseInspectionReportCreate3
+  * @author        : I2MAX
+  * @date          : 2021-04-15
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-04-15         I2MAX          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesLeaseInspectionReport"
+                description="lsMSalesLeaseInspectionReportCreate3">
+
+    <!-- =============================================================================================================
+    ==== component
+    ============================================================================================================== -->
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- =============================================================================================================
+    ==== content
+    ============================================================================================================== -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">업로드</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <article class="content">
+        <section class="lwsImgBox">
+            <div class="lwsTitImg">
+                <lightning:fileUpload label="전면"
+                                      multiple="false"
+                                      accept="{!v.filetype}"
+                                      recordId="{!v.mobileStepVO.bizData.leaseInspectionReport.Id}"
+                                      onuploadfinished="{!c.doAfterUploadFinished}"
+                />
+            </div>
+            <div class="lwsTitImg">
+                <lightning:fileUpload label="측면1"
+                                      multiple="false"
+                                      accept="{!v.filetype}"
+                                      recordId="{!v.mobileStepVO.bizData.leaseInspectionReport.Id}"
+                                      onuploadfinished="{!c.doAfterUploadFinished}"
+                />
+            </div>
+            <div class="lwsTitImg">
+                <lightning:fileUpload label="측면2"
+                                      multiple="false"
+                                      accept="{!v.filetype}"
+                                      recordId="{!v.mobileStepVO.bizData.leaseInspectionReport.Id}"
+                                      onuploadfinished="{!c.doAfterUploadFinished}"
+                />
+            </div>
+            <div class="lwsTitImg">
+                <lightning:fileUpload label="후면"
+                                      multiple="false"
+                                      accept="{!v.filetype}"
+                                      recordId="{!v.mobileStepVO.bizData.leaseInspectionReport.Id}"
+                                      onuploadfinished="{!c.doAfterUploadFinished}"
+                />
+            </div>
+        </section>
+
+        <section class="bbtnBox">
+                <lightning:button label="닫기" class="bbtn_white width100" onclick="{!c.doClose}"/>
+        </section>
+    </article>
+</aura:component>

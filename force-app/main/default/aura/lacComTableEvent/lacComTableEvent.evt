@@ -1,0 +1,19 @@
+<!--
+  * @filename      : lacComTableEvent
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:event type="COMPONENT" description="lacComTableEvent">
+    <aura:attribute name="message" type="Map" description="tableFrame Event Params Map"/>
+</aura:event>

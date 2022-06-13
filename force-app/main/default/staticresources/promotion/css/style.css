@@ -1,0 +1,140 @@
+@charset: "utf-8";
+
+
+/* font */
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 100;
+    src: local('Noto Sans Thin'), local('NotoSans-Thin'),
+    url(../fonts/eot/NotoSansKR-Thin-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-Thin-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-Thin-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-Thin-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Noto Sans Light'), local('NotoSans-Light'),
+    url(../fonts/eot/NotoSansKR-Light-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-Light-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-Light-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-Light-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 350;
+    src: local('Noto Sans DemiLight'), local('NotoSans-DemiLight'),
+    url(../fonts/eot/NotoSansKR-DemiLight-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-DemiLight-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-DemiLight-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-DemiLight-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Sans Regular'), local('NotoSans-Regular'),
+    url(../fonts/eot/NotoSansKR-Regular-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-Regular-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-Regular-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-Regular-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Noto Sans Medium'), local('NotoSans-Medium'),
+    url(../fonts/eot/NotoSansKR-Medium-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-Medium-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-Medium-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-Medium-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Sans Bold'), local('NotoSans-Bold'),
+    url(../fonts/eot/NotoSansKR-Bold-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-Bold-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-Bold-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-Bold-Hestia.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Noto Sans Korean';
+    font-style: normal;
+    font-weight: 900;
+    src: local('Noto Sans Black'), local('NotoSans-Black'),
+    url(../fonts/eot/NotoSansKR-Black-Hestia.eot),
+    url(../fonts/eot/NotoSansKR-Black-Hestia.eot?#iefix) format('embedded-opentype'),
+    url(../fonts/woff/NotoSansKR-Black-Hestia.woff) format('woff'),
+    url(../fonts/otf/NotoSansKR-Black-Hestia.otf) format('opentype');
+}
+
+*, body{font-family: 'Noto Sans Korean', sans-serif; letter-spacing: -0.02em; box-sizing: border-box}
+
+/* font-E */
+
+.clearfix:after {content: ''; display: table; clear: both}
+.bgonly{text-indent: -9999px; font-size: 0}
+
+
+/*-------------------------- event --------------------------*/
+.eventBody { width: 100%; display: inline-block;}
+.eventBody .visual { width: 100%; padding-top: 0;  text-align: center; /* min-height: 553px; background: url(../images/tit-bg-mo.png) center 0 #050121 no-repeat; background-size: 100*/%; */ }
+.eventBody .visual img {width: 100%; height: auto;}
+
+.eventBody h2 { width: 100%; font-weight: 700; font-size: 34px; color: #0b3c7d; }
+.eventBody .event_form { width: 100%; background: #f1f1f1; padding: 20px 7%; }
+.eventBody .event_form li { width: 100%; display: flex; line-height: 45px; margin: 10px 0;}
+.eventBody .event_form li>strong {width: 90px; display: inline-block; font-weight: 500;}
+.eventBody .event_form li>input, .eventBody .event_form li>select {width: calc(100% - 90px); height: 45px; display: inline-block; padding:0 8px; box-sizing: border-box; border-radius: 0; border: 1px solid #ccc; font-size: 15px; }
+
+.eventBody .event_agree { width: 100%; padding: 20px 7%; box-sizing: border-box; }
+.eventBody .event_agree li { width: 100%; line-height: 28px; }
+.eventBody .event_agree .agree_in { padding-left: 30px; box-sizing: border-box; }
+
+.eventBody .bbtn_area {width: 100%; background: #f1f1f1; padding: 20px 7%;  }
+.eventBody .bbtn_area button{width: 100%; height: 50px; 
+	background-color: #ed174b; border: none; cursor: pointer;
+	color: #fff; font-weight: bold; font-size: 20px;
+	}
+
+/* Checkbox */
+.eventBody .event_agree input[type="checkbox"] {
+    display:none;
+}
+.eventBody .event_agree input[type="checkbox"] + label {font-size: 13px; font-weight: 500; letter-spacing: -1px; }
+.eventBody .event_agree input[type="checkbox"] + label>strong { color: #0b3c7d; }
+.eventBody .event_agree input[type="checkbox"] + label span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: -2px 5px 0 0;
+    vertical-align: middle;
+    background: url(../images/checkbox.svg) left top no-repeat;
+    cursor: pointer;
+    background-size: cover;
+}
+
+.eventBody .event_agree input[type="checkbox"]:checked + label span {
+    background:url(../images/checkbox.svg) -26px top no-repeat;
+    background-size: cover;
+}
+
+/* fullDown */
+.form_select{position: relative; display: inline-block; width: 100%;}
+.form_select select{display: inline-block; width: 100%; appearance:none; -webkit-appearance:none; -moz-appearance:none;}
+.form_select select::-ms-expand{display:none;}
+.form_select__arrow{position: absolute; top: 19px; right: 15px; width :0; height :0; pointer-events: none; border-style :solid; border-width: 10px 7px 0 7px; border-color: #000 transparent transparent transparent;}
+
+
+

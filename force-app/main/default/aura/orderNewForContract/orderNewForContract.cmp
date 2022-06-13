@@ -1,0 +1,117 @@
+<!--
+  * @filename      : orderNewForContract
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-12-14 오후 2:05
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-12-14 오후 2:05    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:appHostable"
+                controller="OrderNewForContract"
+                description="orderNewForContract">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="labelMap" type="Map" access="public" description="다국어 지원"/>
+    <aura:attribute name="wrapperData" type="OrderNewQa.WrapperData" access="public"/>
+    <aura:attribute name="divisionList" type="List" default="[
+        {'label': '공장주문', 'value': '공장주문'}
+    ]"/>
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComHeader type="" title="주문 신청">
+        <aura:set attribute="button">
+            <lightning:button label="저장" variant="brand" onclick="{!c.doSave}"/>
+        </aura:set>
+    </c:lacComHeader>
+    <c:lacComBody>
+        <c:lacComSectionFrame title="주문 요약 정보" hasHeader="true">
+            <lightning:recordEditForm objectApiName="Order__c">
+                <lightning:layout horizontalAlign="end">
+                    <lightning:layoutItem size="1" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">{!v.labelMap.Order__c.orderaccount__c}</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <lightning:inputField aura:id="orderAccount" fieldName="OrderAccount__c" class="slds-list_horizontal slds-m-left_x-large slds-m-bottom_medium slds-m-top_large" variant="label-hidden" onchange="{!c.doGetSoldTo}" value="{!v.wrapperData.order.OrderAccount__c}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+
+                <lightning:layout horizontalAlign="end">
+                    <lightning:layoutItem size="1" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">주문 목적</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <p class="slds-list_horizontal slds-m-left_x-large slds-m-bottom_medium">
+                        <div class="slds-m-top_large">농협/관납</div>
+                        <lightning:button label="제품 조회" type="button" class="slds-size_1-of-5 left-side custom-box slds-m-left_medium slds-m-top_medium" variant="brand" onclick="{!c.doMoveSearchList}"/>
+                        </p>
+                    </lightning:layoutItem>
+                </lightning:layout>
+
+                <lightning:layout horizontalAlign="end">
+                    <lightning:layoutItem size="1" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">{!v.labelMap.Order__c.division__c}</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <lightning:radioGroup aura:id="division" label="" options="{!v.divisionList}" value="{!v.wrapperData.order.Division__c}" class="slds-m-left_x-large slds-m-bottom_medium slds-m-top_small customRadioCls"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+
+                <lightning:layout horizontalAlign="end">
+                    <lightning:layoutItem size="1" class="slds-align-middle slds-m-right--large">
+                        <label for="division" class="slds-m-top_medium">{!v.labelMap.Order__c.deliverydate__c}</label>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="9">
+                        <lightning:inputField fieldName="DeliveryDate__c" class="slds-list_horizontal slds-m-left_x-large slds-m-bottom_medium slds-m-top_large" variant="label-hidden" value="{!v.wrapperData.order.DeliveryDate__c}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:recordEditForm>
+        </c:lacComSectionFrame>
+
+        <colgroup>
+            <col width="20%"/>
+            <col width="40%"/>
+            <col width="40%"/>
+        </colgroup>
+
+        <c:lacComSectionFrame title="제품 정보" hasHeader="true">
+            <c:lacComTable aura:id="dataTable">
+                <thead>
+                <tr>
+                    <c:lacComTh title="{!v.labelMap.Product2.type__c}">{!v.labelMap.Product2.type__c}</c:lacComTh>
+                    <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.name}</c:lacComTh>
+                    <c:lacComTh title="{!v.labelMap.OrderLineitem__c.nhgovlistprice__c}">{!v.labelMap.OrderLineitem__c.nhgovlistprice__c}</c:lacComTh>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <c:lacComTd>{!v.wrapperData.orderLineItemList[0].ProductId__r.Type__c}</c:lacComTd>
+                    <c:lacComTd>{!v.wrapperData.orderLineItemList[0].ProductId__r.Name}</c:lacComTd>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.orderLineItemList[0].NhGovListPrice__c}" maximumFractionDigits="3"/></c:lacComTd>
+                </tr>
+                </tbody>
+            </c:lacComTable>
+        </c:lacComSectionFrame>
+    </c:lacComBody>
+
+</aura:component>

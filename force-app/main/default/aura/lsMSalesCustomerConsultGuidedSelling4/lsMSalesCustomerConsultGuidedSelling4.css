@@ -1,0 +1,29 @@
+.THIS {
+}
+
+.THIS .catalogList_height {
+    height: calc(100vh - 240px);
+    overflow: scroll;
+}
+/*----------------- swipe img -----------------*/
+.THIS .PS_result .ps_result_product {
+    width: 700px;
+    display: inline-block;
+}
+
+.THIS .PS_result .PS_result_titBox {
+    margin-top:15px !important;
+}
+
+.THIS .slds-is-relative {
+    margin-bottom: 40px;
+}
+
+
+/*----------------- bbtn -----------------*/
+.THIS .catalogFoot_fix {
+    z-index: 30;
+}
+.THIS .catalogFoot_fix .bbtn_white {
+    margin-top: 30px !important;
+}

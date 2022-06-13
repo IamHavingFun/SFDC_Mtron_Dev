@@ -1,0 +1,107 @@
+<!--
+  * @filename      : tableauIframeConnector
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-05-27
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-05-27     	i2max          Create
+ -->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                description="tableauIframeConnector">
+
+    <aura:attribute name="tsname" type="String" default="SE_Dashboard" required="true" description="대시보드 이름"/>
+
+    <aura:attribute name="biLink_total" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_1" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_2" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_3" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_4" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_5" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_6" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_7" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+    <aura:attribute name="biLink_8" type="String" default="" required="true" description="전체 BI 대쉬보드 url"/>
+
+    <article class="mapArea">
+        <div class="mapBox">
+            <div class="mapTit">
+                <ul>
+                    <a href="{#v.biLink_total}" target="_blank"><li>전체 <div class="map_color1"></div></li></a>
+                    <a href="{#v.biLink_1}" target="_blank"><li>경기 <div class="map_color2"></div></li></a>
+                    <a href="{#v.biLink_2}" target="_blank"><li>강원 <div class="map_color3"></div></li></a>
+                    <a href="{#v.biLink_3}" target="_blank"><li>충북 <div class="map_color4"></div></li></a>
+                    <a href="{#v.biLink_4}" target="_blank"><li>충남 <div class="map_color5"></div></li></a>
+                    <a href="{#v.biLink_5}" target="_blank"><li>전북 <div class="map_color6"></div></li></a>
+                    <a href="{#v.biLink_6}" target="_blank"><li>전남 <div class="map_color7"></div></li></a>
+                    <a href="{#v.biLink_7}" target="_blank"><li>경북 <div class="map_color8"></div></li></a>
+                    <a href="{#v.biLink_8}" target="_blank"><li>경남 <div class="map_color9"></div></li></a>
+                </ul>
+            </div>
+            <div class="">
+                <img src="/resource/img_map" style="height:540px"/>
+            </div>
+        </div>
+    </article>
+    <!--
+    <lightning:layout horizontalAlign="spread" class="slds-m-around_medium">
+        <lightning:layoutItem size="12" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center">
+            <a href="{#v.biLink_total}" target="_blank">
+                <p class="customBox">전체</p>
+            </a>
+        </lightning:layoutItem>
+    </lightning:layout>
+
+    <lightning:layout horizontalAlign="center" class="slds-m-around_medium" pullToBoundary="small" multipleRows="true">
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_1}" target="_blank">
+                <p class="customBox">경기</p>
+            </a>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_2}" target="_blank">
+                <p class="customBox">강원</p>
+            </a>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_3}" target="_blank">
+                <p class="customBox">충북</p>
+            </a>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_4}" target="_blank">
+                <p class="customBox">충남</p>
+            </a>
+        </lightning:layoutItem>
+    </lightning:layout>
+
+    <lightning:layout horizontalAlign="center" class="slds-m-around_medium">
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_5}" target="_blank">
+                <p class="customBox">전북</p>
+            </a>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_6}" target="_blank">
+                <p class="customBox">전남</p>
+            </a>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_7}" target="_blank">
+                <p class="customBox">경북</p>
+            </a>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" class="slds-box slds-box_border slds-p-around_large slds-align_absolute-center" >
+            <a href="{#v.biLink_8}" target="_blank">
+                <p class="customBox">경남</p>
+            </a>
+        </lightning:layoutItem>
+    </lightning:layout>
+-->
+</aura:component>

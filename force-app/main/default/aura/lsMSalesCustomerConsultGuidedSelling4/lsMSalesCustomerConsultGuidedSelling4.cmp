@@ -1,0 +1,121 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultGuidedSelling4
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일]고객상담 : Step4 : Guided Selling Step4
+  *                : 맟춤형 추천(제품 컨텐츠 Display)
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesCustomerConsult"
+                description="lsMSalesCustomerConsultGuidedSelling4">
+
+    <!-- ============================================================================
+    ==== 선택된 제품으로 구한 제품 VO
+    ============================================================================= -->
+    <aura:attribute name="productVO" type="LsMSalesProductVO" default="선택된 제품의 조회 VO 객체"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <!-- ============================================================================
+    ==== Header 영역
+    ============================================================================= -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">고객상담</article>
+        <article class="TopRright"></article>
+    </header>
+    <!-- ============================================================================
+    ==== Body 영역
+    ============================================================================= -->
+    <div id="container">
+        <article class="content catalogList_height">
+            <!-- ============================================================================
+            ==== 스텝 영역
+            ============================================================================= -->
+            <div class="stepBox">
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step_check.png'}" alt=""/>
+                    <div class="txt on">Step1</div>
+                </div>
+                <div class="line on"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step_check.png'}" alt=""/>
+                    <div class="txt on">Step2</div>
+                </div>
+                <div class="line on"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step_check.png'}" alt=""/>
+                    <div class="txt on">Step3</div>
+                </div>
+                <div class="line on"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step4_on.png'}" alt=""/>
+                    <div class="txt">Step4</div>
+                </div>
+            </div>
+            <!-- ============================================================================
+            ==== 주업무 영역
+            ============================================================================= -->
+            <section class="PS_result">
+                <aura:if isTrue="{!not(empty(v.productVO))}">
+                    <article class="PS_result_titBox">
+                        <div class="name">{!v.productVO.product.Name}</div>
+                        <div class="right">
+                            <lightning:button label="제원보기" onclick="{!c.doSpecification}"/>
+                            <lightning:button label="재고현황" onclick="{!c.doSearchInventory}"/>
+                        </div>
+                        <div class="option">
+                            <!-- 20200803: Series__c 에서 Name으로 변경 -->
+                            <div>{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Name}</div>
+                            <div>마력(PS):{!v.mobileStepVO.bizData.productSeriesVO.productSeries.HorsePower__c} / 중량(KG):{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Weight__c} / 전장(mm):{!v.mobileStepVO.bizData.productSeriesVO.productSeries.Length__c}</div>
+                        </div>
+                    </article>
+                </aura:if>
+                <!-- 노출 순서는 동영상, 세일즈토크, 카탈로그 -->
+                <!-- 제품 컨테츠 set별 동영상 -->
+                <!-- 최종적으로 [Object object] 에러 발생시 length 로 비교한다. -->
+                <aura:if isTrue="{!and(not(empty(v.productVO.productContentsVideoDataList)), v.productVO.productContentsVideoDataList.length > 0)}">
+                    <aura:iteration items="{!v.productVO.productContentsVideoDataList}" var="productContentsData">
+                        <article class="PS_result_titBox">
+                            <div class="slds-text-align_center">
+                                <iframe width="100%" height="315" src="{!productContentsData.productContents.MovieURL__c}" frameborder="0" allow="fullscreen; accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+                            </div>
+                        </article>
+                    </aura:iteration>
+                    <div class="txtBox">&nbsp;</div><!--임의 여백을 위한 코드-->
+                </aura:if>
+                <!-- 세일즈토크 carousel -->
+                <aura:if isTrue="{!and(not(empty(v.productVO.productContentsSalesTalkDataList)), v.productVO.productContentsSalesTalkDataList.length > 0)}">
+                    <aura:iteration items="{!v.productVO.productContentsSalesTalkDataList}" var="productContentsData" indexVar="swiperContainerIndex">
+                        <c:lsMSalesCustomerConsultSwiper productContentsData="{!productContentsData}" sitePathPrefix="{!v.productVO.sitePathPrefix}"/>
+                    </aura:iteration>
+                </aura:if>
+                <!-- 카탈로그 carousel -->
+                <aura:if isTrue="{!and(not(empty(v.productVO.productContentsCatalogueDataList)), v.productVO.productContentsCatalogueDataList.length > 0)}">
+                    <aura:iteration items="{!v.productVO.productContentsCatalogueDataList}" var="productContentsData" indexVar="swiperContainerIndex">
+                        <c:lsMSalesCustomerConsultSwiper productContentsData="{!productContentsData}" sitePathPrefix="{!v.productVO.sitePathPrefix}"/>
+                    </aura:iteration>
+                </aura:if>
+            </section>
+        </article>
+        <!-- ============================================================================
+        ==== 하단 버튼 영역
+        ============================================================================= -->
+        <article class="bbtnBox catalogFoot_fix">
+            <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrevSelf}"/>
+            <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+        </article>
+    </div>
+</aura:component>

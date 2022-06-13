@@ -1,0 +1,31 @@
+.THIS {
+}
+
+.THIS .top_searchBoxN {
+    width: 100%;
+    background: #fff;
+    padding: 50px 0px 0px 0;
+    box-sizing: border-box;
+}
+.THIS .top_searchBoxN .btn_search_icon {
+    border-radius: 0;
+}
+
+.THIS .modal_body .top_row2Box {
+    width: 100%;
+    display: block;
+    padding-top: 40px;
+}
+
+.THIS .modal_body .col_board2 .right input {
+    margin-top: 12px;
+    text-align: right;
+}
+.THIS .slds-input {
+    border-radius: 0;
+}
+
+/* ----------------- modal layout ------------------ */
+.THIS .slds-modal__container {
+    border-radius: 0;
+}

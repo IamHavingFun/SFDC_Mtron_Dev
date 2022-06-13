@@ -1,0 +1,103 @@
+<!--
+  * @filename      : lsMSalesCaseList
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-11-26 오후 4:57
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-26 오후 4:57    i2max_my.Seo      Create
+ -->
+<aura:component
+        extends="c:lsMSalesBase"
+        description="lsMSalesCaseList"
+        implements="force:appHostable,forceCommunity:availableForAllPageTypes"
+        controller="LsMSalesCaseList">
+
+    <aura:attribute name="srchOptions" type="List" access="private" default="[
+                        {'label': '전체', 'value': 'All'},
+                        {'label': '진행중', 'value': 'Progress'},
+                        {'label': '완료', 'value': 'Completed'}
+                    ]"
+                    description="검색 조건 상태 Options"/>
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .w315 {
+        width: 315px !important;
+        }
+        .w130 {
+        width: 130px !important;
+        }
+    </aura:html>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">문의/건의</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 검색영역 -->
+        <div class="top_searchBox">
+            <div class="row">
+                <span class="form_select" style="width:calc(100% - 300px);">
+                    <lightning:combobox label=""
+                                        options="{!v.srchOptions}"
+                                        variant="label-stacked"
+                                        value="{!v.reqData.searchStatus}"/>
+                </span>
+                <span class="form_select" style="width:140px; margin-right: 0px;">
+                    <button class="btn_search" onclick="{!c.doSearch}">검색</button>
+                </span>
+                <span class="form_select" style="width:160px;">
+                    <button class="btn" onclick="{!c.doNaviRegister}">신규등록</button>
+                </span>
+            </div>
+        </div>
+        <!-- //상단 검색영역 -->
+
+        <article class="content">
+            <!-- 테이블 -->
+            <c:lsMSalesTableFrame aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}">
+                <div class="col_board mt20">
+                    <!-- iteration 돌리기 전 체크 로직. -->
+                    <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+                        <ul>
+                            <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                                <li>
+                                    <div class="left">
+                                        <div class="tit"><a data-recordid="{!record.Id}" onclick="{!c.doViewDetail}">{!record.Subject__c}</a></div>
+                                        <div class="stxt">
+                                            <!--{!record.CreatedDate}<br/>-->
+                                            <lightning:formattedDateTime value="{!record.CreatedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                         minute="2-digit" hour12="false"/>
+                                        </div>
+                                    </div>
+                                    <div class="right w315">
+                                        <span>{!record.Status__c}</span>
+                                    </div>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                        <aura:set attribute="else">
+                            <c:lsMSalesNoDataFound/>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </c:lsMSalesTableFrame>
+        </article>
+    </div>
+</aura:component>

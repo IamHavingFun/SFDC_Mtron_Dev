@@ -1,0 +1,55 @@
+<!--
+  * @filename      : assetTransferOrderLimitCancelQa
+  * @author        : I2MAX
+  * @date          : 2021-03-24
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-03-24         I2MAX          Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                controller="AssetTransferOrderLimitCancelQa"
+                description="assetTransferOrderLimitCancelQa">
+
+    <!-- =============================================================================================================
+    ==== public attribute
+    ============================================================================================================== -->
+    <aura:attribute name="asset" type="Asset" default="{'sobjectType':'Asset'}" description=""/>
+    <aura:attribute name="isError" type="Boolean" default="false" description=""/>
+    <aura:attribute name="errorMessage" type="String" default="" description=""/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- =============================================================================================================
+    ==== content
+    ============================================================================================================== -->
+    <c:lacComQuickAction title="추가 전배 승인 요청" aura:id="quickAction" hasSelfFooter="{#false}">
+
+        <aura:if isTrue="{!v.isError == false}">
+
+            <lightning:recordEditForm objectApiName="Asset" recordId="{!v.recordId}">
+                <lightning:inputField fieldName="LimitCancelComment__c" value="{!v.asset.LimitCancelComment__c}" class="custom-height"/>
+            </lightning:recordEditForm>
+
+            <aura:set attribute="else">
+                {!v.errorMessage}
+            </aura:set>
+        </aura:if>
+
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isError == false}">
+                <lightning:button label="제출" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

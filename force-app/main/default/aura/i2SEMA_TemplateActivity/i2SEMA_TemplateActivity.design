@@ -1,0 +1,20 @@
+<!--
+  * @filename      : i2SEMA_TemplateActivity.design
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee
+  * @date          : 2020/04/17 1:54 PM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020/04/17 1:54 PM     i2max_shlee       Create
+ -->
+
+<design:component>
+    <design:attribute name="align" label="Align" dataSource="Vertical,Horizontal" default="Vertical"/>
+</design:component>

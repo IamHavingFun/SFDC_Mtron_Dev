@@ -1,0 +1,10 @@
+<apex:page standardController="Account" extensions="MyAccountController">
+<apex:canvasApp applicationName="SparklerCon" 
+    height="800px" 
+    width="804px" 
+    parameters="
+    {
+        'ts.name': 'Join/JoinDashboard',
+        'ts.trustedTicket.signedIdentity':'{!signedIdentity}',
+    }" />
+</apex:page>

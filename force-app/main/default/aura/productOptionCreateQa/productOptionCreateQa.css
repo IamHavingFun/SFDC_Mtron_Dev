@@ -1,0 +1,34 @@
+/****************************************************************************************
+* @filename      : productOptionCreateQa.css
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-09-01 오후 4:38
+* @group         :
+* @group-content :
+* @description   :
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+0.1     2020-09-01 오후 4:38        SEOKHO LEE          Create
+****************************************************************************************/
+
+.THIS {
+}
+.THIS .customInput{
+    margin-bottom: 15px;
+    margin-left: 5px;
+}
+.THIS .customLayoutMargin{
+    margin-bottom: 30px !important;
+}
+.THIS .customLayoutMargin2{
+    margin-top: 30px;
+}  
+
+.THIS .slds-form-element__control {
+    width: 360px;
+}

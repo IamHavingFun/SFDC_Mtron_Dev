@@ -1,0 +1,38 @@
+<!-- **************************************************************************************
+  * @filename      : guideActionPromotionClose
+  * @projectname   : LS_PS
+  * @author        : MS
+  * @date          : 2020-07-15 08 51
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author          description
+  * ===============================================================
+    0.1     2020-07-15 08 51       Park He         Create
+************************************************************************************ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="GuideActionPromotionClose"
+                description="guideActionPromotionClose">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComQuickAction title="프로모션 종료 알림 보내기" aura:id="quickAction" hasSelfFooter="{!false}" isSmall="{!true}">
+        <div class="slds-text-align_center">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            해당 프로모션의 종료 알림을 보내시겠습니까?
+        </div>
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSend" label="프로모션 완료" variant="brand" onclick="{!c.doCloseAlert}"/>
+        </aura:set>
+
+    </c:lacComQuickAction>
+</aura:component>

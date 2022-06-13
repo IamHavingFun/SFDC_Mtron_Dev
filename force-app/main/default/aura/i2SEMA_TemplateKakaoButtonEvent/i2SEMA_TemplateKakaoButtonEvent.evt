@@ -1,0 +1,22 @@
+<!--
+  * @filename      : i2SEMA_TemplateKakaoButtonEvent
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/27 11:29 AM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020/04/27 11:29 AM     i2max_shlee       Create
+ -->
+
+<aura:event type="APPLICATION" access="global" description="i2SEMA_TemplateKakaoButtonEvent">
+    <aura:attribute name="referenceData"
+                    type="object"
+                    description="Template/Preview Component Reference"/>
+</aura:event>

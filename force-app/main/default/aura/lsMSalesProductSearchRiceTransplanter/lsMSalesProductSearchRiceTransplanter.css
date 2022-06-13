@@ -1,0 +1,7 @@
+.THIS {
+}
+
+.THIS .form_select input {
+    border: 1px solid #000;
+    border-radius: 0;
+}

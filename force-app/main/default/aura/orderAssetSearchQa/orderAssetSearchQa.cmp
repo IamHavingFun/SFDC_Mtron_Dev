@@ -1,0 +1,80 @@
+<!--
+  * @filename      : orderAssetSearchQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 9:58
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-03-10 오전 9:58     i2max_my.Seo           Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader"
+                controller="OrderAssetSearchQa"
+                description="orderAssetSearchQa">
+
+    <aura:attribute name="productId" type="String" description="product Id"/>
+    <aura:attribute name="wrapperData" type="OrderNewQa.WrapperData" description=""/>
+    <aura:attribute name="labelMap" type="Map" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="전수배 목록" aura:id="quickAction" isWide="{#true}" hasSelfFooter="{#false}">
+        <!-- 조회 영역 -->
+        <div class="slds-form--inline slds-m-top_small">
+            <lightning:input type="text" name="model" label="모델" value="{!v.wrapperData.orderLineItemList[0].ProductId__r.Name}" disabled="{#true}"/>
+        </div>
+
+        <c:lacComBody>
+            <c:lacComTable aura:id="dataTable" hasScroll="{#true}">
+                <colgroup>
+                    <col width="10%"/>
+                    <col width="20%"/>
+                    <col width="20%"/>
+                    <col width="10%"/>
+                    <col width="30%"/>
+                    <col width="10%"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <c:lacComTh>선택</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Asset.businessofficename__c}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Asset.dealer__c}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Product2.name}">{!v.labelMap.Product2.name}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Asset.productiondate__c}">{!v.labelMap.Asset.productiondate__c}</c:lacComTh>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                        <tr>
+                            <c:lacComTd><lightning:input aura:id="mycheck" label="" type="checkbox" value="{!record}"/></c:lacComTd>
+                            <c:lacComTd title="{#record.BusinessOffice__r.Name}">{#record.BusinessOffice__r.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.Dealer__c}">{#record.Dealer__r.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.Name}">{#record.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.Product2.Name}">{#record.Product2.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.DealerReceiptDate__c}">{#record.ProductionDate__c}</c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </c:lacComTable>
+            <aura:if isTrue="{!(empty(v.recordList))}">
+                <div class="slds-text-align_center slds-m-top_small" style="font-size: medium">해당 전수배 목록이 없습니다.</div>
+            </aura:if>
+        </c:lacComBody>
+
+        <aura:set attribute="footer">
+<!--            <lightning:button aura:id="btnCancel" label="취소" onclick="{!c.doCancel}"/>-->
+            <lightning:button aura:id="btnSave" label="선택" variant="brand" onclick="{!c.doSelect}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

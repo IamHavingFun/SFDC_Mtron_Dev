@@ -1,0 +1,232 @@
+<!--
+  * @filename      : contractDetail
+  * @projectname   :
+  * @author        : i2max_ss.Jung
+  * @date          : 2020-04-13 오후 5:01
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-04-13 오후 5:01       i2max_ss.Jung         Create
+ -->
+
+<aura:component extends="c:lsSalesBase"
+                implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="ContractDetail"
+                description="contractDetail">
+
+    <aura:attribute name="labelMap" type="Map" description="계약 필드 label 다국어 지원"/>
+    <aura:attribute name="partnerUrl" type="String" description="파트너 도메인"/>
+    <aura:attribute name="contract" type="Contract__c" default="{'sobjectType':'Contract__c'}"/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ============================================================================
+    ==== 채무현황(엠트론) 영역
+    ============================================================================= -->
+    <!-- Header Start -->
+    <c:lacComHeader type="" title="채무현황(엠트론)" aura:id="header" iconName="custom:custom18" isDetailCard="{!false}">
+    </c:lacComHeader>
+    <!-- Header End -->
+
+    <!-- Body Start -->
+    <c:lacComTableFrame aura:id="table" isPaging="{!false}" simple="{!true}" isCommunity="{#v.isCommunity}">
+        <c:lacComTable aura:id="dataTable" hasScroll="true" fixedHeader="{!true}" isNotDefaultTableBorder="{!false}">
+            <thead>
+            <tr>
+                <c:lacComTh style="width:20%;"></c:lacComTh>
+                <c:lacComTh title="채권금액">채권금액</c:lacComTh>
+                <c:lacComTh title="납입금액">납입금액</c:lacComTh>
+                <c:lacComTh title="납입기일">납입기일</c:lacComTh>
+                <c:lacComTh title="상태">상태</c:lacComTh>
+                <c:lacComTh title="비고">비고</c:lacComTh>
+            </tr>
+            </thead>
+            <tbody>
+            <tr style="height: 41px">
+                <c:lacComTd title="자부담 (계약금/보조금/현금)">자부담 (계약금/보조금/현금)</c:lacComTd>
+
+                <c:lacComTd title="{!v.contract.SelfPayDebtAmt__c}"><lightning:formattedNumber value="{!v.contract.SelfPayDebtAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.SelfPayPaymentAmt__c}"><lightning:formattedNumber value="{!v.contract.SelfPayPaymentAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.SelfPayDueDate__c}">{!v.contract.SelfPayDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_SelfPayStatus__c}">
+                    <aura:if isTrue="{!not(empty(v.contract.fm_SelfPayStatus__c))}">
+                        <img src = "{!if(v.isCommunity, v.partnerUrl+v.contract.fm_SelfPayStatus__c, v.contract.fm_SelfPayStatus__c)}" width="25"/>
+                    </aura:if>
+                </c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_SelfPayRemarks__c}">{!v.contract.fm_SelfPayRemarks__c}</c:lacComTd>
+            </tr>
+
+            <tr style="height: 41px">
+                <c:lacComTd title="리스">리스</c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LeaseDebtAmt__c}"><lightning:formattedNumber value="{!v.contract.fm_LeaseDebtAmt__c}" /></c:lacComTd>
+                <c:lacComTd title="{!v.contract.LeasePaymentAmt__c}"><lightning:formattedNumber value="{!v.contract.LeasePaymentAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.LeaseDueDate__c}">{!v.contract.LeaseDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LeaseStatus__c}">
+                    <aura:if isTrue="{!not(empty(v.contract.fm_LeaseStatus__c))}">
+                        <img src = "{!if(v.isCommunity, v.partnerUrl+v.contract.fm_LeaseStatus__c, v.contract.fm_LeaseStatus__c)}" width="25"/>
+                    </aura:if>
+                </c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LeaseRemarks__c}">{!v.contract.fm_LeaseRemarks__c}</c:lacComTd>
+            </tr>
+
+            <tr style="height: 41px">
+                <c:lacComTd title="융자">융자</c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LoanDebtAmt__c}"><lightning:formattedNumber value="{!v.contract.fm_LoanDebtAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.LoanPaymentAmt__c}"><lightning:formattedNumber value="{!v.contract.LoanPaymentAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.LoanDueDate__c}">{!v.contract.LoanDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LoanStatus__c}">
+                    <aura:if isTrue="{!not(empty(v.contract.fm_LoanStatus__c))}">
+                        <img src = "{!if(v.isCommunity, v.partnerUrl+v.contract.fm_LoanStatus__c, v.contract.fm_LoanStatus__c)}" width="25"/>
+                    </aura:if>
+                </c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LoanRemarks__c}">{!v.contract.fm_LoanRemarks__c}</c:lacComTd>
+            </tr>
+            </tbody>
+        </c:lacComTable>
+    </c:lacComTableFrame>
+    <!-- Body End -->
+
+
+    <div class="slds-m-bottom_large"></div>
+
+    <!-- ============================================================================
+    ==== 고객수금현황
+    ============================================================================= -->
+    <!-- Header Start -->
+    <c:lacComHeader type="" title="고객수금현황" aura:id="header" iconName="custom:custom18" isDetailCard="{!false}">
+        <aura:set attribute="button">
+            <lightning:button label="저장" onclick="{!c.doSave}"/>
+        </aura:set>
+    </c:lacComHeader>
+    <!-- Header End -->
+
+    <!-- Body Start -->
+    <c:lacComTableFrame aura:id="table" isPaging="{!false}" simple="{!true}" isCommunity="{#v.isCommunity}">
+        <c:lacComTable aura:id="dataTable" hasScroll="true" fixedHeader="{!true}" isNotDefaultTableBorder="{!false}">
+            <thead>
+            <tr>
+                <c:lacComTh title=""></c:lacComTh>
+                <c:lacComTh title="계약금액">계약금액</c:lacComTh>
+                <c:lacComTh title="수금금액">수금금액</c:lacComTh>
+                <c:lacComTh title="수금기일">수금기일</c:lacComTh>
+                <c:lacComTh title="메모">메모</c:lacComTh>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <c:lacComTd title="계약금">계약금</c:lacComTd>
+                <c:lacComTd title="{!v.contract.ContractAmt__c}"><lightning:formattedNumber value="{!v.contract.ContractAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.ContractAmtCollectAmt__c}">
+                    <lightning:input type="number" value="{!v.contract.ContractAmtCollectAmt__c}" variant="label-hidden" class="inputBGcolor"/>
+                </c:lacComTd>
+                <c:lacComTd title="{!v.contract.ContractAmtCollectDueDate__c}">{!v.contract.ContractAmtCollectDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.ContractPayNotes__c}">
+                    <lightning:input type="text" value="{!v.contract.ContractNotes__c}" variant="label-hidden"/>
+                </c:lacComTd>
+            </tr>
+
+            <tr>
+                <c:lacComTd title="융자금">융자금</c:lacComTd>
+                <c:lacComTd title="{!v.contract.LoanContractAmt__c}"><lightning:formattedNumber value="{!v.contract.LoanContractAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LoanCollectAmt__c}"><lightning:formattedNumber value="{!v.contract.fm_LoanCollectAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LoanCollectDueDate__c}">{!v.contract.fm_LoanCollectDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.LoanNotes__c}">
+                    <lightning:input type="text" value="{!v.contract.LoanNotes__c}" variant="label-hidden"  class="inputBGcolor"/>
+                </c:lacComTd>
+            </tr>
+
+            <tr>
+                <c:lacComTd title="리스">리스</c:lacComTd>
+                <c:lacComTd title="{!v.contract.LeaseContractAmt__c}"><lightning:formattedNumber value="{!v.contract.LeaseContractAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LeaseCollectAmt__c}"><lightning:formattedNumber value="{!v.contract.fm_LeaseCollectAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.fm_LeaseCollectDueDate__c}">{!v.contract.fm_LeaseCollectDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.LeaseNotes__c}">
+                    <lightning:input type="text" value="{!v.contract.LeaseNotes__c}" variant="label-hidden"  class="inputBGcolor"/>
+                </c:lacComTd>
+            </tr>
+
+            <tr>
+                <c:lacComTd title="보조금">보조금</c:lacComTd>
+                <c:lacComTd title="{!v.contract.SubsidyContractAmt__c}"><lightning:formattedNumber value="{!v.contract.SubsidyContractAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.SubsidyCollectAmt__c}">
+                    <lightning:input type="number" value="{!v.contract.SubsidyCollectAmt__c}" variant="label-hidden"  class="inputBGcolor"/>
+                </c:lacComTd>
+                <c:lacComTd title="{!v.contract.SubsidyCollectDueDate__c}">{!v.contract.SubsidyCollectDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.SubsidyNotes__c}">
+                    <lightning:input type="text" value="{!v.contract.SubsidyNotes__c}" variant="label-hidden"  class="inputBGcolor"/>
+                </c:lacComTd>
+            </tr>
+
+            <tr>
+                <c:lacComTd title="자부담">자부담</c:lacComTd>
+                <c:lacComTd title="{!v.contract.SelfPayContractAmt__c}"><lightning:formattedNumber value="{!v.contract.SelfPayContractAmt__c}"/></c:lacComTd>
+                <c:lacComTd title="{!v.contract.SelfPayCollectAmt__c}">
+                    <lightning:input type="number" value="{!v.contract.SelfPayCollectAmt__c}" variant="label-hidden"  class="inputBGcolor"/>
+                </c:lacComTd>
+                <c:lacComTd title="{!v.contract.SelfPayCollectDueDate__c}">{!v.contract.SelfPayCollectDueDate__c}</c:lacComTd>
+                <c:lacComTd title="{!v.contract.SelfPayNotes__c}">
+                    <lightning:input type="text" value="{!v.contract.SelfPayNotes__c}" variant="label-hidden"  class="inputBGcolor"/>
+                </c:lacComTd>
+            </tr>
+
+
+            <!--<tr>
+                <c:lacComTd title="총 액" class="slds-text-title_bold" colspan="1">총 액</c:lacComTd>
+                <c:lacComTd class="slds-text-title_bold" colspan="4">
+                    <lightning:formattedNumber value="{!v.contract.fm_TotalPayAmt__c}"/>
+                </c:lacComTd>
+            </tr>-->
+            </tbody>
+        </c:lacComTable>
+    </c:lacComTableFrame>
+    <!-- Body End -->
+
+    <div class="slds-m-bottom_large"></div>
+    <c:lacComTable aura:id="dataTable" hasScroll="true" fixedHeader="{!false}" isNotDefaultTableBorder="{!true}">
+        <tbody>
+        <tr>
+            <c:lacComTd title="지불총액" class="slds-text-title_bold" colspan="1">지불총액</c:lacComTd>
+            <c:lacComTd class="slds-text-title_bold" colspan="4">
+                <!--<lightning:formattedNumber value="{!v.contract.fm_TotalPayAmt__c}"/>-->
+                <lightning:formattedNumber value="{!v.contract.fm_TotalPayAmt__c}"/>
+            </c:lacComTd>
+        </tr>
+        </tbody>
+    </c:lacComTable>
+
+    <div class="slds-m-bottom_large"></div>
+
+    <!--<c:lacComSectionFrame title="중고" hasHeader="{#true}">
+        <lightning:recordEditForm objectApiName="Contract__c">
+            <div class="slds-list_horizontal slds-p-around_xx-small">
+                <lightning:outputField fieldName="isUsedUndertaking__c" class="slds-size_1-of-2 right-side"/>
+                <lightning:outputField fieldName="UsedUndertakingAmt__c" class="slds-size_1-of-2 left-side"/>
+            </div>
+        </lightning:recordEditForm>
+    </c:lacComSectionFrame>-->
+
+    <c:lacComSectionFrame title="중고" hasHeader="{#true}">
+        <div class="slds-m-bottom_large"></div>
+        <c:lacComTable aura:id="dataTable" hasScroll="true" fixedHeader="{!false}" isNotDefaultTableBorder="{!true}">
+            <tbody>
+                <tr>
+                    <c:lacComTd title="{!v.labelMap.Contract__c.isusedundertaking__c}" >{!v.labelMap.Contract__c.isusedundertaking__c}</c:lacComTd>
+                    <c:lacComTd><ui:outputCheckbox value="{!v.contract.isUsedUndertaking__c}"/></c:lacComTd>
+                    <c:lacComTd title="{!v.labelMap.Contract__c.usedundertakingamt__c}" >{!v.labelMap.Contract__c.usedundertakingamt__c}</c:lacComTd>
+                    <c:lacComTd><lightning:formattedNumber value="{!v.contract.UsedUndertakingAmt__c}"/></c:lacComTd>
+                </tr>
+            </tbody>
+        </c:lacComTable>
+    </c:lacComSectionFrame>
+
+</aura:component>

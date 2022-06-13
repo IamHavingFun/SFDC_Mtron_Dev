@@ -1,0 +1,160 @@
+<!--
+  * @filename      : lsMSalesPDICreateStep1
+  * @projectname   :
+  * @author        : i2max.seo
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] PDI(인도 점검서) : Step1 : lsMSalesPDICreateStep1
+  *                : 교육 정보
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max.seo      Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreateStep1">
+
+
+    <aura:attribute name="options" type="List" default="[
+        {'label': '예', 'value': true},
+        {'label': '아니오', 'value': false}
+    ]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <c:lacComService aura:id="lacComService"/>
+    <aura:html tag="style">
+        .slds-form-element__control {
+            width: 290px;
+            display: flex;
+        }
+        .cLsMSalesThemeLayout .slds-radio {
+            padding: 15px 15px;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].fm_ProductType__c}] {!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.Name}({!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <article class="content">
+            <div class="list_vTitBox">
+                <div class="left">교육사항</div>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <div class="right">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" onchange="{!c.gfn_getInputRadioCheckedList}"/>
+                    </div>
+                </aura:if>
+            </div>
+            <ul class="list_verticalBox">
+                <li>
+                    <div class="left">장비 사용시 주의사항 및 안전교육</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" type="radio" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education1__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">계기판넬 스위치 및 램프 기능</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education2__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">각종 레버의 역할 및 조작방법</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education3__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">운전 조작요령 및 주행실습</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education4__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">작업기 탈거 및 장착</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education5__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">유압레버 사용법 및 작업 요령</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education6__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">각 부위 점검 및 정비 요령</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education7__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">기대 고장에 따른 응급처치 요령(시동불능, 동작불능 등)</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education8__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">장기 보관 요령(냉각수, 연료, 페인트 벗겨진 부위 등)</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Education9__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPreSelf}"/>
+                    </aura:set>
+                </aura:if>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isPDI}">
+                <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+                </aura:if>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+
+    </div>
+
+    <!--	장비 사용시 주의사항 및 안전교육
+    {!v.mobileStepVO.bizData.pdi.Education2__c}	계기판넬 스위치 및 램프 기능
+    {!v.mobileStepVO.bizData.pdi.Education3__c}	각종 레버의 역할 및 조작방법
+    {!v.mobileStepVO.bizData.pdi.Education4__c}
+    {!v.mobileStepVO.bizData.pdi.Education5__c}
+    {!v.mobileStepVO.bizData.pdi.Education6__c}
+    {!v.mobileStepVO.bizData.pdi.Education7__c}
+    {!v.mobileStepVO.bizData.pdi.Education8__c}
+    {!v.mobileStepVO.bizData.pdi.Education9__c}-->
+
+</aura:component>

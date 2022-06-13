@@ -1,0 +1,12 @@
+<design:component>
+    <design:attribute name="tsname" label="TS Name" default="SE_Dashboard" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_total" label="BI url(전체)" default="https://sedashboard.lsmtron.co.kr/views/LS__v3/1?:showAppBanner=false&#38;#38;:display_count=n&#38;#38;:showVizHome=n&#38;#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_1" label="BI url(경기)" default="https://sedashboard.lsmtron.co.kr/views/01__jun/Dashboard1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_2" label="BI url(강원)" default="https://sedashboard.lsmtron.co.kr/views/20201/Dashboard1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_3" label="BI url(충복)" default="https://sedashboard.lsmtron.co.kr/views/201_/Dashboard1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_4" label="BI url(충남)" default="https://sedashboard.lsmtron.co.kr/views/1_/1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_5" label="BI url(전북)" default="https://sedashboard.lsmtron.co.kr/views/201DLL/Dashboard1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_6" label="BI url(전남)" default="https://sedashboard.lsmtron.co.kr/views/1_15895213471150/Dashboard1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_7" label="BI url(경북)" default="https://sedashboard.lsmtron.co.kr/views/2020_DLL/sheet0?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+    <design:attribute name="biLink_8" label="BI url(경남)" default="https://sedashboard.lsmtron.co.kr/views/17-19_190212_V1/-_1?:showAppBanner=false&#38;:display_count=n&#38;:showVizHome=n&#38;:origin=viz_share_link" description="태블로 대시보드 FULL URL을 선택하세요."/>
+</design:component>

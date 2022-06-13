@@ -1,0 +1,34 @@
+/**
+ * Created by MS on 2020-07-09.
+ */
+
+.THIS .slds-card__body{
+    height: 205px;
+}
+.THIS .cuf-body {
+    height: 242px;
+}
+.THIS .uiImage{
+    padding-right: var(--lwc-spacingMedium,1rem);
+    padding-top: var(--lwc-spacingXSmall,0.5rem);
+}
+.THIS .slds-text-heading--small{
+    padding-left: var(--lwc-spacingMedium,1rem);
+    padding-bottom: 0;
+    font-weight: var(--lwc-fontWeightBold,700);
+}
+.THIS .einstein-header {
+    display: flex;
+    height: 86px;
+    background-image: url(/img/einstein/einstein_header_background.svg);
+    background-repeat: no-repeat;
+    background-position: right 0 bottom 6px;
+    background-size: cover;
+    border-radius: .25rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--lwc-spacingXSmall,0.5rem);
+    margin-left: calc(var(--lwc-spacingMedium,1rem)* -1);
+    margin-right: calc((var(--lwc-spacingMedium,1rem)* -1) - 1px);
+    margin-top: calc(var(--lwc-varSpacingMedium,1rem)* -1);
+}

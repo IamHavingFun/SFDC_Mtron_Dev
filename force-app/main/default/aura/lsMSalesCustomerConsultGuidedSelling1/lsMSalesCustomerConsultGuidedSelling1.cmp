@@ -1,0 +1,204 @@
+<!--
+  * @filename      : lsMSalesCustomerConsultGuidedSelling1
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일]고객상담 : Step1 : Guided Selling Step1
+  *                : 맟춤형 추천(경작유형 선택, 경작규모 선택, 트랙터 보유여부)
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesCustomerConsult"
+                description="lsMSalesCustomerConsultGuidedSelling1">
+
+    <aura:attribute name="isLivestockBiz"
+                    type="Boolean"
+                    default="{!v.mobileStepVO.bizData.prodSerRecStd.FarmingForm__c == '축산(영업)'}"
+                    description="축산(영업) 여부"/>
+
+    <aura:attribute name="farmingSizeOptions" type="List" description="영농규모 옵션"/>
+    <aura:attribute name="accountRecordTypeOptions" type="List" access="private" description="고객타입 옵션"/>
+    <aura:attribute name="accountCustomerTypeOptions" type="List" access="public" description="고객유형 옵션"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .PSelect2 {
+        height: 94px !important;
+        padding: 0px 30px !important;
+        }
+        .PSelect2 .left_img {
+        float: left;
+        width: 70px;
+        height: 72px;
+        line-height: 72px;
+        text-align: center;
+        margin: 5px 15px 0 0;
+        }
+        .PSelect2 .right_txt {
+        float: left;
+        width: calc(100% - 85px);
+        display: inline-block;
+        margin-top: 30px;
+        }
+        .PSelect2.box_select .right_txt {
+        margin: 30px 5px 0 2px;
+        }
+        .h65 {
+        height: 65px !important;
+        }
+        .myCombobox { width: calc(50% - 10px); margin-right: 10px; display: inline-block; }
+        .myCombobox button {
+            font-size: 32px;
+            height:94px;
+        }
+        .myCombobox button span {
+            font-size: 32px;
+            padding-top: 25px;
+        }
+
+<!--
+        font-size: 32px;
+        height: 94px;
+        vertical-align: middle;
+        padding-top: 25px;
+        -->
+    </aura:html>
+
+    <!-- ============================================================================
+    ==== Header 영역
+    ============================================================================= -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">고객상담</article>
+        <article class="TopRright"></article>
+    </header>
+    <div id="container">
+        <article class="content">
+            <!-- ============================================================================
+            ==== 스텝 영역
+            ============================================================================= -->
+            <div class="stepBox">
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step1_on.png'}" alt=""/>
+                    <div class="txt on">Step1</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step2.png'}" alt=""/>
+                    <div class="txt">Step2</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step3.png'}" alt=""/>
+                    <div class="txt">Step3</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                    <img src="{!$Resource.publish + '/img/step4.png'}" alt=""/>
+                    <div class="txt">Step4</div>
+                </div>
+            </div>
+
+            <!-- ============================================================================
+            ==== 사업형태 영역
+            ============================================================================= -->
+            <section>
+                <label class="form_tit">사업형태 선택</label>
+                <div class="slds-list_horizontal">
+
+                    <lightning:combobox aura:id="recordType"
+                                        label=""
+                                        class="myCombobox"
+                                        variant="label-hidden"
+                                        options="{!v.accountRecordTypeOptions}"
+                                        value="{!v.mobileStepVO.bizData.customerVO.customer.RecordTypeId}"
+                                        onchange="{!c.doGetCustomerTypeOptions}"
+                                        placeholder="선택"/>
+                    <lightning:combobox aura:id="customerType"
+                                        label=""
+                                        class="myCombobox"
+                                        variant="label-hidden"
+                                        options="{!v.accountCustomerTypeOptions}"
+                                        value="{!v.mobileStepVO.bizData.customerVO.customer.CustomerType__c}"
+                                        onchange="{!c.doGetFarmInfo}"
+                                        placeholder="선택"/>
+                </div>
+            </section>
+
+            <!-- ============================================================================
+            ==== 선택사항 영역
+            ============================================================================= -->
+            <section class="PSelect2Box">
+                <label class="form_tit">사용형태 선택</label>
+                <aura:if isTrue="{!not(empty(v.resData.farmingForm))}">
+                    <aura:iteration items="{!v.resData.farmingForm}" var="record" indexVar="idx" start="0">
+                        <article class="{!v.mobileStepVO.bizData.prodSerRecStd.FarmingForm__c == record.value ? 'PSelect2 box_select' : 'PSelect2'}"
+                                 aura:id="farmFormItem"
+                                 data-value="{!record.value}"
+                                 onclick="{!c.doSelectFarmForm}">
+                            <!-- ============================================================================
+                            ==== picklist의 순서를 마구 변경하여 value 값으로 하드코딩함
+                            ============================================================================= -->
+                            <div class="left_img">
+                                <aura:if isTrue="{!equals(record.value, '하우스(일반)')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0206.png'}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!equals(record.value, '하우스(대형)')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0207.png'}"/>
+                                </aura:if>
+                               <aura:if isTrue="{!equals(record.value, '축산(일반)')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0204.png'}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!equals(record.value, '축산(영업)')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0205.png'}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!equals(record.value, '수도작')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0201.png'}" class="h65"/>
+                                </aura:if>
+                                <aura:if isTrue="{!equals(record.value, '전작')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0202.png'}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!equals(record.value, '과수')}">
+                                    <img src="{!$Resource.publish + '/img/img_PS0203.png'}"/>
+                                </aura:if>
+                            </div>
+                            <div class="right_txt">
+                                <span class="tit">{!record.label}</span>
+                            </div>
+                        </article>
+                    </aura:iteration>
+                </aura:if>
+            </section>
+            <!-- ============================================================================
+            ==== 영농규모 : lightning:slider 를 대체
+            ============================================================================= -->
+            <section>
+                <label class="form_tit">{!v.isLivestockBiz ? '주 사용 작업기' : '영농규모 선택'}</label>
+                <lightning:combobox aura:id="seriesOptions"
+                                    label=""
+                                    class="myCombobox"
+                                    variant="label-hidden"
+                                    options="{!v.farmingSizeOptions}"
+                                    value="{!v.mobileStepVO.bizData.prodSerRecStd.FarmingSize__c}"
+                                    placeholder="선택"/>
+            </section>
+
+            <!-- ============================================================================
+            ==== 하단 버튼 영역
+            ============================================================================= -->
+            <section class="bbtnBox">
+                <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+            </section>
+        </article>
+    </div>
+</aura:component>

@@ -1,0 +1,27 @@
+<!--
+  * @filename      : lacComCreateComponent
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-04-14 오전 9:50
+  * @group         : 
+  * @group-content : 
+  * @description   : Community에서 menu tab 선택 시, 빈 페이지에서 QuickAction을 바로 여는 cmp.
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오전 9:50     i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lacComBase"
+                implements="forceCommunity:availableForAllPageTypes"
+                description="lacComCreateComponent">
+
+    <!-- 디자인 변수를 사용하므로, builder에서 해당 cmp명(QuickAction cmp)을 입력해줘야 작동. -->
+    <aura:attribute name="targetComponent" type="String" required="true" description="대상 QuickAction Component"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+</aura:component>

@@ -1,0 +1,105 @@
+<!--
+  * @filename      : lsMSalesPDICreateStep5
+  * @projectname   :
+  * @author        : i2max.seo
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] PDI(인도 점검서) : Step5 : lsMSalesPDICreateStep5
+  *                :  안전사항 및 기타
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max.seo      Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreateStep5">
+
+
+
+    <aura:attribute name="options" type="List" default="[
+        {'label': '예', 'value': true},
+        {'label': '아니오', 'value': false}
+    ]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-form-element__control {
+            width: 350px;
+            display: flex;
+            text-align: center;
+        }
+        .cLsMSalesThemeLayout .slds-radio {
+            padding: 15px 15px;
+        }
+        .w120 {
+            width: 120px !important;
+        }
+        .slds-form-element__control slds-grow textarea-container {
+            width:100% !important;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].fm_ProductType__c}] {!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.Name}({!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <article class="content">
+            <div class="">
+                <label class="form_tit">안전사항 및 기타</label>
+                <div class="grayBox">
+                    <div class="txt">사용설명서에 표기된<br/>안전표시데칼(경고라벨)을 확인하고<br/>
+                        상세 내용을 설명 받으셨습니까?
+                    </div>
+                    <div class="radios" style="margin:20px auto 0 20px;">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.ETC__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                 </div>
+            </div>
+
+            <div class="">
+                <label class="form_tit">미 출고 부품 및 조치사항</label>
+                <lightning:textarea label="" value="{!v.mobileStepVO.bizData.pdi.Action__c}" style="height:234px;" readonly="{!v.mobileStepVO.bizData.isViewMode}"/>
+            </div>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <lightning:button label="이전" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <lightning:button label="PDI작성 확인 및 서명" class="bbtn" onclick="{!c.doNextSelf}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="다음 화면" class="bbtn" onclick="{!c.doNextSelf}"/>
+                    </aura:set>
+                </aura:if>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+    </div>
+</aura:component>

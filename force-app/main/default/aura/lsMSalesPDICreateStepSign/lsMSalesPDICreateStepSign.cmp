@@ -1,0 +1,110 @@
+<!--
+  * @filename      : lsMSalesPDICreateStepSign
+  * @projectname   :
+  * @author        : i2max.seo
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] PDI(인도 점검서) : Step5 : lsMSalesPDICreateStepSign
+  *                :  검사자 서명, 고객 서명
+
+  @TODO    : 검사자 서명, 고객 서명 처리 해야 함.
+             첨부파일로 검사자서명.png(jpg), 고객서명.png(jpg)
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max.seo      Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreateStep5">
+
+    <!---->
+    <aura:if isTrue="{!not(v.mobileStepVO.bizData.isViewMode)}">
+        <ltng:require styles="{!join(','
+							, $Resource.signature + '/docs/css/signature-pad.css')}"
+
+                      scripts="{!join(','
+				  			, $Resource.signature + '/docs/js/signature_pad.umd.js')}"
+                      afterScriptsLoaded="{!c.scriptsLoaded}" />
+    </aura:if>
+
+    <aura:attribute name="dealerSign" type="String" />
+    <aura:attribute name="dealerPad" type="Object" />
+    <aura:attribute name="customerSign" type="String" />
+    <aura:attribute name="customerPad" type="Object" />
+    <aura:attribute name="signList" type="List" default="" />
+    <c:lacComService aura:id="lacComService"/>
+    <aura:html tag="style">
+        .w120 {
+            width: 120px !important;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo" aura:id="sizeCanvas">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].fm_ProductType__c}] {!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.Name}({!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <article class="content">
+            <div class="">
+                <label class="form_tit" style="display:block;">검사자 서명</label>
+                <aura:if isTrue="{!v.mobileStepVO.bizData.isViewMode}">
+                    <img src="{!'/Partner/sfc/servlet.shepherd/document/download/' + v.mobileStepVO.bizData.dealerSign.ContentDocumentId}"/>
+                    <aura:set attribute="else">
+                        <canvas aura:id="dealerCanvas" class="" style="border:1px solid black"></canvas>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+            <div class="">
+                <label class="form_tit" style="display:block;">고객 서명</label>
+                <aura:if isTrue="{!v.mobileStepVO.bizData.isViewMode}">
+                    <img src="{!'/Partner/sfc/servlet.shepherd/document/download/' + v.mobileStepVO.bizData.customerSign.ContentDocumentId}"/>
+                    <aura:set attribute="else">
+                        <canvas aura:id="customerCanvas" class="" style="border:1px solid black"></canvas>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <lightning:button label="이전" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <lightning:button label="PDI작성 완료" class="bbtn btn_50" onclick="{!c.doCreatePdi}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="돌아가기" class="bbtn" onclick="{!c.doPreSelf}"/>
+                    </aura:set>
+                </aura:if>
+            </section>
+        </article>
+
+    </div>
+
+
+</aura:component>

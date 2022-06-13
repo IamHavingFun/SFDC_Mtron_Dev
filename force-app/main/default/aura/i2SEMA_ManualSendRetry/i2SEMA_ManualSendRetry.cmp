@@ -1,0 +1,48 @@
+<!--
+* @filename      : i2SEMA_ManualSendRetry
+* @projectname   : i2SEMA Core
+* @author        : i2max_ys.seo
+* @date          : 2020-03-06 오후 3:16
+* @group         : e.g)tab name
+* @group-content : e.g)view file
+* @description   : Notification, Notification Group 상세화면에서 'Retry Notification' Notification 발송 재시도
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+*   ver     date                    author              description
+* ===============================================================
+    0.1     2020-03-09 오후 3:16     i2max_ys.seo        Create
+    0.1     2020/04/14 9:46 AM      i2max_shlee         Rename NotificationSendRetry -> i2SEMA_ManualSendRetry
+-->
+
+<aura:component description="i2SEMA_ManualSendRetry"
+                access="global" controller="i2SEMA_ManualSendRetry" extends="c:i2SEMA_Base"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader">
+    <!-- =============================================================================
+    = Attribute
+    ============================================================================== -->
+    <aura:attribute name="recordId" type="String" />
+    <!-- =============================================================================
+    = Handler
+    ============================================================================== -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <!-- =============================================================================
+    = Markup
+    ============================================================================== -->
+    <aura:html tag="style">
+        .modal-body scrollable {
+        background : none;
+        }
+        .slds-modal__content{
+        background : none;
+        }
+        .slds-p-around--medium{
+        background : none;
+        }
+        .slds-spinner_container{
+        background : none;
+        }
+    </aura:html>
+
+</aura:component>

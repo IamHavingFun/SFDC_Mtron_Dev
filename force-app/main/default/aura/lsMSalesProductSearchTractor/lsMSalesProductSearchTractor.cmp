@@ -1,0 +1,57 @@
+<!--
+  * @filename      : lsMSalesProductSearchTractor
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-06-19
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] 제품검색 : 트랙터 : StepContainer
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-19     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesQAStepContainerBase"
+                controller="LsMSalesProductSearchTractor"
+                description="lsMSalesProductSearchTractor">
+
+    <!-- ============================================================================
+    ==== 선택된 productType
+    ============================================================================= -->
+    <aura:attribute name="productType" type="String" required="true" default="트랙터" description="관심모델: 트랙터, 콤바인, 이앙기"/>
+
+    <!-- ============================================================================
+    ==== step 업무 처리의 컴포넌트 순서
+    ============================================================================= -->
+    <aura:attribute name="stepList" type="List"
+                    default="[
+                        'lsMSalesProductSearchTractor1',
+                        'lsMSalesProductSearchTractor2'
+                    ]"
+                    description="단계별 업무 컴포넌트명"/>
+
+    <!-- ============================================================================
+    ==== step Change Event 처리 : Contain인 경우 반드시 핸들러 처리
+    ==== includeFacets="true" 처리를 하여 본 container에서 hanldler 처리되게끔 함.
+    ============================================================================= -->
+    <aura:handler name="changeStep" event="c:lacComEvent" action="{!c.doChangeStep}" includeFacets="true"/>
+
+    <!-- ============================================================================
+    ==== Mobile Service Component
+    ============================================================================= -->
+    <c:lsMSalesService aura:id="lsMSalesService"/>
+
+    <!-- ============================================================================
+    ==== System 이벤트 핸들러
+    ============================================================================= -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- ============================================================================
+    ==== Content 영역
+    ============================================================================= -->
+    <div aura:id="stepContainer"></div>
+
+</aura:component>

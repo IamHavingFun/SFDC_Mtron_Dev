@@ -1,0 +1,6 @@
+<!--
+ - Created by MS on 2021-01-07.
+ -->
+<design:component>
+    <design:attribute name="isPartner" label="파트너 유무" default="" description="파트너 UI 이면 파트너 체크 해주세요."/>
+</design:component>

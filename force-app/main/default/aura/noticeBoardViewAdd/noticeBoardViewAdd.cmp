@@ -1,0 +1,25 @@
+<!--
+  * @filename      : noticeBoardViewAdd
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-09-09 오후 1:26
+  * @group         : 
+  * @group-content : 
+  * @description   : internal, community, mobile에 init을 위한 빈 component.
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-09-09 오후 1:26    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                controller="NoticeBoardViewAdd"
+                description="noticeBoardViewAdd">
+
+    <aura:attribute name="recordId" type="String" access="public" default="" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+</aura:component>

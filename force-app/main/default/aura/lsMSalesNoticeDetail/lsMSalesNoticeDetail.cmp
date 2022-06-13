@@ -1,0 +1,66 @@
+<!--
+  * @filename      : 
+  * @projectname   :
+  * @author        : Choi SeongWon
+  * @date          : 2020-06-23 오후 5:20
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * ===============================================================
+  * ver         date                 author             description
+  * ===============================================================a
+    0.1   2020-06-23 오후 5:20      Choi SeongWon           Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="force:appHostable,forceCommunity:availableForAllPageTypes,lightning:isUrlAddressable,force:hasRecordId"
+                controller="LsMSalesNoticeDetail">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="detailData" type="NoticeBoard__c" description=""/>
+    <aura:attribute name="labelMap" type="Map" description=""/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">공지사항 상세조회 </article>
+        <article class="TopRright"></article>
+    </header>
+
+
+    <div id="container" class="bgW">
+        <!--상단 타이틀영역 2줄-->
+        <div class="top_titBox">
+            <div class="tit">
+                {!v.detailData.noticeBoard.Name}
+            </div>
+            <div class="stit">
+                등록일 : <lightning:formattedDateTime value="{!v.detailData.noticeBoard.CreatedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="false"/>&nbsp;&nbsp;
+                등록자 : {!v.detailData.noticeBoard.CreatedBy.Name}
+            </div>
+        </div>
+        <!--//상단 타이틀영역 2줄-->
+
+        <article class="content">
+            <!--테이블-->
+            <div class="board_view mt20">
+                <ul>
+                    <li class="">
+                        <lightning:formattedRichText label="{!v.labelMap.NoticeBoard__c.content__c}" value="{!v.detailData.noticeBoard.Content__c}" readonly='true' />
+                    </li>
+                </ul>
+            </div>
+
+            <!--하단버튼-->
+            <section class="bbtnBox">
+                <lightning:button label="목록으로" class="bbtn" onclick="{!c.doBack}"/>
+            </section>
+            <!--//하단버튼-->
+        </article>
+        <c:noticeBoardViewAdd recordId="{!v.recordId}"/>
+    </div>
+</aura:component>

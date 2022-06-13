@@ -1,0 +1,97 @@
+<!--
+  * @filename      : i2SEMA_NotificationPreview
+  * @projectname   : i2sema.dev pd
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/08 1:10 PM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020/04/08 1:10 PM     i2max_shlee       Create
+ -->
+
+<aura:component description="i2SEMA_NotificationPreview"
+                access="global"
+                controller="i2SEMA_Template"
+                extends="c:i2SEMA_Base"
+                implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
+    <!-- =============================================================================
+    = Attribute
+    ============================================================================== -->
+    <aura:attribute name="recordId"
+                    type="String" />
+    <aura:attribute name="referenceData"
+                    type="object"
+                    description="참조 정보"/>
+    <!-- =============================================================================
+    = Handler
+    ============================================================================== -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:method name="refresh" action="{!c.doInit}"/>
+    <!-- =============================================================================
+    = Markup
+    ============================================================================== -->
+
+    <!-- begin #page-container -->
+    <div class="body-wrap">
+        <div class="message-container sms">
+        <div class="container-title">
+            {!  if(equals(v.referenceData.template.Channel__c, '--none--'), ''
+            , if(equals(v.referenceData.template.Channel__c, '0'), $Label.c.i2SEMA_LAB_SMS
+            , if(equals(v.referenceData.template.Channel__c, '2'), $Label.c.i2SEMA_LAB_MMS
+            , if(equals(v.referenceData.template.Channel__c, '3'), $Label.c.i2SEMA_LAB_LMS
+            , if(equals(v.referenceData.template.Channel__c, '1008'), $Label.c.i2SEMA_LAB_KAKAO_NOTI_TALK
+            , if(equals(v.referenceData.template.Channel__c, '1009'), $Label.c.i2SEMA_LAB_KAKAO_FRIEND_TALK
+            , if(equals(v.referenceData.template.Channel__c, '10', $Label.c.i2SEMA_LAB_CHATTER))))))))}
+            &nbsp;{!$Label.c.i2SEMA_LAB_PREVIEW}
+        </div>
+        <div class="container-body">
+            <!-- MMS 파일  -->
+            <aura:if isTrue="{!equals(v.referenceData.template.Channel__c, '2')}">
+            <div class="kakao-text-wrap">
+                <aura:iteration items="{!v.referenceData.files}" var="file">
+                    <div class="kakao-img">
+                        <img src="{!'data:image/' + ';base64,' + (file.versionData)}" style="width:100%;" />
+                    </div>
+                </aura:iteration>
+            </div>
+            </aura:if>
+            <div class="kakao-text-wrap">
+                <!-- 카카오 친구톡 이미지 URL -->
+                <aura:if isTrue="{!and(equals(v.referenceData.template.Channel__c, '1009'), not(empty(v.referenceData.template.KakaoImgUrl__c)))}">
+                    <div class="kakao-img">
+                        <a class="btnLink" data-value="{!v.referenceData.template.KakaoFriendTalkImageLink__c}" onclick="{!c.moveLink}">
+                            <img src="{!v.referenceData.template.KakaoImgUrl__c}" style="width:100%;"/>
+                        </a>
+                    </div>
+                </aura:if>
+                <!-- Kakao 알림톡 헤더 -->
+                <aura:if isTrue="{!equals(v.referenceData.template.Channel__c, '1008')}">
+                    <div class="kakao-header">{!$Label.c.i2SEMA_LAB_KAKAO_NOTI_TALK_ARRIVED}</div>
+                </aura:if>
+                <!-- Content Text -->
+                <div class="kakao-text" style="white-space:pre-line">
+                    <aura:unescapedHtml value="{!v.referenceData.template.Content__c}" />
+                </div>
+                <!-- Kakao Buttons -->
+                <aura:if isTrue="{!or(equals(v.referenceData.template.Channel__c, '1008'), equals(v.referenceData.template.Channel__c, '1009'))}">
+                    <div class="kakao-btn-wrap">
+                        <aura:iteration items="{!v.referenceData.kakaoButtons}" var="kakaoBtn">
+                            <a class="kakao-btn" data-value="{!kakaoBtn.ButtonLink1__c}" href="javascript:void(0);" onclick="{!c.moveLink}">{!kakaoBtn.Name}</a>
+                        </aura:iteration>
+                    </div>
+                </aura:if>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- end #page-container -->
+
+
+</aura:component>

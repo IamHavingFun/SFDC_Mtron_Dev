@@ -1,0 +1,87 @@
+<!--
+  * @filename      : orderOpportunitySearchQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-04-16 오후 5:13
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 5:13    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader"
+                controller="OrderOpportunitySearchQa"
+                description="orderOpportunitySearchQa">
+
+    <aura:attribute name="wrapperData" type="OrderNewQa.WrapperData" description=""/>
+    <aura:attribute name="productTypeList" type="List" description=""/>
+    <aura:attribute name="seriesList" type="List" description=""/>
+    <aura:attribute name="labelMap" type="Map" description=""/>
+    <aura:attribute name="action" type="Aura.Action" description=""/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:handler name="tableEvent" event="c:lacComTableEvent" action="{!c.util_Move}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="판매기회 조회" aura:id="quickAction" hasSelfFooter="{#false}" isWide="{#true}">
+        <!-- 검색 조건 영역 -->
+        <div class="slds-form--inline slds-m-bottom_medium">
+            <lightning:input label="{!v.labelMap.Opportunity.name}" type="search" placeholder="기회 검색" value="{!v.reqData.name}"/>
+            <c:lacComComboBox label="{!v.labelMap.Product2.producttype__c}" option="{!v.productTypeList}" value="{!v.reqData.productType}"/>
+            <c:lacComComboBox label="{!v.labelMap.Product2.series__c}" option="{!v.seriesList}" value="{!v.reqData.series}"/>
+            <lightning:button label="조회" variant="brand" onclick="{!c.doSearch}"/>
+        </div>
+
+        <c:lacComTableFrame aura:id="table" isPaging="{#true}" simple="{#true}">
+            <c:lacComTable hasScroll="{#true}" scrollHeight="300px">
+                <colgroup>
+                    <col width="8%"/>
+                    <col width="25%"/>
+                    <col width="10%"/>
+                    <col width="19%"/>
+                    <col width="15%"/>
+                    <col width="8%"/>
+                    <col width="10%"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <c:lacComTh>선택</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Opportunity.name}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Account.name}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Product2.name}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Opportunity.customerexpecteddate__c}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Opportunity.stagename}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.User.name}</c:lacComTh>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                        <tr>
+                            <c:lacComTd><lightning:input aura:id="mycheck" label="" type="checkbox" onchange="{!c.doCheck}" value="{!record}"/></c:lacComTd>
+                            <c:lacComTd title="{!record.Contract__r.Opportunity__r.Name}">{!record.Contract__r.Opportunity__r.Name}</c:lacComTd>
+                            <c:lacComTd title="{!record.Contract__r.Opportunity__r.Account.Name}">{!record.Contract__r.Opportunity__r.Account.Name}</c:lacComTd>
+                            <c:lacComTd title="{!record.ProductId__r.Name}">{!record.ProductId__r.Name}</c:lacComTd>
+                            <c:lacComTd title="{!record.Contract__r.CustomerExpectedDate__c}">{!record.Contract__r.CustomerExpectedDate__c}</c:lacComTd>
+                            <c:lacComTd title="{!record.Contract__r.Opportunity__r.StageName}">{!record.Contract__r.Opportunity__r.StageName}</c:lacComTd>
+                            <c:lacComTd title="{!record.Contract__r.Opportunity__r.Owner.Name}">{!record.Contract__r.Opportunity__r.Owner.Name}</c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </c:lacComTable>
+        </c:lacComTableFrame>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSave" label="선택" variant="brand" onclick="{!c.doSelect}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

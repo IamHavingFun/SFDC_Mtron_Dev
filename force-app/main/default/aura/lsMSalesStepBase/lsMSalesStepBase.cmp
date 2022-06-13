@@ -1,0 +1,32 @@
+<!--
+  * @filename      : lsMSalesStepBase
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-05-15
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] Step별로 처리되는 업무의 기본 Base
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-05-15     	i2max          Create
+ -->
+<aura:component extends="c:lsMSalesBase" extensible="true" implements="c:lsMSalesStepInf" description="lsMSalesStepBase">
+    <!-- ============================================================================
+    ==== Step 단위 순서 : 0부터 시작
+    ============================================================================= -->
+    <aura:attribute name="step" type="Integer" default="0" required="true" description="업무별 DataStructure"/>
+    <!-- ============================================================================
+    ==== Step 변경 이벤트 Register : name 기반
+    ============================================================================= -->
+    <aura:registerEvent name="changeStep" type="c:lacComEvent"/>
+
+    <!-- ==============================================================================
+    실제 데이터가 들어가는 부분
+    ============================================================================== -->
+    {!v.body}
+
+</aura:component>

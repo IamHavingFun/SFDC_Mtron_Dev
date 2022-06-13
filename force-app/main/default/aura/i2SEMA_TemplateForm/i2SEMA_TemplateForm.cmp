@@ -1,0 +1,233 @@
+<!--
+  * @filename      : i2SEMA_TemplateForm
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_ys.seo
+  * @date          : 2020-04-08 오후 2:46
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 2:46     i2max_ys.seo       Create
+    0.2     2020/04/17 10:43 AM     i2max_shlee       전체 수정 i2SEMA_NotificationTemplate -> i2SEMA_TemplateForm
+ -->
+
+<aura:component extends="c:i2SEMA_Base"
+                access="global"
+                controller="i2SEMA_Template"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride,lightning:isUrlAddressable"
+                description="i2SEMA_TemplateForm">
+
+    <!--Template Information-->
+    <!-- Attribute -->
+    <aura:attribute name="recordId"
+                    type="String"
+                    description="페이지의 Record ID"/>
+
+    <aura:attribute name="standAlone"
+                    type="Boolean"
+                    default="{!true}"
+                    description="컴포넌트 독립사용 여부"/>
+    <aura:attribute name="isPopup"
+                    type="Boolean"
+                    default="{!false}"
+                    description="팝업창 여부"/>
+    <aura:attribute name="isScreen"
+                    type="String"
+                    default="New"
+                    description="화면 상태 : Read 읽기모드, New 생성, Edit 수정"/>
+    <aura:attribute name="isDisable"
+                    type="Boolean"
+                    description="템플릿 활성 유무" default="false"/>
+    <aura:attribute name="isExceededByteLimit"
+                    type="Boolean"
+                    description="컨텐츠 사이즈 초과" default="false"/>
+    <aura:attribute name="receiverDialogOpen"
+                    type="Boolean"
+                    default="false"
+                    description="관련수신자 선택 다이얼로그 오플 플래그"/>
+    <aura:attribute name="referenceData"
+                    type="Object"
+                    description="컴포넌트 참조값"/>
+
+
+    <!-- Event / Handler -->
+    <aura:handler name="init"
+                  action="{!c.doInit}"
+                  value="{!this}"/>
+
+    <aura:registerEvent name="previewEvent"
+                        type="c:i2SEMA_NotificationPreviewEvent"/>
+
+    <aura:method name="cancel"
+                 action="{!c.doCancel}"/>
+    <aura:method name="save"
+                 action="{!c.doSave}"/>
+
+    <!-- Markup -->
+    <div class="container">
+        <!-- Template Name 템플릿 이름 -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title required">{! v.objectType.NotificationTemplate__c.Name.label}</span>
+            </div>
+            <div class="itemHolder noLabel">
+                <lightning:input aura:id="NotificationTemplate__c" type="text" class="slds-large-size--1-of-2 templateName" required="true" label="{! v.objectType.NotificationTemplate__c.Name.label}" value="{!v.referenceData.template.Name}" disabled="{!v.isDisable}"/>
+            </div>
+        </div>
+        <!-- Active 템플릿 활성여부  -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title">{! v.objectType.NotificationTemplate__c.IsActive__c.label}</span>
+            </div>
+            <div class="itemHolder noLabel" style="text-align:left;">
+                <lightning:input  aura:id="activeCheckBox" type="checkbox"  class="slds-large-size--1-of-2 templateName" label="{! v.objectType.NotificationTemplate__c.IsActive__c.label}" value="{!v.referenceData.template.IsActive__c}" checked="{!v.referenceData.template.IsActive__c}" onchange="{!c.doCheckBox}" disabled="{!v.isDisable}"/>
+            </div>
+        </div>
+        <!-- 타입여부 1:광고성, 2:정보성  -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title required">{!v.objectType.NotificationTemplate__c.Type__c.label}</span>
+            </div>
+            <div class="itemHolder noLabel" style="text-align:left;">
+                <lightning:select aura:id="Type__c"  value="{!v.referenceData.template.Type__c}" label="{!v.objectType.NotificationTemplate__c.Type__c.label}" required="true" messageWhenValueMissing="{!$Label.c.i2SEMA_MSG_BLANK_CHANNEL}" onchange="{!c.changeType}" disabled="{!v.isDisable}" >
+                    <option value="" >{!$Label.c.i2SEMA_LAB_NONE}</option>
+                    <aura:iteration items="{!v.objectType.NotificationTemplate__c.Type__c.picklistOptions}" var="item">
+                        <option value="{!item.value}" selected="{!v.referenceData.template.Type__c == item.value}">{!item.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </div>
+        <!-- 광고성이면, 차단번호 입력  -->
+        <aura:if isTrue="{!equals(v.referenceData.template.Type__c, '1')}">
+            <div class="rowHolder largeIndent">
+                <div class="titleHolder">
+                    <span class="title required">{!$Label.c.i2SEMA_LAB_ARS080}</span>
+                </div>
+                <div class="itemHolder noLabel" style="text-align:left;">
+                    <lightning:input aura:id="NotificationTemplate__c" type="text" class="slds-large-size--1-of-2 templateName" required="true" label="{! v.objectType.NotificationTemplate__c.Ars080Phone__c.label}" value="{!v.referenceData.template.Ars080Phone__c}" disabled="true"/>
+                </div>
+            </div>
+        </aura:if>
+        <!-- Channel -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title required">{!v.objectType.NotificationTemplate__c.Channel__c.label}</span>
+            </div>
+            <div class="itemHolder noLabel slds-col">
+                <lightning:select aura:id="channel"  value="{!v.referenceData.template.Channel__c}" label="{!v.objectType.NotificationTemplate__c.Channel__c.label}" required="true" messageWhenValueMissing="{!$Label.c.i2SEMA_MSG_BLANK_CHANNEL}" onchange="{!c.changeChannel}" disabled="{!v.isDisable}" >
+                    <option value="" >{!$Label.c.i2SEMA_LAB_NONE}</option>
+                    <aura:iteration items="{!v.objectType.NotificationTemplate__c.Channel__c.picklistOptions}" var="item">
+                        <!--채널 표시 : 알림톡 생성/수정/삭제 불가 -->
+                        <aura:if isTrue="{!notequals(item.value, '1008')}">
+                            <option value="{!item.value}" selected="{!v.referenceData.template.Channel__c == item.value}">{!item.label}</option>
+                        </aura:if>
+                        <!--읽기모드(isDisable = true)시 알림톡 채널 표시-->
+                        <aura:if isTrue="{!v.isDisable}">
+                            <aura:if isTrue="{!equals(item.value, '1008')}">
+                                <option value="Kakao Notification Talk" selected="{!v.referenceData.template.Channel__c == item.value}">{!item.label}</option>
+                            </aura:if>
+                        </aura:if>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </div>
+
+        <div>
+            <!-- Title -->
+            <aura:if isTrue="{!notequals(v.referenceData.template.Channel__c, '0')}">
+                <div class="smallIndent">
+                    <span class="title required">{!v.objectType.NotificationTemplate__c.Title__c.label}</span>
+                    <lightning:input aura:id="field" required="true" class="noLabel" label="Title" type="text" value="{!v.referenceData.template.Title__c}" disabled="{!v.isDisable}" onchange="{!c.firePreviewEvent}"/>
+                </div>
+            </aura:if>
+            <!-- 개인화 라벨 -->
+            <aura:if isTrue="{!not(v.isDisable)}">
+                <div class="smallIndent">
+                    <span class="title">{!$Label.c.i2SEMA_LAB_PERSONALIZATION_LABELS}</span>
+                    <div class="noLabel">
+                        <a class="slds-button slds-button_brand labelButton" style="margin-left: 5px !important;" data-value="{!$Label.c.i2SEMA_LAB_LABEL_01}" onclick="{!c.addLabel}">{!$Label.c.i2SEMA_LAB_LABEL_01}</a>
+                        <a class="slds-button slds-button_brand labelButton" data-value="{!$Label.c.i2SEMA_LAB_LABEL_02}" onclick="{!c.addLabel}">{!$Label.c.i2SEMA_LAB_LABEL_02}</a>
+                        <a class="slds-button slds-button_brand labelButton" data-value="{!$Label.c.i2SEMA_LAB_LABEL_03}" onclick="{!c.addLabel}">{!$Label.c.i2SEMA_LAB_LABEL_03}</a>
+                        <a class="slds-button slds-button_brand labelButton" data-value="{!$Label.c.i2SEMA_LAB_LABEL_04}" onclick="{!c.addLabel}">{!$Label.c.i2SEMA_LAB_LABEL_04}</a>
+                        <a class="slds-button slds-button_brand labelButton" data-value="{!$Label.c.i2SEMA_LAB_LABEL_05}" onclick="{!c.addLabel}">{!$Label.c.i2SEMA_LAB_LABEL_05}</a>
+                    </div>
+                </div>
+            </aura:if>
+            <!-- MSG Contents -->
+            <div class="smallIndent">
+                <span class="title required">{!v.objectType.NotificationTemplate__c.Content__c.label}</span>
+                <lightning:textarea aura:id="field" required="true" class="noLabel" label="Contents" value="{!v.referenceData.template.Content__c}" disabled="{!v.isDisable}" onchange="{!c.contentInput}"/>
+                <p class="slds-float--right labelSize" style="{!if(v.isExceededByteLimit, 'color:red;', '')}">
+                    {!v.referenceData.template.ContentLength__c}/{!if(equals(v.referenceData.template.Channel__c, '0'), v.config.SMSTextLimit__c, if(equals(v.referenceData.template.Channel__c, '1009'), v.config.KakaoFriendTalkTextLimit__c, v.config.MMSTextLimit__c))}
+                </p>
+            </div>
+            <!--MMS File-->
+            <aura:if isTrue="{!equals(v.referenceData.template.Channel__c, '2')}">
+                <div class="smallIndent">
+                    <!-- MMS 파일 업로드  -->
+                    <aura:if isTrue="{!and(not(v.isDisable), or(v.referenceData.files == null, v.referenceData.files.length == 0))}">
+                        <lightning:input aura:id="field" onchange="{!c.changeFile}" type="file" name="file" label="{!$Label.c.i2SEMA_NT_LAB_UPLOAD_ATTACHMENT}" multiple="false" accept= '.jpg' required="true"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.referenceData.files.length > 0}">
+                        <!-- 업로드된 MMS 파일들  -->
+                        <aura:iteration items="{!v.referenceData.files}" var="fileData">
+                            <div class="fileLabel">
+                                {!$Label.c.i2SEMA_LAB_UPLOADED_ATTACHMENT}
+                                <lightning:formattedText class="fileName" value="{!fileData.fileName}"/>
+                                <aura:if isTrue="{!not(v.isDisable)}">
+                                    <a onclick="{!c.removeFile}"><lightning:formattedText value="{!$Label.c.i2SEMA_LAB_REMOVE_ATTACHMENT}"/></a>
+                                </aura:if>
+                            </div>
+                        </aura:iteration>
+                    </aura:if>
+                </div>
+            </aura:if>
+            <!-- 카카오 알림톡 -->
+            <aura:if isTrue="{!equals(v.referenceData.template.Channel__c, '1008')}">
+                <!--카카오 알림톡 : Kakao Template Code-->
+                <div class="small Indent" style="text-align:left;">
+                    <span class="title required">{! v.objectType.NotificationTemplate__c.KakaoNotiTempleteCode__c.label}</span>
+                    <lightning:input type="text" class="noLabel" label="{! v.objectType.NotificationTemplate__c.KakaoNotiTempleteCode__c.label}" value="{!v.referenceData.template.KakaoNotiTempleteCode__c}" disabled="{!v.isDisable}"/>
+                </div>
+            </aura:if>
+            <!-- 카카오 친구톡 -->
+            <aura:if isTrue="{!equals(v.referenceData.template.Channel__c, '1009')}">
+                <!--카카오 친구톡 : KakaoFriendTalkImage__c -->
+                <div class="smallIndent">
+                    <span class="title">{! v.objectType.NotificationTemplate__c.KakaoFriendTalkImage__c.label}</span>
+                    <lightning:recordEditForm objectApiName="NotificationTemplate__c">
+                        <lightning:inputField class="noLabel" fieldName="KakaoFriendTalkImage__c" value="{!v.referenceData.template.KakaoFriendTalkImage__c}" disabled="{!v.isDisable}" onchange="{!c.changeKakaoImg}"/>
+                    </lightning:recordEditForm>
+                </div>
+                <!--카카오 친구톡 : KakaoImgLink__c-->
+                <div class="smallIndent">
+                    <span class="title">{! v.objectType.NotificationTemplate__c.KakaoImgLink__c.label}</span>
+                    <lightning:input aura:id="field" class="noLabel" label="{! v.objectType.NotificationTemplate__c.KakaoImgLink__c.label}" type="text" value="{!v.referenceData.template.KakaoImgLink__c}" disabled="{!v.isDisable}" onchange="{!c.firePreviewEvent}"/>
+                </div>
+            </aura:if>
+            <!-- 카카오 템플릿 -->
+            <aura:if isTrue="{!or(equals(v.referenceData.template.Channel__c, '1008'), equals(v.referenceData.template.Channel__c, '1009'))}">
+                <!--카카오 비즈톡  : 알림톡 / 친구톡 -->
+                <div class="smallIndent">
+                    <c:i2SEMA_TemplateKakaoButtonListView aura:id="btnLinkView" recordId="{!v.recordId}" isScreen="{!v.isScreen}" referenceData="{!v.referenceData}"/>
+                </div>
+            </aura:if>
+
+        </div>
+        <!-- Footer 저장/취소 버튼 disable = false 표시, standalone = true 표시 , 둘중 하나라도 미표시면 미표시 -->
+        <aura:if isTrue="{!and(not(v.isDisable), v.standAlone)}">
+            <div class="slds-grid  slds-m-top--medium">
+                <div class="slds-col--bump-left">
+                    <lightning:button label="{!$Label.site.cancel}" onclick="{!c.doCancel}"/>
+                    <lightning:button label="{!$Label.site.save}" variant="brand" onclick="{!c.doSave}"/>
+                </div>
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>

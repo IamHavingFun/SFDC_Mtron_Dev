@@ -1,0 +1,10 @@
+/**
+ * Created by MS on 2020-12-24.
+ */
+
+.THIS {
+}
+
+.THIS .radio_horizontal .slds-form-element__control {
+    display: flex;
+}

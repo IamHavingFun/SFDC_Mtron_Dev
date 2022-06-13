@@ -1,0 +1,9 @@
+<!--
+ - Created by ms on 2020-05-15.
+ -->
+<design:component>
+    <design:attribute name="tsname" label="TS Name" default="SE_Dashboard" description="태블로 대시보드를 선택하세요."/>
+    <design:attribute name="width" label="Width" default="804px" description="넓이를 지정하세요."/>
+    <design:attribute name="height" label="Height" default="636px" description="높이를 지정하세요."/>
+    <design:attribute name="align" label="Align" default="center" description="정렬을 지정하세요."/>
+</design:component>

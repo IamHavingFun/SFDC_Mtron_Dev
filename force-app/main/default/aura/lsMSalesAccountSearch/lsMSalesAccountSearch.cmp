@@ -1,0 +1,173 @@
+<!--
+* @filename      : lsMSalesAccountSearch
+* @projectname   :
+* @author        : i2max_my.Seo
+* @date          : 2020-06-17 오후 3:43
+* @group         :
+* @group-content :
+* @description   : [모바일] 판매 기회 관리
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+ 0.1     2020-06-17 오후 3:43     i2max_my.Seo         Create
+-->
+<aura:component extends="c:lsMSalesBase"
+                implements="forceCommunity:availableForAllPageTypes"
+                controller="lsMSalesAccountSearch"
+                description="lsMSalesAccountSearch">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+    <aura:attribute name="inDate" type="List" default="[
+                        {'label': '7일 이내', 'value': '7'},
+                        {'label': '15일 이내', 'value': '15'},
+                        {'label': '30일 이내', 'value': '30'}]"/>
+    <aura:attribute name="pageReference" type="Object"/>
+    <aura:attribute name="srchOptions" type="List" access="private" default="[
+                        {'label': '상담', 'value': 'Opportunity'},
+                        {'label': '자산', 'value': 'Asset'},
+                        {'label': '고객', 'value': 'Account'}
+                    ]"
+                    description="검색 조건 Options"/>
+
+    <aura:attribute name="seriesOptions" type="List" description="시리즈 Options"/>
+    <aura:attribute name="horsePowerStandardOptions" type="List" description="마력 Options"/>
+    <aura:attribute name="purchaseDateOptions" type="List"  default="[
+                        {'label': '1년전구매', 'value': '1'},
+                        {'label': '3년전구매', 'value': '3'},
+                        {'label': '5년전구매', 'value': '5'},
+                        {'label': '6년전구매', 'value': '6'},
+                        {'label': '7년전구매', 'value': '7'},
+                        {'label': '8년전구매', 'value': '8'},
+                        {'label': '9년전구매', 'value': '9'},
+                        {'label': '10년전구매', 'value':'10'}
+                        ]"
+                    description="구매년도 Options"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .comm-layout-column:not(:empty){
+        padding: 0px !important;
+        }
+        .uiContainerManager {
+        width: 0%;
+        width: 0%;
+        }
+    </aura:html>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">판매관리</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 검색영역 -->
+        <div class="top_saleBox">
+            <div class="row">
+                <span class="form_select" style="width:calc(100% - 350px); margin-right: 15px;">
+                    <lightning:input label="" type="text" style="width:100%" placeholder="{!equals(v.reqData.searchType, 'Asset') ? '모델명,성명' : '성명을 입력하세요'}" value="{!v.reqData.srchName}" />
+                </span>
+                <span class="form_select" style="width:230px; margin-right: 0px;">
+                    <lightning:combobox label=""
+                                        options="{!v.srchOptions}"
+                                        variant="label-stacked"
+                                        value="{!v.reqData.searchType}"
+                                        onchange="{!c.doSearchChange}" />
+                </span>
+                <span class="form_select" style="width:105px;">
+                    <lightning:button label="검색" class="btn_search" onclick="{!c.doSearch}"/>
+                </span>
+            </div>
+
+            <aura:if isTrue="{!equals(v.reqData.searchType, 'Asset')}">
+                <div class="row">
+                    <span class="form_select" style="width:calc(33.33% - 15px); margin-right: 15px;" >
+
+                        <lightning:combobox label=""
+                                            placeholder="시리즈"
+                                            options="{!v.seriesOptions}"
+                                            variant="label-hidden"
+                                            value="{!v.reqData.srchSeries}"
+                                            onchange="{!c.doSeriesChange}"/>
+
+                    </span>
+                    <span class="form_select" style="width:calc(33.33% - 15px); margin-right: 15px;">
+                        <lightning:combobox label=""
+                                            placeholder="마력"
+                                            options="{!v.horsePowerStandardOptions}"
+                                            variant="label-hidden"
+                                            value="{!v.reqData.srchHorsePowerStandard}"
+                                            onchange="{!c.doHorsePowerStandardChange}"/>
+                    </span>
+
+                        <span class="form_select" style="width:calc(33.33% - 15px); margin-right: 15px;">
+                        <lightning:combobox label=""
+                                            placeholder="구매년도"
+                                            options="{!v.purchaseDateOptions}"
+                                            variant="label-hidden"
+                                            value="{!v.reqData.srchPurchaseDate}"/>
+                    </span>
+
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!equals(v.reqData.searchType, 'Opportunity')}">
+                <div class="row">
+                    <span class="form_select" style="width:calc(100% - 352px);">
+                        <lightning:combobox label=""
+                                            options="{!v.inDate}"
+                                            variant="label-hidden"
+                                            placeholder="최근 상담 기간"
+                                            value="{!v.reqData.srchDate}"/>
+<!--                    <div class="form_select__arrow"></div>-->
+                </span>
+                </div>
+
+            </aura:if>
+
+        </div>
+        <!-- //상단 검색영역 -->
+
+        <article class="content">
+            <!-- 테이블 -->
+
+            <c:lsMSalesTableFrame  aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}" isPaging="true">
+            <div class="col_board_sale mt20">
+                <!-- iteration 돌리기 전 체크 로직. -->
+                <aura:if isTrue="{!and(not(empty(v.recordList)), v.recordList.length > 0)}">
+
+                 <ul>
+                    <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                    <li>
+                        <div class="left">
+                            <a data-recordid="{!record.Id}" onclick="{!c.doDetail}">{!record.Name}&nbsp;({!record.fm_Mobile__c}) (<lightning:formattedDateTime value="{!record.LastModifiedDate}"/>)</a>
+                        </div>
+                        <div class="right">{!record.CustomerStatus__c}</div>
+                        <div class="result">
+                            <div class="circle_tab"><b>{!empty(record.FarmingForm__c) ? '-' : record.FarmingForm__c}&nbsp;&nbsp;{!empty(record.FarmingArea__c) ? '-' : record.FarmingArea__c}</b></div>
+                            <div class="circle_tab">보유 <b> {!empty(record.Assets)? 0 : record.Assets.length}건</b></div>
+                            <div class="circle_tab">상담 <b> {!empty(record.Opportunities)? 0 : record.Opportunities.length}건</b></div>
+                        </div>
+                    </li>
+                    </aura:iteration>
+                 </ul>
+                    <aura:set attribute="else">
+                        <c:lsMSalesNoDataFound/>
+                    </aura:set>
+                </aura:if>
+            </div>
+            <!-- // 테이블 -->
+
+            </c:lsMSalesTableFrame>
+
+        </article>
+
+    </div>
+</aura:component>

@@ -1,0 +1,45 @@
+<!--
+  * @filename      : lacComTd
+  * @projectname   : LWC_I2MAX
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component description="lacComTd">
+
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="style" type="String" default="" />
+    <aura:attribute name="isErrorTd" type="Boolean" default="false" description="td의 Error css 표시여부" />
+    <aura:attribute name="tdClass" type="String" default="{!v.isErrorTd ? 'custom-hasError_td' : ''}" />
+
+    <aura:attribute name="colspan" type="Integer" default="1"/>
+    <aura:attribute name="rowspan" type="Integer" default="1"/>
+
+    <aura:attribute name="isLineBreak" type="Boolean" default="false" description="Excel 처럼 Line Enter 를 그대로 표현" />
+    <aura:attribute name="class" type="String" default="{!v.isLineBreak ? '' : 'slds-truncate'}" />
+
+    <aura:if isTrue="{!v.isLineBreak}">
+        <aura:html tag="style">
+            td > p {
+            white-space: pre;
+            }
+        </aura:html>
+    </aura:if>
+    <!-- =============================================================================================================
+     * Body
+    ============================================================================================================= -->
+    <td scope="row" style="{#v.style}" colspan="{#v.colspan}" rowspan="{#v.rowspan}" class="{#v.tdClass}">
+        <p class="{#v.class}" title="{#v.title}">
+            {#v.body}
+        </p>
+    </td>
+</aura:component>

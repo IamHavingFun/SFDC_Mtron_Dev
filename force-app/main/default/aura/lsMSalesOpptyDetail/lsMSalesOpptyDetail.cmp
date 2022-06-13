@@ -1,0 +1,105 @@
+<!--
+  * @filename      : lsMSalesOpptyDetail
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-08-04 오후 5:25
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-08-04 오후 5:25    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                controller="LsMSalesOpptyDetail"
+                description="lsMSalesOpptyDetail">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">판매관리 상세조회</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 개인정보영역 -->
+        <div class="top_colBox">
+            <div class="left">{!v.resData.Account.Name}<span class="bar"></span>({!v.resData.Account.PersonMobilePhone})</div>
+            <aura:if isTrue="{!not(empty(v.resData.Account.PersonMobilePhone))}">
+                <div class="right">연락처확보</div>
+            </aura:if>
+        </div>
+        <!-- //상단 개인정보영역 -->
+
+        <ul class="body_customerBox">
+            <li>
+                <dl>
+                    <dt>영농유형</dt>
+                    <dd>{!v.resData.Account.FarmingForm__c}</dd>
+                </dl>
+                <dl>
+                    <dt>영농면적</dt>
+                    <dd>{!v.resData.Account.FarmingArea__c}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>관심모델</dt>
+                    <aura:if isTrue="{!not(empty(v.resData.QuoteLineItem__r))}">
+                        <dd>
+                            <aura:iteration items="{!v.resData.QuoteLineItem__r}" var="qli">
+                                <aura:if isTrue="{!equals(qli.Product__r.Type__c, '본체') }">
+                                    [{!qli.Product__r.ProductType__c}]{!qli.Product__r.Name}<br/>
+                                </aura:if>
+                            </aura:iteration>
+                        </dd>
+
+                        <aura:set attribute="else">
+                            <dd>[{!v.resData.InterestModel__r.ProductType__c}]{!v.resData.InterestModel__r.Name}</dd>
+                        </aura:set>
+                    </aura:if>
+                </dl>
+                <dl>
+                    <dt>구매희망일</dt>
+                    <dd>{!v.resData.CloseDate}</dd>
+                </dl>
+            </li>
+        </ul>
+
+        <article class="content">
+            <!-- 테이블 -->
+            <div class="col_board_amount">
+                <ul>
+                    <aura:iteration items="{!v.resData.QuoteLineItem__r}" var="qli">
+                        <li>
+                            <div class="left">
+                                <div class="tit">[{!qli.Product__r.ProductType__c}]{!qli.Product__r.Name}</div>
+                                <div class="stxt">{!qli.Product__r.Option1__c}/{!qli.Product__r.Option2__c}/{!qli.Product__r.Option3__c}/{!qli.Product__r.Option4__c}</div>
+                            </div>
+                            <div class="right">
+<!--                                <div class="row"><div class="mark">소</div>{!qli.ListPrice__c}</div>-->
+                                <div class="row"><div class="mark">대리점가</div>{!qli.UnitPrice__c}</div>
+                                <div class="row"><div class="mark">판매가</div>{!qli.NetPrice__c}</div>
+                                <div class="row"><div class="mark">융자한도</div>{!qli.LoanLimitAmt__c}</div>
+                            </div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+            <!-- // 테이블 -->
+
+            <section class="bbtnBox">
+                <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doMovePrevPage}"/>
+                <lightning:button label="{!empty(v.resData.QuoteLineItem__r) ? '견적서 작성' : equals(v.resData.StageName, '견적') ? '견적서 수정' : '견적서 보기'}" class="bbtn btn_50" onclick="{!c.doMoveQuoteRegister}"/>
+            </section>
+        </article>
+    </div>
+</aura:component>

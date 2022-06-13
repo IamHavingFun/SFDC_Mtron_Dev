@@ -1,0 +1,38 @@
+<!--
+  * @filename      : lacComTh
+  * @projectname   : LWC_I2MAX
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component description="lacComTh">
+    <!-- =============================================================================================================
+     * Attribute
+    ============================================================================================================= -->
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="style" type="String" default="" />
+    <aura:attribute name="thClass" type="String" />
+
+    <aura:attribute name="colspan" type="Integer" default="1"/>
+    <aura:attribute name="rowspan" type="Integer" default="1"/>
+
+    <aura:attribute name="class" type="String" default="slds-truncate" />
+
+    <!-- =============================================================================================================
+     * Body
+    ============================================================================================================= -->
+    <th scope="row" style="{#v.style}" colspan="{#v.colspan}" rowspan="{#v.rowspan}" class="{#v.thClass}">
+        <p class="{#v.class}" title="{#v.title}">
+            {#v.body}
+        </p>
+    </th>
+</aura:component>

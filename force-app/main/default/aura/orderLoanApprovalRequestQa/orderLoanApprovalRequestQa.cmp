@@ -1,0 +1,45 @@
+<!--
+  * @filename      : orderLoanApprovalRequestQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-04-16 오후 1:32
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 1:32    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:actionOverride"
+                controller="orderLoanApprovalRequestQa"
+                description="orderLoanApprovalRequestQa">
+
+    <aura:attribute name="orderRecord" type="Order__c" default="{}" description="Order__c SObject"/>
+    <aura:attribute name="isApprovalRequest" type="Boolean" default="false" description="승인 가능 여부 체크."/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="주문 여신 한도 승인 제출" aura:id="quickAction" isSmall="{#true}" hasSelfFooter="{#false}">
+        <aura:if isTrue="{!v.isApprovalRequest}">
+            <div class="slds-text-align_center">
+                승인 제출 하시겠습니까?
+                코멘트 박스 붙여야 한다.
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-text-align_center">여신 한도 승인 대상이 아닙니다.</div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isApprovalRequest}">
+                <lightning:button aura:id="btnSave" label="제출" variant="brand" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

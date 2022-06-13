@@ -1,0 +1,333 @@
+<!--
+  * @filename       : i2SEMA_ManualSendForm
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-08 오후 2:10
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 2:10     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_ManualSendForm"
+                extends="c:i2SEMA_Base"
+                controller="i2SEMA_ManualSend"
+                access="global"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader">
+
+    <!-- Attribute -->
+    <aura:attribute name="recordId"
+                    type="String"
+                    access="global"
+                    description="페이지의 Record ID"/>
+
+    <aura:attribute name="standAlone"
+                    type="Boolean"
+                    default="{!true}"
+                    access="global"
+                    description="컴포넌트 독립사용 여부"/>
+
+    <aura:attribute name="receiverDialogOpen"
+                    type="Boolean"
+                    default="false"
+                    access="global"
+                    description="관련수신자 선택 다이얼로그 오플 플래그"/>
+
+    <aura:attribute name="referenceData"
+                    type="Object"
+                    access="global"
+                    description="[i2SEMA_ManualSend.ReferenceData] 컴포넌트 참조값"/>
+
+    <aura:attribute name="requestData"
+                    type="Object"
+                    access="global"
+                    description="[i2SEMA_ManualSend.RequestData] 사용자 요청값"/>
+
+    <!-- Event / Handler -->
+    <aura:handler name="init"
+                  action="{!c.doInit}"
+                  value="{!this}"/>
+
+    <aura:handler name="receiverEvent"
+                  event="c:i2SEMA_ManualSendReceiverEvent"
+                  action="{!c.HandleReceiverEvent}"/>
+
+    <aura:registerEvent name="previewEvent"
+                        type="c:i2SEMA_NotificationPreviewEvent"/>
+
+    <aura:method name="save"
+                 action="{!c.doSave}"/>
+
+
+    <!-- Markup -->
+    <div class="container">
+        <!-- Channel -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title required">{!$Label.c.i2SEMA_LAB_CHANNEL}</span>
+            </div>
+            <div class="itemHolder noLabel slds-col">
+                <aura:if isTrue="{!and(v.requestData.channel != '1008',v.requestData.channel != '1009')}">
+                    <lightning:select label="Channel" value="{!v.requestData.channel}" disabled="{!and(v.requestData.templateId != null , v.requestData.templateId != '')}" onchange="{!c.changeChannelHandle}">
+                        <option value="">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                        <aura:iteration items="{!v.referenceData.channelOptions}" var="channelOption">
+                            <option value="{!channelOption.value}">{!channelOption.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                    <!-- Kakao 채널은 Template 활용시에만 사용 -->
+                    <aura:set attribute="else">
+                        <lightning:select label="Channel" value="{!v.requestData.channel}" disabled="true" onchange="{!c.changeChannelHandle}">
+                            <option value="1008">{!$Label.c.i2SEMA_LAB_KAKAO_NOTI_TALK}</option>
+                            <option value="1009">{!$Label.c.i2SEMA_LAB_KAKAO_FRIEND_TALK}</option>
+                        </lightning:select>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+
+        <!-- 수신자 -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title required">{!$Label.c.i2SEMA_LAB_RECEIVER}</span>
+            </div>
+            <div class="itemHolder noLabel">
+                <lightning:select label="" value="{!v.requestData.receiverOption}" onchange="{!c.changeReceiverOptionHandle}">
+                    <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                    <aura:iteration items="{!v.referenceData.receiverOptions}" var="receiverOption">
+                        <option value="{!receiverOption.value}">{!receiverOption.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </div>
+
+        <!-- 참조 필드를 수신자로 선택 -->
+        <aura:if isTrue="{!v.requestData.receiverOption == $Label.c.i2SEMA_LAB_REFERENCE_FIELD}">
+            <!-- 필드 선택 -->
+            <div class="rowHolder smallIndent">
+                <div class="titleHolder"></div>
+                <div class="itemHolder noLabel">
+                    <lightning:select label="" value="{!v.requestData.referenceField}" onchange="{!c.changeReferenceFieldHandle}">
+                        <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                        <aura:iteration items="{!v.referenceData.referenceFieldOptions}" var="referenceFieldOption">
+                            <option value="{!referenceFieldOption.value}">{!referenceFieldOption.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </div>
+        </aura:if>
+
+        <!-- 관련 레코드를 수신자로 선택 -->
+        <aura:if isTrue="{!v.requestData.receiverOption == $Label.c.i2SEMA_LAB_RELATED_RECORD}">
+            <!-- SObject 타입 선택 -->
+            <div class="rowHolder smallIndent">
+                <div class="titleHolder"></div>
+                <div class="itemHolder noLabel">
+                    <lightning:select label="" value="{!v.requestData.receiverType}" onchange="{!c.changeReceiverTypeHandle}">
+                        <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                        <aura:iteration items="{!v.referenceData.receiverTypeOptions}" var="receiverTypeOption">
+                            <option value="{!receiverTypeOption.value}">{!receiverTypeOption.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </div>
+            <!-- 선택된 Record 건수 -->
+            <aura:if isTrue="{!v.requestData.receiverType != null}">
+                <div class="rowHolder smallIndent">
+                    <div class="titleHolder"></div>
+                    <div class="itemHolder">
+                        <span><a onclick="{!c.editRelatedReceiver}"><lightning:formattedText value="{!v.requestData.receiverIds.length + ' Record Selected'}"/></a></span>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:if>
+
+        <!-- 특정 레코드를 수신자로 선택 -->
+        <aura:if isTrue="{!v.requestData.receiverOption == $Label.c.i2SEMA_LAB_SPECIFIC_RECORD}">
+            <!-- 타입 선택 -->
+            <div class="rowHolder smallIndent">
+                <div class="titleHolder"></div>
+                <div class="itemHolder noLabel">
+                    <lightning:select label="" value="{!v.requestData.receiverType}" onchange="{!c.changeReceiverTypeHandle}">
+                        <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                        <aura:iteration items="{!v.referenceData.specificTypeOptions}" var="specificTypeOption">
+                            <option value="{!specificTypeOption.value}">{!specificTypeOption.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </div>
+            <!-- 수신자 선택 -->
+            <aura:if isTrue="{!v.requestData.receiverType != null}">
+                <div class="rowHolder smallIndent">
+                    <div class="titleHolder"></div>
+                    <div class="itemHolder">
+                        <lightning:recordEditForm objectApiName="Notification__c">
+                            <aura:iteration items="{!v.requestData.specificReceivers}" var="specificReceiver" indexVar="idx">
+                                <div class="inlineFlexContainer">
+                                    <div class="largeInlineItem">
+                                        <lightning:inputField class="noLabel" fieldName="{!v.requestData.receiverType + '__c'}" value="{!specificReceiver.Id}"/>
+                                    </div>
+                                    <div id="{!idx}" class="smallInlineItem deleteIcon" onclick="{!c.removeReceiver}">
+                                        <lightning:icon iconName="utility:close" size="x-small"/>
+                                    </div>
+                                </div>
+                            </aura:iteration>
+                        </lightning:recordEditForm>
+                        <div class="addButton slds-align--absolute-center" onclick="{!c.addReceiver}">
+                            <lightning:formattedText value="{!$Label.c.i2SEMA_LAB_ADD_RECEIVER}"/>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:if>
+
+        <!-- 예약 발송 -->
+        <div class="slds-grid smallIndent">
+            <div class="titleHolder">
+                <span class="title">{!$Label.c.i2SEMA_LAB_SCHEDULED}</span>
+            </div>
+            <div class="itemHolder noLabel">
+                <div class="inlineFlexContainer">
+                    <div class="smallInlineItem">
+                        <lightning:input type="checkbox"
+                                         label=""
+                                         checked="{!v.requestData.scheduled}"/>
+                    </div>
+                    <div class="largeIndent deleteIcon">
+                        <lightning:input type="datetime-local"
+                                         label=""
+                                         value="{!v.requestData.scheduledTime}"
+                                         disabled="{!not(equals(v.requestData.scheduled,true))}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 타입(광고성/정보성) -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title required">{!$Label.c.i2SEMA_LAB_TYPE}</span>
+            </div>
+            <div class="itemHolder noLabel">
+                <lightning:select  aura:id="Type__c" label="" value="{!v.requestData.type}" onchange="{!c.changeType}" disabled="{!and(v.requestData.templateId != null , v.requestData.templateId != '')}">
+                    <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                    <aura:iteration items="{!v.referenceData.typeOptions}" var="typeOption">
+                        <option value="{!typeOption.value}">{!typeOption.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </div>
+        <!-- 광고성이면, 차단번호 입력  -->
+        <aura:if isTrue="{!equals(v.requestData.type, '1')}">
+            <div class="rowHolder largeIndent">
+                <div class="titleHolder">
+                    <span class="title required">{!$Label.c.i2SEMA_LAB_ARS080}</span>
+                </div>
+                <div class="itemHolder noLabel" style="text-align:left;">
+                    <lightning:input type="text" label="" value="{!v.requestData.arsPhone}" disabled="{!and(v.requestData.templateId != null , v.requestData.templateId != '')}"/>
+                </div>
+            </div>
+        </aura:if>
+
+
+        <!-- Template 선택 -->
+        <div class="rowHolder largeIndent">
+            <div class="titleHolder">
+                <span class="title">{!$Label.c.i2SEMA_LAB_TEMPLATE}</span>
+            </div>
+            <div class="itemHolder">
+                <lightning:recordEditForm objectApiName="Notification__c">
+                    <lightning:inputField class="noLabel slds-m-top--small" fieldName="NotificationTemplate__c" value="{!v.requestData.templateId}" onchange="{!c.changeTemplateHandle}"/>
+                </lightning:recordEditForm>
+            </div>
+        </div>
+        <!-- Label 변환 내용 -->
+        <aura:if isTrue="{!v.requestData.templateId != null}">
+            <aura:iteration items="{!v.requestData.templateSettings}" var="templateSetting" indexVar="idx">
+                <div class="rowHolder smallIndent">
+                    <div class="titleHolder"></div>
+                    <div class="itemHolder">
+                        <div class="inlineFlexContainer">
+                            <div class="mediumInlineItem" onchange="{!c.changeTemplateObjectHandle}" id="{!idx}">
+                                <lightning:select label="{!templateSetting.label}" value="{!templateSetting.sObjectType}">
+                                    <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                                    <aura:iteration items="{!templateSetting.templateOption.availableSObjectTypes}" var="availableSObjectType">
+                                        <option value="{!availableSObjectType.value}">{!availableSObjectType.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                            <div class="mediumInlineItem">
+                                <lightning:select label="" value="{!templateSetting.sObjectField}">
+                                    <option value="{!null}">{!$Label.c.i2SEMA_LAB_NONE}</option>
+                                    <aura:iteration items="{!templateSetting.templateOption.availableSObjectFields}" var="availableSObjectField">
+                                        <option value="{!availableSObjectField.value}">{!availableSObjectField.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:iteration>
+        </aura:if>
+
+        <!-- Contents -->
+        <div>
+            <aura:if isTrue="{!v.requestData.channel != '0'}">
+                <div class="smallIndent">
+                    <span class="title required">{!$Label.c.i2SEMA_LAB_TITLE}</span>
+                    <lightning:input aura:id="field" required="true" class="noLabel" label="Title" type="text" value="{!v.requestData.title}" disabled="{!and(v.requestData.templateId != null , v.requestData.templateId != '')}" onchange="{!c.firePreviewEvent}"/>
+                </div>
+            </aura:if>
+
+            <div class="smallIndent">
+                <span class="title required">{!$Label.c.i2SEMA_LAB_CONTENTS}</span>
+                <lightning:textarea  aura:id="field" required="true" class="noLabel" label="Contents" value="{!v.requestData.content}" disabled="{!and(v.requestData.templateId != null , v.requestData.templateId != '')}" onchange="{!c.firePreviewEvent}"/>
+            </div>
+
+            <div class="smallIndent">
+                <aura:if isTrue="{!v.requestData.channel == '2'}">
+                    <aura:if isTrue="{!v.requestData.files.length > 0}">
+                        <!-- 첨부된 파일정보 -->
+                        <aura:iteration items="{!v.requestData.files}" var="fileData">
+                            <div class="slds-grid">
+                                <div class="slds-m-left--medium">
+                                    <span>Attached File : </span>
+                                    <span style="color:red;">{!fileData.fileName}</span>
+                                </div>
+                                <!-- Template 미사용시에만 파일 제거가능 -->
+                                <aura:if isTrue="{!or(v.requestData.templateId == null,v.requestData.templateId == '')}">
+                                    <div class="slds-m-left--small"><a onclick="{!c.removeFileHandle}"><lightning:formattedText value="Remove"/></a></div>
+                                </aura:if>
+                            </div>
+                        </aura:iteration>
+                        <!-- 템플릿 미사용시 파일 첨부버튼 -->
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!or(v.requestData.templateId == null,v.requestData.templateId == '')}">
+                                <lightning:input onchange="{!c.changeFileHandle}" type="file" name="file" label="Attachment" multiple="false" accept="image/jpg"/>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </aura:if>
+            </div>
+        </div>
+
+        <aura:if isTrue="{!v.standAlone == true}">
+            <div class="slds-grid  slds-m-top--medium">
+                <div class="slds-col--bump-left">
+                    <lightning:button label="{!$Label.c.i2SEMA_LAB_SEND}" variant="brand" onclick="{!c.doSave}"/>
+                </div>
+            </div>
+        </aura:if>
+    </div>
+
+    <!-- Member Search -->
+    <aura:if isTrue="{!v.receiverDialogOpen == true}">
+        {!v.body}
+    </aura:if>
+
+
+</aura:component>

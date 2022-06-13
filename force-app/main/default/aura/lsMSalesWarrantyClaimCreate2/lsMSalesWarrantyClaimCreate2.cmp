@@ -1,0 +1,232 @@
+<!--
+* @filename      : lsMSalesWarrantyClaimCreate
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-06-19 오후 3:01
+* @group         :
+* @group-content :
+* @description   : [모바일] LWS 클레임 등록
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+ 0.1     2020-06-19 오후 3:01     SEOKHO LEE          Create
+* ===============================================================a
+-->
+<aura:component
+        extends="c:lsMSalesStepBase"
+        description="lsMSalesWarrantyClaimCreate2"
+        controller="LsMSalesWarrantyClaimCreate">
+
+    <!-- ============================================================================
+    ==== Current User LDS 사용을 위한 attribute override : 상속 super의 attribute 재정의
+    ============================================================================= -->
+    <aura:set attribute="isCurrentUserLDS" value="{!true}"/>
+    <!-- ============================================================================
+    ==== Current User LDS 필드재정의 : 중복이 되어도 됨. 기설정된 필드와 중복제거하고 합쳐짐
+    ============================================================================= -->
+    <aura:set attribute="currentUserFields" value="AccountId"/>
+
+    <aura:attribute name="isSameDealer" type='Boolean' default="false" description="로그인사용자의 대리점과 자산의 대리점이 동일한지 여부"/>
+
+    <aura:attribute name="claimData" type='LsMSalesWarrantyClaimCreate.ClaimData' description="LWC클레임 WrapperClass"/>
+    <aura:attribute name="labelMap" type="Map" description="label관련 data를 담는 attribute"/>
+    <aura:attribute name="filetype" type="List" default="['.png', '.jpg', '.jpeg']" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="prefixURL" type="String" default="/Partner/sfc/servlet.shepherd/version/download/"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .w120 {
+        width: 120px !important;
+        }
+        .slds-file-selector__text .slds-medium-show {
+        display : none !important;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">LWS 클레임 등록</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name w120">기대번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.claimData.asset.Name}</span>
+                </li>
+                <li>
+                    <span class="name w120">고객명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.claimData.asset.Account.Name} ({!v.claimData.asset.Account.fm_Mobile__c})</span>
+                </li>
+
+                <li>
+                    <span class="name w120">모델명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.claimData.asset.Product2.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <aura:if isTrue="{!v.claimData.isUnkwonCustomer}">
+            고객 등록 만들자.
+            <aura:set attribute="else">
+                <article class="content">
+                    <section class="lwsImgBox">
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="기대정보"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p1.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p1"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p1.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p1.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="계기판 사용시간"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p2.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p2"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p2.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p2.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="고장부품 탈거 전"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p3.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p3"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p3.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p3.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="고장부품 탈거 후"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p4.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p4"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p4.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p4.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="고장에 대한 다각도 사진1"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p5.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p5"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p5.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p5.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="고장에 대한 다각도 사진2"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p6.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p6"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p6.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p6.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="고장에 대한 다각도 사진3"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p7.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p7"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p7.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p7.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="lwsTitImg">
+                            <lightning:fileUpload label="고장에 대한 다각도 사진4"
+                                                  multiple="false"
+                                                  class="{!v.claimData.contentVersionItems.p8.ContentDocumentId}"
+                                                  accept="{!v.filetype}"
+                                                  recordId="{!v.claimData.wc.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"
+                                                  name="p8"
+                                                  disabled="{!not(v.isSameDealer)}"
+                            />
+                            <div class="lwsImg">
+                                <aura:if isTrue="{!not(empty(v.claimData.contentVersionItems.p8.Id))}">
+                                    <img src="{!v.prefixURL + v.claimData.contentVersionItems.p8.Id}"/>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bbtnBox">
+                        <aura:if isTrue="{!not(v.isSameDealer)}">
+                            <lightning:button label="취소" class="bbtn_white width100" onclick="{!c.doCancel}"/>
+                            <aura:set attribute="else">
+                                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                                <lightning:button label="저장" class="bbtn btn_50" onclick="{!c.doSave}"/>
+                            </aura:set>
+                        </aura:if>
+                    </section>
+                </article>
+            </aura:set>
+        </aura:if>
+
+    </div>
+</aura:component>

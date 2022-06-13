@@ -1,0 +1,11 @@
+.THIS .width100{
+    width:100%;
+}
+
+.THIS .bbtn_gray {height: 100px; background: gray;
+    border: 1px solid #000; color: white;
+    font-size: 28px; text-align: center;
+    cursor: pointer; margin: 60px 0 0 0;
+    display: inline-block;
+    border-radius: 0;
+}

@@ -1,0 +1,49 @@
+<!--
+  * @filename      : i2SEMA_ReservationCancel
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_ys.seo
+  * @date          : 2020-03-13 오전 9:30
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file
+  * @description   : Notification 예약 취소
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-03-13 오전 9:30     i2max_ys.seo        Create
+    0.1     2020/04/14 11:22 AM     i2max_shlee         Rename  NotificationReservationCancel -> i2SEMA_ReservationCancel
+ -->
+
+<aura:component description="i2SEMA_ReservationCancel"
+                access="global" controller="i2SEMA_ReservationCancel" extends="c:i2SEMA_Base"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader">
+
+    <!-- =============================================================================
+    = Attribute
+    ============================================================================== -->
+    <aura:attribute name="recordId" type="String" />
+    <!-- =============================================================================
+    = Handler
+    ============================================================================== -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <!-- =============================================================================
+    = Markup
+    ============================================================================== -->
+    <aura:html tag="style">
+        .modal-body scrollable {
+        background : none;
+        }
+        .slds-modal__content{
+        background : none;
+        }
+        .slds-p-around--medium{
+        background : none;
+        }
+        .slds-spinner_container{
+        background : none;
+        }
+    </aura:html>
+
+</aura:component>

@@ -1,0 +1,56 @@
+<!--
+ - Created by MS on 2022-05-04.
+ -->
+<aura:component extends="c:lacComBase"
+                controller="OrderPriceInfo"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId"
+                description="orderPriceInfo">
+    <aura:attribute name="priceList" type="List" description="대상 개체 레코드 ID"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:dependency resource="markup://force:editRecord" type="EVENT" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+
+    <lightning:card title="제품 가격 정보">
+        <div class="slds-m-around_large">
+            <aura:if isTrue="{!not(empty(v.priceList))}">
+                <c:lacComTable hasScroll="{#false}" >
+                    <colgroup>
+                        <col width="15%"/>
+                        <col width="25%"/>
+                        <col width="30%"/>
+                        <col width="30%"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <c:lacComTh>유형</c:lacComTh>
+                        <c:lacComTh>가격</c:lacComTh>
+                        <c:lacComTh>유효기간(시작)</c:lacComTh>
+                        <c:lacComTh>유효기간(종료)</c:lacComTh>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.priceList}" var="record" indexVar="idx">
+                        <tr>
+                            <c:lacComTd class="{!record.isTarget ? 'selectedTarget' : ''}">{!record.priceType}</c:lacComTd>
+                            <c:lacComTd class="{!record.isTarget ? 'selectedTarget' : ''}">
+                                <lightning:formattedNumber value="{!record.price}" maximumFractionDigits="0" />
+                            </c:lacComTd>
+                            <c:lacComTd class="{!record.isTarget ? 'selectedTarget' : ''}">
+                                {!record.startDate}
+                            </c:lacComTd>
+                            <c:lacComTd class="{!record.isTarget ? 'selectedTarget' : ''}">
+                                {!record.endDate}
+                            </c:lacComTd>
+                        </tr>
+                        </aura:iteration>
+                        </tbody>
+                    </c:lacComTable>
+                <aura:set attribute="else">
+                    가격 정보가 없습니다.
+                </aura:set>
+            </aura:if>
+        </div>
+    </lightning:card>
+
+</aura:component>

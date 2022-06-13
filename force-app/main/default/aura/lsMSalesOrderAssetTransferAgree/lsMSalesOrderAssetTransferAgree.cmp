@@ -1,0 +1,55 @@
+<!--
+ - Created by MS on 2020-07-01.
+ -->
+
+<aura:component extends="c:lsMSalesBase"
+                controller="LsMSalesOrderAssetTransferAgree"
+                description="lsMSalesOrderAssetTransferAgree">
+
+
+    <aura:attribute name="orderList" type="List" description=""/>
+    <aura:attribute name="tempOrder" type="Order__c" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .right {
+            width:300px !important;
+        }
+        .col_board .right .btn {
+            margin-left: 5px !important;
+        }
+    </aura:html>
+
+    <!-- 테이블 -->
+    <div class="col_board">
+        <c:lsMSalesTableFrame aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}">
+            <aura:if isTrue="{!and(not(empty(v.orderList)), v.orderList.length > 0)}">
+                <ul>
+                    <aura:iteration items="{!v.orderList}" var="record">
+                        <li>
+                            <div class="left">
+                                <div class="tit">{!record.productName}</div>
+                                <div class="tit">{!record.order.Name}</div>
+                                <div class="tit">{!record.order.Opportunity__r.Name}</div>
+                            </div>
+                            <div class="right">
+                                <lightning:button label="거부" value="{!record.order}" class="btn m5" onclick="{!c.doAgreeRejectConfirm}"/>
+                                <lightning:button label="승인" value="{!record.order}" class="btn" onclick="{!c.doAgreeApprovalConfirm}"/>
+                            </div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+
+                <aura:set attribute="else">
+                    <c:lsMSalesNoDataFound/>
+                </aura:set>
+            </aura:if>
+        </c:lsMSalesTableFrame>
+    </div>
+    <!-- // 테이블 -->
+</aura:component>

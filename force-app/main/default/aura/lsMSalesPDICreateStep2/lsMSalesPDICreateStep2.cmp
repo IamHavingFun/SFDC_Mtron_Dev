@@ -1,0 +1,151 @@
+<!--
+  * @filename      : lsMSalesPDICreateStep2
+  * @projectname   :
+  * @author        : i2max.seo
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] PDI(인도 점검서) : Step2 : lsMSalesPDICreateStep1
+  *                :  외장 및 성능 점검사항 (1/3)
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	i2max.seo      Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreateStep2">
+
+    <aura:attribute name="options" type="List" default="[
+        {'label': '예', 'value': true},
+        {'label': '아니오', 'value': false}
+    ]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-form-element__control {
+            width: 290px;
+            display: flex;
+        }
+        .cLsMSalesThemeLayout .slds-radio {
+            padding: 15px 15px;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].fm_ProductType__c}] {!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.Name}({!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <article class="content">
+            <div class="list_vTitBox">
+                <div class="left">외장 및 성능 점검사항(1/3)</div>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <div class="right">
+                        <lightning:radioGroup label="" options="{!v.options}" class="radio_horizontal" onchange="{!c.gfn_getInputRadioCheckedList}"/>
+                    </div>
+                </aura:if>
+            </div>
+            <ul class="list_verticalBox">
+                <li>
+                    <div class="left">외부 도장 및 부식 상태</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_1__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">카바류 고정 상태</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_2__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">각부 볼트 너트류 체결 상태</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_3__c}"  disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">계기판, 경고등</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_4__c}"  disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">각부 레버류 작동 상태</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_5__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">각부 오일 누유</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_6__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">팬 벨트 장력</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_7__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">밧데리 전해액량</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_8__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+                <li>
+                    <div class="left">브레이크유격 및 주차브레이크 작동상태</div>
+                    <div class="right">
+                        <lightning:radioGroup label="" aura:id="mycheck" options="{!v.options}" class="radio_horizontal" value="{!v.mobileStepVO.bizData.pdi.Check1_9__c}" disabled="{!v.mobileStepVO.bizData.isViewMode}"/>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <lightning:button label="이전 화면" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <lightning:button label="다음 화면" class="bbtn btn_50" onclick="{!c.doNextSelf}"/>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+
+    </div>
+    <!--{!v.mobileStepVO.bizData.pdi.Check1_1__c}	외부 도장 및 부식 상태
+    {!v.mobileStepVO.bizData.pdi.Check1_2__c}	카바류 고정 상태
+    {!v.mobileStepVO.bizData.pdi.Check1_3__c}	각부 볼트 너트류 체결 상태
+    {!v.mobileStepVO.bizData.pdi.Check1_4__c}	계기판, 경고등
+    {!v.mobileStepVO.bizData.pdi.Check1_5__c}	각부 레버류 작동 상태
+    {!v.mobileStepVO.bizData.pdi.Check1_6__c}	각부 오일 누유
+    {!v.mobileStepVO.bizData.pdi.Check1_7__c}	팬 벨트 장력
+    {!v.mobileStepVO.bizData.pdi.Check1_8__c}	밧데리 전해액량
+    {!v.mobileStepVO.bizData.pdi.Check1_9__c}	브레이크유격 및 주차브레이크 작동상태-->
+
+</aura:component>

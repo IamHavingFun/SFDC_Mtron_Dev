@@ -1,0 +1,63 @@
+<!--
+* @filename      : customCaseEvaluation.cmp
+* @projectname   :
+* @author        : SEOKHO LEE
+* @date          : 2020-06-05 오전 11:24
+* @group         :
+* @group-content :
+* @description   :
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================a
+0.1     2020-06-05 오전 11:24      SEOKHO LEE          Create
+-->
+
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="CustomCaseEvaluation">
+    <html tag="style">
+    .label{
+    margin-top: 25px !important;
+    }
+    .layout{
+    margin-top: 50px !important;
+    margin-left: 30px !important;
+    }
+    .slds-text-align_left {
+    margin-left: 20px !important;
+    }
+    </html>
+    <aura:attribute name="isDisabled" type="Boolean" description="버튼 비활성화 유무" default="true"/>
+    <aura:attribute name="initData" type="CaseEvaluation.InitData"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="평가 등록" aura:id="quickAction" isSmall="{#true}" hasSelfFooter="{#false}">
+            <lightning:layout class="layout">
+                <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-text-align_center">
+                    평가
+                </lightning:layoutItem>
+                <lightning:layoutItem class="slds-col slds-size_7-of-12 slds-text-align_left">
+                    <lightning:combobox class="combobox" label="" variant="label-hidden" options="{!v.initData.dealerFeedBackList}" value="{!v.initData.caseData.DealerFeedback__c}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout class="layout">
+                <lightning:layoutItem class="slds-col slds-size_2-of-12 slds-text-align_center">
+                    재검토 사유
+                </lightning:layoutItem>
+                <lightning:layoutItem class="slds-col slds-size_7-of-12 slds-text-align_left">
+                    <lightning:textarea name="Comment" label="재검토 사유" value="{!v.initData.caseData.DealerFeedbackComment__c}" variant="label-hidden"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSave}" disabled="{!v.isDisabled}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+
+</aura:component>

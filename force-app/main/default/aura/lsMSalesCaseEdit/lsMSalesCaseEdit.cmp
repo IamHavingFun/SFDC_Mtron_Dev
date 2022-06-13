@@ -1,0 +1,118 @@
+<!--
+  * @filename      : lsMSalesCaseEdit
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-11-26 오후 5:03
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-26 오후 5:03    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                controller="LsMSalesCaseEdit"
+                description="lsMSalesCaseEdit">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="caseCreateData" type="LsMSalesCaseEdit.CaseCreateData" description="Case 신규등록 Wrapper Class"/>
+    <aura:attribute name="type2List" type="List" description="상세유형 값."/>
+    <aura:attribute name="isBaseUI" type="Boolean" description="화면제어"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+        .slds-textarea {
+        min-height: 330px !important;
+        }
+        .slds-file-selector {
+        width:  100% !important;
+        }
+        .slds-file-selector__dropzone {
+        width:  100% !important;
+        }
+        .slds-file-selector__button {
+        height: 66px !important;
+        width:  100% !important;
+        }
+    </aura:html>
+
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">문의/건의 등록</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container">
+        <article class="content">
+
+            <section>
+                <label class="form_tit" style="margin: 40px 0 -20px 0">유형<span style="color: red">*</span></label>
+                <lightning:combobox label="" options="{!v.caseCreateData.typeList}" value="{!v.caseCreateData.caseData.Type__c}" onchange="{!c.doTypeChange}"/>
+            </section>
+            <section>
+                <label class="form_tit" style="margin: 40px 0 -20px 0">상세 유형<span style="color: red">*</span></label>
+                <lightning:combobox  label="" options="{!v.type2List}" value="{!v.caseCreateData.caseData.TypeLevel2__c}" />
+            </section>
+
+            <section>
+                <label class="form_tit" style="margin: 40px 0 -20px 0">제목<span style="color: red">*</span></label>
+                <span class="">
+                    <lightning:input label="" type="text" placeholder="제목을 입력하세요." value="{!v.caseCreateData.caseData.Subject__c}"/>
+			    </span>
+            </section>
+
+            <section class="">
+                <label class="form_tit">요청 사항<span style="color: red">*</span></label>
+                <span class="">
+                    <lightning:textarea label="요청 사항" variant="label-hidden" value="{!v.caseCreateData.caseData.Description__c}" placeholder="상세 내용을 기술 해주세요."/>
+			    </span>
+            </section>
+
+            <aura:if isTrue="{!v.caseCreateData.caseData.Type__c == '문제제기'}">
+                <section>
+                    <label class="form_tit" style="margin: 40px 0 -20px 0">기대번호<span style="color: red">*</span></label>
+                    <span class="">
+                        <lightning:input label="" type="text" placeholder="기대번호를 입력하세요." value="{!v.caseCreateData.assetName}"/>
+                    </span>
+                </section>
+
+                <section>
+                    <label class="form_tit" style="margin: 40px 0 -20px 0">사용시간<span style="color: red">*</span></label>
+                    <span class="">
+                        <lightning:input label="" type="text" placeholder="사용시간을 입력하세요." value="{!v.caseCreateData.caseData.UsingTime__c}"/>
+                    </span>
+                </section>
+
+                <section>
+                    <label class="form_tit" >문제 현상<span style="color: red">*</span></label>
+                    <span class="">
+                        <lightning:textarea label="문제 현상" variant="label-hidden" value="{!v.caseCreateData.caseData.IssueDetails__c}" placeholder="문제 현상을 기술 해주세요."/>
+                    </span>
+                </section>
+
+                <section>
+                    <label class="form_tit" >조치 사항</label>
+                    <span class="">
+                        <lightning:textarea label="조치 사항" variant="label-hidden" value="{!v.caseCreateData.caseData.DoneDetails__c}" placeholder="조치 사항을 기술 해주세요."/>
+                    </span>
+                </section>
+            </aura:if>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="저장" class="bbtn btn_50" onclick="{!c.doSave}"/>
+            </section>
+
+        </article>
+    </div>
+</aura:component>

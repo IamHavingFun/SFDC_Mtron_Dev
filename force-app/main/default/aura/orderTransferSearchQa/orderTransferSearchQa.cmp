@@ -1,0 +1,117 @@
+<!--
+  * @filename      : orderTransferSearchQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-11-19 오후 12:28
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-19 오후 12:28    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                controller="OrderTransferSearchQa"
+                description="orderTransferSearchQa">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="productName" type="String" access="public" default="" description=""/>
+    <aura:attribute name="assetTransferRequest" type="AssetTransferRequest__c" access="public" description=""/>
+    <aura:attribute name="labelMap" type="Map" access="public" description="label관련 data를 담는 attribute"/>
+    <aura:attribute name="businessOfficeNameList" type="List" access="public"/>
+
+    <!-- ===================================================================================================
+    ==== private Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="assetTransferTargetList" type="List" access="private" default="[
+            {'label': '대상', 'value': 'true'},
+            {'label': '미대상', 'value': 'false'}
+    ]"/>
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComQuickAction title="전배 대상 목록" aura:id="quickAction" hasSelfFooter="{#false}" isWide="{#true}">
+        <!-- 조회 영역 -->
+        <div class="slds-form--inline slds-m-top_small slds-list_horizontal">
+            <c:lacComComboBox label="영업소" option="{!v.businessOfficeNameList}" value="{!v.reqData.businessOfficeName}"/>
+            <lightning:input type="text" name="model" label="모델" value="{!v.productName}" disabled="{#true}"/>
+            <c:lacComComboBox label="전배 대상 여부" option="{!v.assetTransferTargetList}" value="{!v.reqData.assetTransferTarget}"/>
+            <lightning:input type="text" name="assetName" label="기대번호" class="" value="{!v.reqData.assetName}"/>
+            <lightning:button label="조회" type="button" onclick="{!c.doSearch}"/>
+        </div>
+        
+        <c:lacComBody>
+            <c:lacComTable aura:id="dataTable" hasScroll="{#true}">
+                <colgroup>
+                    <col width="7%"/>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="12%"/>
+                    <col width="11%"/>
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <c:lacComTh>선택</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Asset.businessofficename__c}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Asset.dealer__c}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Product2.name}">{!v.labelMap.Product2.name}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Asset.productiondate__c}">{!v.labelMap.Asset.productiondate__c}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Asset.issendreceiveitem__c}">{!v.labelMap.Asset.issendreceiveitem__c}</c:lacComTh>
+                        <c:lacComTh title="{!v.labelMap.Asset.fm_distributionstockexpiration__c}">{!v.labelMap.Asset.fm_distributionstockexpiration__c}</c:lacComTh>
+                        <c:lacComTh title="전배요청이력">전배요청이력</c:lacComTh>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                        <tr>
+                            <c:lacComTd>
+                                <lightning:input aura:id="mycheck" label="" type="checkbox" value="{!record.asset}"
+                                                 onchange="{!c.doCheckMultiSelect}" disabled="{!or(record.isRejected, record.isSamOffice)}"/>
+                            </c:lacComTd>
+                            <c:lacComTd title="{#record.asset.BusinessOffice__r.Name}">{!record.asset.BusinessOffice__r.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.asset.Dealer__r.Name}">{!record.asset.Dealer__r.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.asset.Name}">{!record.asset.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.asset.Product2.Name}">{!record.asset.Product2.Name}</c:lacComTd>
+                            <c:lacComTd title="{#record.asset.ProductionDate__c}">{!record.asset.ProductionDate__c}</c:lacComTd>
+                            <c:lacComTd title="{#record.asset.IsSendReceiveItem__c}">
+                                <ui:outputCheckbox class="" value="{!record.asset.IsSendReceiveItem__c}"/>
+                            </c:lacComTd>
+                            <c:lacComTd title="{#record.asset.fm_DistributionStockExpiration__c}">{!record.asset.fm_DistributionStockExpiration__c}</c:lacComTd>
+                            <c:lacComTd title="{#record.assetTransferStatus}">{!record.assetTransferStatus}</c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </c:lacComTable>
+
+            <aura:if isTrue="{!empty(v.recordList)}">
+                <div class="slds-text-align_center slds-m-top_small" style="font-size: medium">해당 전수배 목록이 없습니다.</div>
+            </aura:if>
+        </c:lacComBody>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnSave" label="선택" variant="brand" onclick="{!c.doSelect}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

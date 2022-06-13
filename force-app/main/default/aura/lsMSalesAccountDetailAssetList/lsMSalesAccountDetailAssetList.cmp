@@ -1,0 +1,25 @@
+<!--
+ - Created by MS on 2020-07-02.
+ -->
+
+<aura:component description="lsMSalesAccountDetailAssetList">
+
+    <aura:attribute name="recordList"  type="List" description="DataList"      />
+
+    <div class="row_board_sale mt20" id="asset">
+        <ul>
+            <aura:iteration items="{!v.recordList}" var="rec" indexVar="idx">
+                <li>
+                    <div class="tit"><b>{!rec.Product2.Name}</b><span class="bar"></span>{!rec.Product2.HorsePowerStandard__c}<span class="bar"></span>
+                        {!rec.Product2.Option1__c}/{!rec.Product2.Option2__c}/{!rec.Product2.Option3__c}/{!rec.Product2.Option4__c}
+                    </div>
+                    <div class="stxt"><b>{!v.rec.Name}</b><span class="bar"></span>생산<span class="date">{!rec.ProductionDate__c}</span><span class="bar"></span>판매<span class="date">{!rec.PurchaseDate}</span></div>
+                </li>
+            </aura:iteration>
+            <aura:if isTrue="{!v.recordList.length == 0}">
+                <li>보유자산이 없습니다.</li>
+            </aura:if>
+        </ul>
+    </div>
+
+</aura:component>

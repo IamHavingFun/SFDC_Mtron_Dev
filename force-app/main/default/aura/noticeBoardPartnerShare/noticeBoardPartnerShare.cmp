@@ -1,0 +1,111 @@
+<!--
+  * @filename      : noticeBoardPartnerShare
+  * @projectname   :
+  * @author        : jy.Kim
+  * @date          : 2020-06-05
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-05     	jy.Kim          Create
+    0.2     2020-08-06     	PARK_JW         컨트롤러 doAllCheck메서드 수정 => 전 단계에서 선택된거 없으면 foreach문 수행 안함
+ -->
+
+<aura:component extends="c:lsSalesBase"
+                description="noticeBoardPartnerShare"
+                implements="forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName"
+                controller="NoticeBoardPartnerShareController">
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        margin: 0 auto;
+        width: 70% !important;
+        max-width: 70rem !important;
+        min-width: 20rem;
+        }
+    </aura:html>
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="businessOfficeList" type="List" description="영업소 리스트"/>
+    <aura:attribute name="dealerList" type="List" description="대리점 리스트"/>
+    <aura:attribute name="bId" type="String" description="선택 영업소 Id"/>
+    <aura:attribute name="recordId" type="String" description="레코드 Id"/>
+    <aura:attribute name="sObjectName" type="String" description="Object API Name"/>
+    <aura:attribute name="resShareData" type="NoticeBoardPartnerShareController.ResData" />
+
+    <c:lacComQuickAction title="공개 범위 설정" aura:id="quickAction" hasSelfFooter="{!true}">
+        <div style="height:400px;" class="slds-card__body slds-list_horizontal">
+            <div class="slds-size_1-of-5 slds-scrollable--y slds-p-right_large">
+                <c:lacComTable aura:id="dataTable" hasScroll="{!true}" fixedHeader="{!true}">
+                <thead>
+                <tr>
+                    <c:lacComTh>대상지역</c:lacComTh>
+                </tr>
+                </thead>
+                <tbody>
+                <aura:iteration items="{!v.businessOfficeList}" var="row">
+                    <tr>
+                        <c:lacComTd>
+                            <span style="cursor:pointer;" class="{!row.Id == v.bId ? 'slds-text-title_bold':''}" data-bid="{!row.Id}" onclick="{!c.doBusinessOfficeSelectId}">{!row.Name}</span>
+                        </c:lacComTd>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+                </c:lacComTable>
+            </div>
+            <div style="height:400px;" class="slds-size_2-of-5 slds-scrollable--y">
+                <c:lacComTable aura:id="dataTable" hasScroll="{!true}" fixedHeader="{!true}">
+                    <thead>
+                    <tr>
+                        <c:lacComTh class="slds-text-align_center" style="width:70px;"><lightning:input type="checkbox" aura:id="myCheckAll" label="" onchange="{!c.doAllCheck}"/></c:lacComTh>
+                        <c:lacComTh>대리점</c:lacComTh>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.dealerList}" var="row" indexVar="i">
+                        <tr>
+                            <c:lacComTd class="slds-text-align_center">
+                                <lightning:input type="checkbox" aura:id="myCheck" label="" value="{!row.dealerList}" checked="{!row.dealerCheck}" onchange="{!c.doCheck}"/>
+                            </c:lacComTd>
+                            <c:lacComTd>
+                                {!row.dealerList.BusinessOffice__r.Name} > {!row.dealerList.Name}
+                            </c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </c:lacComTable>
+            </div>
+            <div class="slds-text-align_center slds-p-right_medium slds-p-left_medium">
+                ▶
+            </div>
+            <div style="height:400px;" class="slds-scrollable--y">
+                <c:lacComTable aura:id="dataTable" hasScroll="{!true}" fixedHeader="{!true}">
+                    <thead>
+                    <tr>
+                        <c:lacComTh class="slds-text-align_center" style="width:70px;">[{!v.resShareData.ShareSetting_List.length}건]</c:lacComTh>
+                        <c:lacComTh>선택 대리점</c:lacComTh>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.resShareData.ShareSetting_List}" var="row">
+                        <tr>
+                            <c:lacComTd class="slds-text-align_center"><lightning:buttonIcon iconName="utility:delete" variant="bare" value="{!row.Account__c}" alternativeText="삭제" onclick="{!c.doDelete}"/></c:lacComTd>
+                            <c:lacComTd>{!row.BusinessOfficeApex__c} > {!row.DealerApex__c}</c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </c:lacComTable>
+            </div>
+        </div>
+        <aura:set attribute="footer">
+            <lightning:button label="취소" onclick="{!c.doCancel}"/>
+            <lightning:button label="저장" variant="brand" onclick="{!c.doSetSave}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

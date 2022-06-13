@@ -1,0 +1,19 @@
+<!--
+  * @filename       : i2SEMA_ManualSendMemberSearch
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-08 오후 2:11
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 2:11     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_ManualSendMemberSearch">
+</aura:component>

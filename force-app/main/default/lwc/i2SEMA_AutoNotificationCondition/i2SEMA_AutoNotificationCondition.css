@@ -1,0 +1,42 @@
+/****************************************************************************************
+  * @filename       : i2SEMA_AutoNotificationCondition.css
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw 
+  * @date           : 2020-04-14 오후 2:22
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-14 오후 2:22     i2max_byeon.jw       Create
+****************************************************************************************/
+template {
+    font-size       : 14px;
+}
+
+.rowHolder {
+    display         : flex;
+    flex-direction  : row;              /* 하위요소 Row 기준 정렬 (Default) */
+    flex-wrap       : wrap;             /* 하위요소 반응형 처리 */
+    justify-content : flex-start;       /* 하위요소 Row 시작 위치부터 정렬 */
+    align-content   : space-around;     /* 하위요소(복수) 개행될 시, 상하간격 조절 */
+    align-items     : center;           /* 하위요소(단수) 개행될 시, 상하간격 조절 */
+    width           : 100%;
+}
+
+.item {
+    flex-grow       : 0;                /* Item 너비 증가비율 (Default 0)*/
+    flex-shrink     : 1;                /* Item 너비 감소비율 (Default 1) */
+    flex-basis      : 25% !important;   /* Flex 기본 너비 */
+}
+.item:not(:last-child){
+    padding-right : 2%;
+}
+
+.removeBtn {
+    color : rgba(255,0,0,0.85);
+    cursor:pointer;
+}

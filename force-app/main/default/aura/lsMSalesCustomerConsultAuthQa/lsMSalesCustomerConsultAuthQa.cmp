@@ -1,0 +1,59 @@
+<!--
+ - Created by MS on 2021-05-10.
+ -->
+
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesCustomerConsultAuthQa"
+                description="lsMSalesCustomerConsultAuthQa">
+
+    <aura:attribute name="phoneNumber" type="String" description="휴대폰 번호"/>
+    <aura:attribute name="isAuthenticated" type="Boolean" default="{#false}" description="인증 여부"/>
+    <aura:attribute name="authNumber" type="String" description="인증 번호"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+            padding: 0px !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">전화번호 인증</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <article class="modal_body">
+
+        <section class="body_contBox">
+            <div>
+                <!-- 공통 -->
+                <div class="form_tit_col mt20">
+                    <div class="left">핸드폰 번호</div>
+                    <div class="right">
+                        <div class="slds-list_horizontal">
+                            <lightning:input label="" class="custom-input" type="text" value="{!v.phoneNumber}" disabled="true"/>
+                            <lightning:button label="발송" class="btn_search" onclick="{!c.doSendSms}" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form_tit_col mt20">
+                    <div class="left">인증 번호</div>
+                    <div class="right">
+                        <lightning:input aura:id="insertedAuthNumber" label="" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <section class="bbtnBox mb60">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="인증" class="bbtn btn_50" onclick="{!c.doAuth}" />
+            </section>
+        </section>
+    </article>
+
+</aura:component>

@@ -1,0 +1,19 @@
+<!--
+  * @filename      : i2SEMA_NotificationTemplateModal
+  * @projectname   : i2sema_Dev1
+  * @author        : i2max_ys.seo 
+  * @date          : 2020-04-08 오후 3:58
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 3:58     i2max_ys.seo       Create
+ -->
+
+<aura:component description="i2SEMA_NotificationTemplateModal">
+</aura:component>

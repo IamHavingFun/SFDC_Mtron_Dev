@@ -1,0 +1,32 @@
+/****************************************************************************************
+  * @filename      : i2SEMA_TemplateKakaoButtonListView.css
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/24 1:51 PM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file  
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 3:15     i2max_ys.seo        Create
+    0.2     2020/04/24 1:51 PM      i2max_shlee         카카오 Class 추가
+****************************************************************************************/
+.THIS .iconColor{
+    background-color : #00cccc;
+}
+.THIS .btnTable{
+    min-height : 100px;
+    max-height : 300px;
+    overflow : hidden;
+    overflow : scroll;
+}
+.THIS .slds-table_cell-buffer tr>th:first-child { padding-left: 0.5rem; }
+.THIS .slds-table_cell-buffer tr>td:first-child { padding-left: 0.5rem; }
+.THIS .kakao-thead {background-color:#eeeeee; border-bottom-color: rgb(188, 196, 204); border-bottom-width: 2px; border-bottom-style: solid;}
+.THIS .kakao-tbody {background-color:white;}
+.THIS .kakao-th {ext-align: left;font-weight:bold;font-color:white;border:0px;}
+.THIS .kakao-td {text-align: left;border:0px;border-bottom:1px;border-style: solid; border-color: rgb(84, 105, 141) rgb(188, 196, 204) rgb(188, 196, 204);}

@@ -1,0 +1,87 @@
+<!--
+  * @filename      : i2SEMA_TemplateKakaoButtonListView
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/24 9:56 AM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : Template에서 카카오 버튼 리스트 표시
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 2:21     i2max_ys.seo        Create
+    0.1     2020/04/24 9:56 AM      i2max_shlee         Rename i2SEMA_NotificationKakaoButtonLinkView > i2SEMA_TemplateKakaoButtonListView
+ -->
+<aura:component extends="c:i2SEMA_Base"
+                access="global"
+                controller="i2SEMA_TemplateKakaoButton"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                description="i2SEMA_TemplateKakaoButtonListView">
+
+    <!-- Attributes -->
+    <aura:attribute name="recordId"     type="String"/>
+    <aura:attribute name="isScreen"     type="String"   description="화면 상태 : New/Read/Edit"/>
+    <aura:attribute name="referenceData" type="object" description="NotificationTemplate.referenceData"/>
+
+    <!--Event / Handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- Add/Edit Popup   -->
+    <c:i2SEMA_TemplateKakaoButtonList aura:id="ktbList" referenceData="{!v.referenceData}"/>
+    <!-- List View   -->
+    <div class="tg-wrap" id="view">
+        <div>
+            <article class="slds-card slds-card_boundary">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media--center slds-has-flexi-truncate" >
+                        <div class="slds-media__body" >
+                            <h2 class="header-title-container">
+                                    <span class="slds-text-heading--small slds-truncate">
+                                        <lightning:icon iconName="custom:custom2" class="iconColor"/>&nbsp;&nbsp;&nbsp;{!$Label.c.i2SEMA_LAB_KAKAO_BUTTON}
+                                    </span>
+                                <!-- Add/Edit 수정버튼 읽기모드시 불가  -->
+                                <aura:if isTrue="{!notequals(v.isScreen, 'Read')}">
+                                    <a style="float:right;" class="slds-button slds-button--neutral" onclick="{!c.showEditPopup}" >{!$Label.c.i2SEMA_LAB_KAKAO_BUTTON_ADD_EDIT}</a>
+                                </aura:if>
+                            </h2>
+
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body--inner btnTable" style="padding: 0rem;">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead id="head" class="kakao-thead">
+                        <tr>
+                            <th class="kakao-th" scope="colgroup" width="15%">Name</th>
+                            <th class="kakao-th" scope="colgroup" width="15%">Type</th>
+                            <th class="kakao-th" scope="colgroup" width="35%">{! v.objectType.KakaoTalkButton__c.ButtonLink1__c.label}</th>
+                            <th class="kakao-th" scope="colgroup" width="35%">{! v.objectType.KakaoTalkButton__c.ButtonLink2__c.label}</th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="kakao-tbody">
+                        <!--<aura:if isTrue="{!v.requestData.isButtonLink}">-->
+                        <aura:iteration items="{!v.referenceData.kakaoButtons}" var="btn" indexVar="i">
+                            <tr>
+                                <td class="kakao-td">{!btn.Name}</td>
+                                <td class="kakao-td">
+                                    {! if(equals(btn.Button_Type__c, ''), '--none--'
+                                    , if(equals(btn.Button_Type__c, 'DS'), $Label.c.i2SEMA_LAB_KAKAO_BUTTON_TYPE_DS
+                                    , if(equals(btn.Button_Type__c, 'BK'), $Label.c.i2SEMA_LAB_KAKAO_BUTTON_TYPE_BK
+                                    , if(equals(btn.Button_Type__c, 'MD'), $Label.c.i2SEMA_LAB_KAKAO_BUTTON_TYPE_MD
+                                    , if(equals(btn.Button_Type__c, 'WL'), $Label.c.i2SEMA_LAB_KAKAO_BUTTON_TYPE_WL
+                                    , if(equals(btn.Button_Type__c, 'AL'), $Label.c.i2SEMA_LAB_KAKAO_BUTTON_TYPE_AL))))))}
+                                </td>
+                                <td class="kakao-td">{!btn.ButtonLink1__c}</td>
+                                <td class="kakao-td">{!btn.ButtonLink2__c}</td>
+                            </tr>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </div>
+</aura:component>

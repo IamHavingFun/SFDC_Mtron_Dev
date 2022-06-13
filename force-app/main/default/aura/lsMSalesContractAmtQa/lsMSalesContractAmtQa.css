@@ -1,0 +1,11 @@
+.THIS {
+}
+.THIS select {
+    height: 66px;
+}
+
+.THIS .input_birthday .input_year { width: calc(50% - 5px); margin-right: 10px; display: inline-block; }
+.THIS .input_birthday .input_month { width: calc(25% - 5px); margin-right: 10px; display: inline-block; }
+.THIS .input_birthday .input_day { width: calc(25% - 5px); margin-right: 0; display: inline-block; }
+
+.THIS .form_tit_col .number_right { width: 70%; text-align: right; margin-top: 12px; color: red;}

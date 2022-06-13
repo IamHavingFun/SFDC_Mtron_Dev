@@ -1,0 +1,135 @@
+<!--
+  * @filename      : partnerHomeGuideActionList
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-03-27
+  * @group         :
+  * @group-content :
+  * @description   : 파트너 홈에 AI 추천 : 가이드 액션 리스트 출력.
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-03-27     	i2max          Create
+ -->
+
+<aura:component extends="c:lacComBase"
+                controller="GuideActionsList"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="partnerHomeGuideActionList">
+
+    <aura:attribute name="targetObject" type="String" default="Home" required="true" description="대상 개체"/>
+    <aura:attribute name="recordId" type="String" description="대상 개체 레코드 ID"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:dependency resource="markup://force:editRecord" type="EVENT" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+
+    <c:lacComService aura:id="lacComService"/>
+    <aura:html tag="style">
+        /* AI 우측 추천활동 모듈 css */
+        .cLacComBaseArea {
+        padding: 63px 10px 40px;
+        border: 1px solid #dae1e6;
+        margin-top: 73px;
+        background-color: #f7f9fa;
+        position: relative;
+        }
+        .cLacComBaseArea .cLacComBaseArea__header {
+        margin-bottom: 30px;
+        text-align: center;
+        }
+        .cLacComBaseArea .cLacComBaseArea__title {
+        padding-left: 80px;
+        font-size: 30px;
+        color: #030a14;
+        font-weight: 900;
+        display: inline-block;
+        position: relative;
+        }
+        .cLacComBaseArea .cLacComBaseArea__icon-blueline {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 80px;
+        height: 57px;
+        background: url({!$Resource.comm_home + '/images/bg_module_icon.png'}) -102px -10px no-repeat;
+        }
+        .cLacComBaseArea .cLacComBaseArea__icon-ai {
+        position: absolute;
+        top: 45%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 72px;
+        height: 72px;
+        background: url({!$Resource.comm_home + '/images/bg_module_icon.png'}) -10px -10px no-repeat;
+        }
+        .cLacComBaseArea .cLacComBaseArea__card {
+        padding: 20px;
+        border: 1px solid #dae1e6;
+        background-color: #fff;
+        position: relative;
+        }
+        .cLacComBaseArea .cLacComBaseArea__card + .cLacComBaseArea__card {
+        margin-top: 10px;
+        }
+        .cLacComBaseArea .cLacComBaseArea__card--title {
+        font-size: 16px;
+        color: #3b3b3b;
+        font-weight: 900;
+        }
+        .cLacComBaseArea .cLacComBaseArea__card--date {
+        padding-left: 10px;
+        font-size: 14px;
+        color: #a2a2a2;
+        }
+        .cLacComBaseArea .cLacComBaseArea__card--text {
+        max-width: 250px;
+        font-size: 17px;
+        color: #8e8f8f;
+        word-break: break-all;
+        padding-top: 18px;
+        }
+        .cLacComBaseArea .cLacComBaseArea__button-close {
+        padding: 0;
+        border: 0;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 12px;
+        height: 12px;
+        background: url({!$Resource.comm_home + '/images/bg_module_icon.png'}) -198px -105px no-repeat;
+        }
+        /* //AI 우측 추천활동 모듈 css */
+    </aura:html>
+
+    <div class="cLacComBaseArea">
+        <i class="cLacComBaseArea__icon-blueline"></i>
+        <div class="cLacComBaseArea__header">
+            <p class="cLacComBaseArea__title">
+                <i class="cLacComBaseArea__icon-ai"></i>
+                AI 추천활동
+            </p>
+        </div>
+        <div class="cLacComBaseArea__body">
+            <aura:if isTrue="{!not(empty(v.recordList))}">
+                <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                    <div class="cLacComBaseArea__card">
+                        <strong class="cLacComBaseArea__card--title">{!record.task.Subject}</strong>
+                        <span class="cLacComBaseArea__card--date"><lightning:formattedDateTime value="{!record.task.ActivityDate}" year="numeric" month="numeric" day="numeric" hour12="false"/></span>
+                        <p class="cLacComBaseArea__card--text"><lightning:formattedRichText value="{!record.content}"/></p>
+                        <button type="button" class="cLacComBaseArea__button-close" data-recordid="{!record.task.Id}" onclick="{!c.doCheckedComplete}"></button>
+                    </div>
+                </aura:iteration>
+                <aura:set attribute="else">
+                    <div class="cLacComBaseArea__card">
+                        <strong class="cLacComBaseArea__card--title">{!$Label.c.GuideAction_NoDataFound}</strong>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </div>
+    </div>
+
+</aura:component>

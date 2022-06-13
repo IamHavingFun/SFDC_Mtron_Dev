@@ -1,0 +1,67 @@
+<!--
+  * @filename      : orderCreditUpdateQa
+  * @projectname   :
+  * @author        : CHOI SEONGWON
+  * @date          : 2020-09-04 오후 4:35
+  * @group         :
+  * @group-content :
+  * @description   :  연체사유/수금계획/담당자 의견 - 업데이트
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * ===============================================================
+  * ver     date          author             description
+  * ===============================================================a
+    0.1         Choi SeongWon           Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="OrderCreditUpdateQa">
+
+    <aura:attribute name="order" type="Order__c" access="public" description=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lacComQuickAction title="여신 입력" aura:id="quickAction" hasSelfFooter="{!false}">
+
+        <lightning:recordEditForm objectApiName="Order__c" >
+            <lightning:layout>
+                <lightning:layoutItem  size="3" class="slds-m-top_large">
+                    <label >연체사유</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="8">
+                    <lightning:input  label="" class="custom-input" value="{!v.order.ErpLRESN_T__c}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem  size="3" class="slds-m-top_large">
+                    <label >수금계획</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="8">
+                    <lightning:input  label="" class="custom-input"  value="{!v.order.ErpLPLAN_T__c}" />
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="3" class="slds-m-top_large">
+                    <label >담당자 의견</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="8">
+                    <lightning:input  label="" class="custom-input" value="{!v.order.ErpLFDBK_T__c}" />
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:recordEditForm>
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!
+                    and(
+                            equals(v.order.Status__c,'본사 여신 검토'),
+                            empty(v.order.ErpZLNNO__c)
+                    )}">
+                <lightning:button label="저장" variant="brand" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+
+    </c:lacComQuickAction>
+
+</aura:component>

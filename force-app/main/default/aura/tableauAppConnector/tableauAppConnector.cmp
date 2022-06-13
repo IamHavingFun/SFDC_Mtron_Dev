@@ -1,0 +1,34 @@
+<aura:component extends="c:lacComBase"
+                controller="TableauAppConnector"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="tableauAppConnector">
+
+    <aura:attribute name="tsname" type="String" default="SE_Dashboard" required="true" description="대시보드 이름"/>
+    <aura:attribute name="width" type="String" default="804px"  description="넓이"/>
+    <aura:attribute name="height" type="String" default="636px" description="높이"/>
+    <aura:attribute name="align" type="String" default="left" description="정렬"/>
+    <aura:attribute name="signedIdentity" type="String" default="" description=""/>
+    <aura:attribute name="parameters" type="String" default="" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div style="{!'text-align:'+v.align+';'}">
+    	<force:canvasApp applicationName="SparklerCon"
+                     developerName="SparklerCon"
+                     width="{!v.width}"
+                     height="{!v.height}"
+                     maxWidth="1900px"
+                     maxHeight="1060px"
+					 parameters="{!v.parameters}"
+                     
+    	/>
+    </div>
+
+<!--    
+
+parameters="{!v.parameters}"
+parameters="{
+    'ts.name':{!v.tsname},
+    'ts.trustedTicket.signedIdentity':{!v.signedIdentity},
+    }-->
+</aura:component>

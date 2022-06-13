@@ -1,0 +1,23 @@
+/****************************************************************************************
+  * @filename      : lacComDetailCard.css
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-03-10 오전 11:08
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @tester        : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-03-10 오전 11:08     i2max_my.Seo          Create
+****************************************************************************************/
+.THIS {
+}
+
+.THIS .slds-page-header {
+    background-color: rgb(243, 242, 242);
+}

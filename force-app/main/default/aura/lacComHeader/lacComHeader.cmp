@@ -1,0 +1,97 @@
+<!--
+  * @filename      : lacComHeader
+  * @projectname   : LWC_I2MAX
+  * @author        : i2max_my.Seo
+  * @date          : 2020-03-10 오전 7:47
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author             description
+  * ===============================================================
+    0.1     2020-03-10 오전 7:47     i2max_my.Seo          Create
+ -->
+<aura:component extends="c:lacComBase"
+                description="lacComHeader">
+    <aura:attribute name="isCommunity" type="Boolean"/>
+
+    <!-- 공용 -->
+    <aura:attribute name="device" type="String" default="{!$Browser.formFactor}" description="기기 판별"/>
+    <aura:attribute name="iconName" type="String" default="standard:event" description="아이콘"/>
+    <aura:attribute name="title" type="String" default="내 모든 고객" description="제목"/>
+
+    <aura:attribute name="isDetailCard" type="Boolean" default="false" description="DetailCard 영역 여부"/>
+    <aura:attribute name="button" type="Aura.Component[]" description="버튼 영역"/>
+    <aura:attribute name="condition" type="Aura.Component[]" description="검색영역1"/>
+    <aura:attribute name="condition2" type="Aura.Component[]" description="검색영역2"/>
+    <aura:attribute name="condition3" type="Aura.Component[]" description="검색영역3"/>
+
+    <!-- ===============================================================================================================
+    ==== Com_InternalHeader or Com_CommunityHeader 에서 Aura.Component[] 속성은 set 하면 무조건 length가 1이 되므로
+    ==== 높이가 길어지는 현상이 발생. 따라서 공통 Header에서 판단하여 여부를 파라미터로 넘김
+    =============================================================================================================== -->
+    <aura:attribute name="hasCondition" type="Boolean" default="{!not(empty(v.condition))}" access="global" description="검색영역1 존재여부"/>
+    <aura:attribute name="hasCondition2" type="Boolean" default="{!not(empty(v.condition2))}" access="global" description="검색영역2 존재여부"/>
+    <aura:attribute name="hasCondition3" type="Boolean" default="{!not(empty(v.condition3))}" access="global" description="검색영역3 존재여부"/>
+
+    <!-- Desktop에서만 사용 -->
+    <aura:attribute name="type" type="String" default="고객" description="소제목"/>
+    <aura:attribute name="doSave" type="Aura.Action" description="저장 버튼 Action"/>
+    <aura:attribute name="doSearch" type="Aura.Action" description="검색 버튼 Action"/>
+    <aura:attribute name="doExcel" type="Aura.Action" description="Excel 버튼"/>
+
+    <aura:if isTrue="{!v.isCommunity}">
+        <c:lacComCommunityHeader type="{#v.type}"
+                                 title="{#v.title}"
+                                 aura:id="header"
+                                 iconName="{#v.iconName}"
+                                 hasCondition="{!v.hasCondition}"
+                                 hasCondition2="{!v.hasCondition2}"
+                                 hasCondition3="{!v.hasCondition3}"
+                                 doSave="{#v.doSave}"
+                                 doSearch="{#v.doSearch}"
+                                 doExcel="{#v.doExcel}">
+            <aura:set attribute="button">
+                {!v.button}
+            </aura:set>
+            <aura:set attribute="condition">
+                {!v.condition}
+            </aura:set>
+            <aura:set attribute="condition2">
+                {!v.condition2}
+            </aura:set>
+            <aura:set attribute="condition3">
+                {!v.condition3}
+            </aura:set>
+        </c:lacComCommunityHeader>
+        <aura:set attribute="else">
+            <c:lacComInternalHeader type="{#v.type}"
+                                    title="{#v.title}"
+                                    aura:id="header"
+                                    iconName="{#v.iconName}"
+                                    hasCondition="{!v.hasCondition}"
+                                    hasCondition2="{!v.hasCondition2}"
+                                    hasCondition3="{!v.hasCondition3}"
+                                    doSave="{#v.doSave}"
+                                    doSearch="{#v.doSearch}"
+                                    doExcel="{#v.doExcel}"
+                                    className="{#v.isDetailCard ? 'slds-page-header' : 'slds-page-header slds-m-bottom_x-small'}">
+                <aura:set attribute="button">
+                    {!v.button}
+                </aura:set>
+                <aura:set attribute="condition">
+                    {!v.condition}
+                </aura:set>
+                <aura:set attribute="condition2">
+                    {!v.condition2}
+                </aura:set>
+                <aura:set attribute="condition3">
+                    {!v.condition3}
+                </aura:set>
+            </c:lacComInternalHeader>
+        </aura:set>
+    </aura:if>
+</aura:component>

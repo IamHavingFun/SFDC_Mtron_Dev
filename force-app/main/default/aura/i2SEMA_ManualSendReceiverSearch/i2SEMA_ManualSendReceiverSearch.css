@@ -1,0 +1,27 @@
+/****************************************************************************************
+  * @filename       : i2SEMA_ManualSendReceiverSearch.css
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw 
+  * @date           : 2020-04-10 오후 4:04
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-10 오후 4:04     i2max_byeon.jw       Create
+****************************************************************************************/
+
+.THIS {
+}
+
+/*-------------------------------------------------------
+ * Label
+  - 표준 라벨 제거
+ -------------------------------------------------------*/
+.THIS.noLabel.slds-form-element__label , .THIS .noLabel .slds-form-element__label {
+    display         : none !important;
+    visibility      : hidden !important;
+}

@@ -1,0 +1,130 @@
+<!--************************************************************************************
+  * File Name   : lacComCommunityHeader
+  * Description : 
+  * Author      : my.Seo
+  * Modification Log
+  * ===============================================================
+  * Ver     Date            Author              Modification
+  * ===============================================================
+    1.0     2020-03-09      my.Seo              Create
+************************************************************************************* -->
+<aura:component description="lacComCommunityHeader" >
+    <!-- =============================================================================================================
+     * Attribute
+    ============================================================================================================= -->
+    <!-- 공용 -->
+    <aura:attribute name="device" type="String" default="{!$Browser.formFactor}" description="기기 판별"/>
+    <aura:attribute name="iconName" type="String" default="standard:event" description="아이콘"/>
+    <aura:attribute name="title" type="String" default="내 모든 고객" description="제목"/>
+
+    <aura:attribute name="button" type="Aura.Component[]" description="버튼 영역"/>
+    <aura:attribute name="condition" type="Aura.Component[]" access="global" description="검색영역1"/>
+    <aura:attribute name="condition2" type="Aura.Component[]" access="global" description="검색영역2"/>
+    <aura:attribute name="condition3" type="Aura.Component[]" access="global" description="검색영역3"/>
+
+    <!-- ===============================================================================================================
+    ==== Aura.Component[] 속성은 set 하면 무조건 length가 1이 되므로
+    ==== 높이가 길어지는 현상이 발생. 따라서 공통 Header에서 판단하여 넘기는 속성값을 비교하여 화면 처리
+    =============================================================================================================== -->
+    <aura:attribute name="hasCondition" type="Boolean" default="{!false}" description="검색영역1 존재여부"/>
+    <aura:attribute name="hasCondition2" type="Boolean" default="{!false}" description="검색영역2 존재여부"/>
+    <aura:attribute name="hasCondition3" type="Boolean" default="{!false}" description="검색영역3 존재여부"/>
+
+    <!-- Desktop에서만 사용 -->
+    <aura:attribute name="type" type="String" access="global" default="고객" description="소제목"/>
+    <aura:attribute name="doSave" type="Aura.Action" description="저장 버튼 Action"/>
+    <aura:attribute name="doSearch" type="Aura.Action" description="검색 버튼 Action"/>
+    <aura:attribute name="doExcel" type="Aura.Action" description="Excel 버튼"/>
+
+    <!-- =============================================================================================================
+     * Body
+    ============================================================================================================= -->
+    <aura:if isTrue="{#v.device == 'DESKTOP' || v.device =='TABLET'}">
+        <div class="slds-page-header--object-home slds-page-header_bleed slds-page-header slds-shrink-none test-headerRegion forceListViewManagerHeader"
+             style="{!v.isInternal ? 'padding-right:10px; padding-left:10px; width:100%; background:white;' : 'padding-right:0; padding-left:0; width:100%; background:white;'}">
+            <div class="slds-is-relative">
+                <!-- Spinner -->
+                <lightning:spinner aura:id="localSpinner" variant="brand" size="medium" class="slds-hide"/>
+                <div class="slds-grid">
+                    <div class="slds-col slds-has-flexi-truncate">
+                        <div class="slds-media slds-no-space slds-grow">
+                            <!-- Icon -->
+                            <div class="slds-media__figure">
+                                <lightning:icon iconName="{#v.iconName}"/>
+                            </div>
+                            <div class="slds-media__body slds-align-middle">
+                                <!-- Sub Title -->
+                                <nav role="navigation" aria-label="Breadcrumbs">
+                                    <ol class="slds-breadcrumb slds-list--horizontal">
+                                        <li class="slds-breadcrumb__item slds-line-height--reset">
+                                            <span class="uiOutputText">{#v.type}</span>
+                                        </li>
+                                    </ol>
+                                </nav>
+                                <!-- Title -->
+                                <h1 class="slds-page-header__title slds-text-color--default slds-p-right--x-small">
+                                    <a class="triggerLink slds-button slds-button--reset slds-type-focus slds-truncate forceListViewPicker" role="button" title="{#v.title}" href="javascript:void(0);" onclick="{!c.doRefresh}">
+                                		<span class="triggerLinkText selectedListView uiOutputText">
+                                        	{#v.title}
+                                		</span>
+                                    </a>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom--xx-small test-lvmForceActionsContainer">
+                        <!-- Custom Button -->
+                        {#v.button}
+                        <!-- Save Button -->
+                        <aura:if isTrue="{# !empty(v.doSave)}">
+                            <lightning:button label="Save" variant="brand" onclick="{!v.doSave}"/>
+                        </aura:if>
+                        <!-- Search Button -->
+                        <aura:if isTrue="{# !empty(v.doSearch)}">
+                            <lightning:button label="Search" onclick="{!v.doSearch}" />
+                        </aura:if>
+                        <!-- Excel Button -->
+                        <aura:if isTrue="{# !empty(v.doExcel)}">
+                            <lightning:button label="Excel" onclick="{!v.doExcel}" />
+                        </aura:if>
+                    </div>
+                </div>
+                <!-- Condition -->
+                <!--                <aura:if isTrue="{!v.hasCondition}">-->
+                <div class="slds-grid slds-m-top--small">
+                    <div class="slds-col slds-align-bottom" >
+                        <p class="slds-text-body--small" >
+                        <div class="slds-form--inline">
+                            {!v.condition}
+                        </div>
+                        </p>
+                    </div>
+                </div>
+                <!--                </aura:if>-->
+                <aura:if isTrue="{!v.hasCondition2}">
+                    <div class="slds-grid slds-m-top--small">
+                        <div class="slds-col slds-align-bottom" >
+                            <p class="slds-text-body--small" >
+                            <div class="slds-form--inline">
+                                {!v.condition2}
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.hasCondition3}">
+                    <div class="slds-grid slds-m-top--small">
+                        <div class="slds-col slds-align-bottom" >
+                            <p class="slds-text-body--small" >
+                            <div class="slds-form--inline">
+                                {!v.condition3}
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

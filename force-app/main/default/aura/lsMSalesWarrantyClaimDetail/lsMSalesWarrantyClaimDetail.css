@@ -1,0 +1,23 @@
+.THIS {
+}
+.THIS .slds-file-selector__text {
+    display : none !important;
+}
+.THIS .slds-file-selector__dropzone {
+    padding: 0;
+    border-width: 0;
+    border-radius: 0;
+}
+.THIS .slds-file-selector__body .slds-button {
+    width: 340px !important;
+    height:66px;
+    line-height:36px;
+    color: #fff !important;
+    background:#525557;
+    border:0;
+    margin:10px 0 10px 0;
+    cursor: pointer;
+}
+.THIS .slds-file-selector__body .slds-button:hover {
+    background:#0081C4;
+}

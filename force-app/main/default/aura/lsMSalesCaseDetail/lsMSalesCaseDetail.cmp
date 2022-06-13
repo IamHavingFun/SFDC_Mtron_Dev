@@ -1,0 +1,223 @@
+<!--
+  * @filename      : lsMSalesCaseDetail
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-11-26 오후 5:00
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-26 오후 5:00    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesBase"
+                implements="force:appHostable,forceCommunity:availableForAllPageTypes,lightning:isUrlAddressable,force:hasRecordId"
+                description="lsMSalesCaseDetail"
+                controller="LsMSalesCaseDetail">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="labelMap" type="Map" description="label관련 data를 담는 attribute"/>
+    <aura:attribute name="filetype" type="List" default="['.png', '.jpg', '.jpeg']" />
+    <aura:attribute name="wrapperData" type="LsMSalesQuestionImproveDetail.WrapperData"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+        .w120 {
+        width: 140px !important;
+        }
+        .minH150 {
+        min-height: 150px !important;
+        }
+        .slds-textarea {
+        min-height: 330px !important;
+        }
+        .evaluationBox {
+        width: 100%;
+        background: #FFFFFF;
+        display: inline-block;
+        }
+        .slds-file-selector__text .slds-medium-show {
+        display : none !important;
+        }
+        .board_view .file {
+        padding-top: 1px;
+        }
+
+    </aura:html>
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">문의/건의 상세조회</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <!-- 상단 타이틀영역 2줄 -->
+        <div class="top_titBox">
+            <div class="tit">
+                {!v.wrapperData.caseData.Subject__c}
+            </div>
+            <div class="stit">
+                {!v.labelMap.CustomizedCase__c.createddate} :
+                <lightning:formattedDateTime value="{!v.wrapperData.caseData.CreatedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="false"/> <span class="space"></span> <!--조회수 : 152-->
+            </div>
+        </div>
+        <!-- //상단 타이틀영역 2줄 -->
+        <article class="content">
+            <!-- 테이블 -->
+            <div class="board_view mt20">
+                <ul>
+                    <li>
+                        <div class="tit w120">유형</div>
+                        <div class="tit_right">:</div>
+                        <!--<div class="txt"><lightning:combobox label="" class="custom-combobox" options="{!v.wrapperData.typeList}" value="{!v.wrapperData.caseData.Type}"/></div>-->
+                        <div class="txt">{!v.wrapperData.caseData.Type__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">상세유형</div>
+                        <div class="tit_right">:</div>
+                        <!--<div class="txt"><lightning:combobox label="" class="custom-combobox" options="{!v.wrapperData.typeList}" value="{!v.wrapperData.caseData.Type}"/></div>-->
+                        <div class="txt">{!v.wrapperData.caseData.TypeLevel2__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">단계</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.Status__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit100">{!v.labelMap.CustomizedCase__c.description__c}</div>
+                    </li>
+                    <li class="viewGrayBox minH150">
+                        {!v.wrapperData.caseData.Description__c}
+                    </li>
+                    <aura:if isTrue="{!v.wrapperData.caseData.Type__c == '문제제기'}">
+                    <li>
+                        <div class="tit w120">기대번호</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt">{!v.wrapperData.caseData.AssetNo__r.Name}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">사용시간</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt">{!v.wrapperData.caseData.UsingTime__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">해당모델</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt">{!v.wrapperData.caseData.SelectedModel__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit100">문제현상</div>
+                    </li>
+                    <li class="viewGrayBox minH150">
+                        {!v.wrapperData.caseData.IssueDetails__c}
+                    </li>
+                    <li>
+                        <div class="tit100">조치사항</div>
+                    </li>
+                    <li class="viewGrayBox minH150">
+                        {!v.wrapperData.caseData.DoneDetails__c}
+                    </li>
+                    </aura:if>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="tit w120">검토상태</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.CountReview__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">담당부서</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.InChargeDepartment__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">부서접수일</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.AppliedDate__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">완료예정일</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.ClosePlanedDate__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit w120">답변완료일</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.AnswerClosedDate__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit100">답변</div>
+                    </li>
+                    <li class="viewGrayBox minH150">
+                        <lightning:formattedRichText value="{!v.wrapperData.caseData.ProcessingResult__c}"/>
+                    </li>
+                    <li>
+                        <div class="tit w120">답변평가</div>
+                        <div class="tit_right">:</div>
+                        <div class="txt blue">{!v.wrapperData.caseData.DealerFeedback__c}</div>
+                    </li>
+                    <li>
+                        <div class="tit100">재검토 사유</div>
+                    </li>
+                    <li class="viewGrayBox minH150">
+                        <lightning:formattedRichText value="{!v.wrapperData.caseData.DealerFeedbackComment__c}"/>
+                    </li>
+                    <label class="form_tit">파일 첨부</label>
+                    <aura:if isTrue="{!not(empty(v.wrapperData.caseData.AttachedContentDocuments))}">
+                        <li class="file">
+                            <aura:iteration items="{!v.wrapperData.caseData.AttachedContentDocuments}" var="record" indexVar="idx">
+                                <div><img src="../resource/publish/img/img_file.png"/><a href="{!('/'+ v.wrapperData.sitePathPrefix + '/sfc/servlet.shepherd/document/download/'+record.ContentDocumentId)}" target="_blank">{!record.Title}.{!record.FileExtension}</a></div>
+                            </aura:iteration>
+                        </li>
+                        <aura:set attribute="else">
+                            <br/>
+                            <div class ="slds-grid slds-grid_align-center">
+                                <p>첨부파일이 존재하지 않습니다.</p>
+                            </div>
+                        </aura:set>
+
+                    </aura:if>
+                    <aura:if isTrue="{!v.wrapperData.caseData.Status__c == '제출'}">
+                        <div class="lwsTitImg slds-grid slds-grid_align-center">
+                            <lightning:fileUpload recordId="{!v.wrapperData.caseData.Id}"
+                                                  class=""
+                                                  multiple="false"
+                                                  accept="{!v.filetype}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"/>
+                        </div>
+                    </aura:if>
+
+                </ul>
+            </div>
+            <!-- // 테이블 -->
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox">
+                <aura:if isTrue="{!(v.wrapperData.caseData.Status__c != '제출')}"> <!--상태가 접수 일때는 편집으로 해야 함-->
+                    <aura:if isTrue="{!(v.wrapperData.caseData.Status__c == '답변 완료 및 평가 대기')}"> <!--상태가 평가대기 일때는 평가등록으로 해야 함-->
+                        <lightning:button label="목록으로" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                        <lightning:button label="평가등록" class="bbtn btn_50" onclick="{!c.doEvaluation}"/>
+                        <aura:set attribute="else">
+                            <lightning:button label="목록으로" class="bbtn bbtn_white" onclick="{!c.doCancel}"/>
+                        </aura:set>
+                    </aura:if>
+                    <aura:set attribute="else">
+                        <lightning:button label="목록으로" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                        <lightning:button label="편집" class="bbtn btn_50" onclick="{!c.doEdit}"/>
+                    </aura:set>
+                </aura:if>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+    </div>
+</aura:component>

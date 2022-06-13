@@ -1,0 +1,21 @@
+<!--
+  * File Name   : i2SEMA_NotificationPreviewEvent
+  * ProjectName : i2SEMA
+  * Group       :
+  * Description :
+  * Copyright   : Copyright © I2MAX. All Rights Reserved.
+  * Modification Log
+  * ===============================================================
+  * Ver     Date                Author              Modification
+  * ===============================================================
+    1.0     2020-04-08 오후 3:28     i2max_ysseo       Create
+ -->
+
+<aura:event type="COMPONENT" access="global" description="i2SEMA_NotificationPreviewEvent">
+    <aura:attribute name="templateId"
+                    type="String"
+                    description="Template Record ID"/>
+    <aura:attribute name="previewReferenceData"
+                    type="object"
+                    description="Template/Preview Component Reference"/>
+</aura:event>

@@ -1,0 +1,33 @@
+/****************************************************************************************
+  * @filename       : i2SEMA_NotificationGroupList.css
+  * @projectname    : i2SEMA Core
+  * @author         : i2max_byeon.jw 
+  * @date           : 2020-05-08 오후 4:07
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-05-08 오후 4:07     i2max_byeon.jw       Create
+****************************************************************************************/
+
+.THIS {
+}
+
+.THIS .slds-card__header {
+    margin : 0 !important;
+    padding : 0 !important;
+}
+
+.THIS .slds-card__body {
+    margin : 0 !important;
+    padding : 0 !important;
+}
+
+.THIS header {
+    margin : 0 !important;
+    padding : 0 !important;
+}

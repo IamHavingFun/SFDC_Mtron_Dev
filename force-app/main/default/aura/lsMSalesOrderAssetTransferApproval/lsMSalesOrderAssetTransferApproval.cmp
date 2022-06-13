@@ -1,0 +1,62 @@
+<!--
+ - Created by MS on 2020-07-01.
+ -->
+
+<aura:component extends="c:lsMSalesBase"
+                controller="LsMSalesOrderAssetTransferApproval"
+                description="lsMSalesOrderAssetTransferApproval">
+
+    <aura:attribute name="dataList" type="List" description=""/>
+    <aura:attribute name="assetTransfer" type="AssetTransferRequest__c" description=""/>
+    <aura:attribute name="contractId" type="Id" description="거부할 계약 ID"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tableEvent" event="c:lacComEvent" action="{!c.util_Load}"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .right {
+        width:300px !important;
+        }
+        .col_board .right .btn {
+        margin-left: 5px !important;
+        }
+    </aura:html>
+
+    <!-- 테이블 -->
+    <div class="col_board">
+        <c:lsMSalesTableFrame aura:id="table" simple="{!true}" isCommunity="{#v.isCommunity}">
+            <aura:if isTrue="{!and(not(empty(v.dataList)), v.dataList.length > 0)}">
+                <ul>
+                    <aura:iteration items="{!v.dataList}" var="record">
+                        <li>
+                            <div class="left">
+                                <div class="tit">
+                                    {!record.Model__r.Name}
+                                    <span class="bar"></span>
+                                    {!record.AssetNo__r.Name}
+                                </div>
+                                <div class="tit">
+                                    {!record.WantedDealer__r.Name}
+                                    <span class="bar"></span>
+                                    <lightning:formattedDateTime value="{!record.CreatedDate}"/>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <lightning:button label="거부" value="{!record}" class="btn m5" onclick="{!c.doRejectConfirm}"/>
+                                <lightning:button label="승인" value="{!record}" class="btn" onclick="{!c.doApprovalConfirm}"/>
+                            </div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+
+                <aura:set attribute="else">
+                    <c:lsMSalesNoDataFound/>
+                </aura:set>
+            </aura:if>
+        </c:lsMSalesTableFrame>
+    </div>
+    <!-- // 테이블 -->
+</aura:component>

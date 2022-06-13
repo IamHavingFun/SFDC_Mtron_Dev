@@ -1,0 +1,113 @@
+<!--
+* @filename      : lsMSalesHome
+* @projectname   :
+* @author        : i2max_my.Seo
+* @date          : 2020-06-17 오후 3:43
+* @group         :
+* @group-content :
+* @description   : [모바일] 홈.
+* @tester        :
+* @reference     :
+* @copyright     : Copyright © I2max. All Rights Reserved.
+* @modification Log
+* ===============================================================
+* ver     date                     author              description
+* ===============================================================
+ 0.1     2020-06-17 오후 3:43     i2max_my.Seo         Create
+
+-->
+<aura:component
+        extends="c:lsMSalesBase"
+        implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+        controller="LsMSalesHome"
+        description="lsMSalesHome">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="loginUser" type="User" description="유저 정보"/>
+    <aura:attribute name="todayDate" type="Date" description="오늘 날짜+요일 정보"/>
+    <aura:attribute name="guideCount" type="Integer" description="알림 건수"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <header id="header" class="bgG bdb_n">
+        <article class="TopLeft">
+        </article>
+        <article class="TopName"></article>
+        <article class="TopRright">
+            <a href="javascript:void(0);" data-url="lsMSalesGuideActionsList__c" onclick="{!c.doMappingPage}">
+            <div class="inform">
+                    <span class="circle">{!v.guideCount}</span>
+            </div>
+            </a>
+        </article>
+    </header>
+
+    <div id="container">
+        <article class="main_content">
+            <section class="logoArea">
+                <div class="logo"></div>
+                <div class="txt"><strong>{!v.loginUser.Contact.Account.Name}&nbsp;{!v.loginUser.Name}</strong> 님, 안녕하세요!</div>
+                <div class="stxt"><lightning:formattedDateTime value="{!v.todayDate}" year="numeric" month="short" day="2-digit" weekday="narrow" /></div>
+            </section>
+
+            <section class="pointMenu">
+                <dl>
+                    <dd class="img1"></dd>
+                    <dt>
+                        <div class="txtBox" data-url="lsMSalesCustomerConsult__c" onclick="{!c.doMappingPage}">
+                            <div class="tit">고객상담</div>
+                            <div class="txt">고객 관심 모델에 대한 상담진행</div>
+                        </div>
+                    </dt>
+                </dl>
+                <dl>
+                    <dt>
+                        <div class="txtBox" data-url="lsMSalesQuoteContractList__c" onclick="{!c.doMappingPage}">
+                            <div class="tit">견적/계약</div>
+                            <div class="txt">견적서 작성 및 계약 체결</div>
+                        </div>
+                    </dt>
+                    <dd class="img2"></dd>
+                </dl>
+                <dl>
+                    <dd class="img3"></dd>
+                    <dt>
+                        <div class="txtBox" data-url="lsMSalesOpportunity__c" onclick="{!c.doMappingPage}">
+                            <div class="tit">판매관리</div>
+                            <div class="txt">고객정보 및 판매기회 관리</div>
+                        </div>
+                    </dt>
+                </dl>
+            </section>
+
+            <section class="boardArea">
+                <div class="iconTxtBox" data-url="lsMSalesDashboard__c" onclick="{!c.doMappingPage}">
+				<span>
+					<div class="icon1"></div>
+					<div class="name">대시보드</div>
+				</span>
+                </div>
+                <div class="iconTxtBox" data-url="lsMSalesNotice__c" onclick="{!c.doMappingPage}">
+				<span>
+					<div class="icon2"></div>
+					<div class="name">공지사항</div>
+				</span>
+                </div>
+                <div class="iconTxtBox" data-url="lsMSalesOrderAssetTransfer__c" onclick="{!c.doMappingPage}">
+				<span>
+					<div class="icon3"></div>
+					<div class="name">전수배 관련 승인</div>
+				</span>
+                </div>
+                <div class="iconTxtBox" data-url="lsMSalesQuestionImprove__c" onclick="{!c.doMappingPage}">
+				<span>
+					<div class="icon4"></div>
+					<div class="name">질문/개선</div>
+				</span>
+                </div>
+            </section>
+        </article>
+    </div>
+
+</aura:component>

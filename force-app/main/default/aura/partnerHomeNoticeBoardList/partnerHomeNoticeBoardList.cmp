@@ -1,0 +1,129 @@
+<!--
+ - Created by ms on 2020-05-13.
+ -->
+
+<aura:component extends="c:lacComBase"
+                controller="PartnerHomeNoticeBoardList"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                description="partnerHomeNoticeBoardList">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        /* 중앙 카드 모듈 type-1 */
+        .cPartnerHomeNotice-type1 {
+        margin-top: 30px;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__top {
+        margin-bottom: 30px;
+        border-bottom: 2px solid #2771bf;
+        font-size: 30px;
+        color: #000;
+        font-weight: 900;
+        position: relative;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__top p {
+        padding-left: 60px;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__icon-paper {
+        position: absolute;
+        bottom: -5px;
+        left: 3px;
+        width: 50px;
+        height: 45px;
+        background: url({!$Resource.comm_home + '/images/bg_module_icon.png'}) -79px -102px no-repeat;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__card-wrap {
+        width: 100%;
+        display: flex;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__card {
+        padding: 30px 20px;
+        border: 1px solid rgb(204, 204, 204);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__card ~ .cPartnerHomeNotice-type1__card {
+        margin-left: 30px;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__info {}
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__title {
+        font-size: 22px;
+        font-weight: 900;
+        color: #3b3b3b;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__title a {
+        max-width: 100%;
+        height: 52px;
+        color: inherit;
+        text-align: left;
+        text-decoration: none;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__ellipsis {
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__desc {
+        padding-top: 20px;
+        font-size: 17px;
+        color: #7d7979;
+        <!--#a2a2a2;-->
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__desc a {
+        color: inherit;
+        text-decoration: none;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__more {
+        padding-top: 35px;
+        font-size: 17px;
+        color: #2771bf;
+        font-weight: bold;
+        }
+        .cPartnerHomeNotice-type1 .cPartnerHomeNotice-type1__more a {
+        color: inherit;
+        text-decoration: none;
+        }
+        /* //중앙 카드 모듈 type-1 */
+    </aura:html>
+
+    <div class="cPartnerHomeNotice-type1">
+        <div class="cPartnerHomeNotice-type1__top">
+            <i class="cPartnerHomeNotice-type1__icon-paper"></i>
+            <p>최근 공지사항</p>
+        </div>
+        <div class="cPartnerHomeNotice-type1__card-wrap">
+            <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                <div class="cPartnerHomeNotice-type1__card">
+                    <div class="cPartnerHomeNotice-type1__info">
+                        <p class="cPartnerHomeNotice-type1__title">
+                            <a data-recordid="{!record.Id}" onclick="{!c.doNaviService}" class="cPartnerHomeNotice-type1__ellipsis">
+                                {!record.Name}
+                            </a>
+                        </p>
+                        <p class="cPartnerHomeNotice-type1__desc">
+                            {!record.Overview__c}
+                        </p>
+                    </div>
+                    <p class="cPartnerHomeNotice-type1__more">
+                        <a data-recordid="{!record.Id}" onclick="{!c.doNaviService}">
+                            자세히 보기
+                        </a>
+                    </p>
+                </div>
+            </aura:iteration>
+        </div>
+    </div>
+
+</aura:component>

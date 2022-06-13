@@ -1,0 +1,68 @@
+<!--
+  * @filename      : lsMSalesAddOtherWorkingMachineQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-12-18 오후 3:04
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-12-18 오후 3:04    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesAddOtherWorkingMachineQa"
+                description="lsMSalesAddOtherWorkingMachineQa">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="quoteWp" type="LsMSalesQuoteData" access="public" description=""/>
+    <aura:attribute name="quoteOtherItem" type="QuoteOtherItem__c" access="public" default="{'sobjectType':'QuoteOtherItem__c'}" description=""/>
+    <aura:attribute name="qliWrapper" type="LsMSalesQuoteData.qliWrapper" access="public" />
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">기타 작업기 추가</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <section class="modal_body">
+        <div class="body_contBox">
+            <h1 class="slds-m-top_large">작업기 제품명</h1>
+            <h2 style="font-size: 15px">기종 및 용도를 이해할 수 있는 이름으로 기입하세요.</h2>
+            <lightning:input aura:id="productName" label="" value="{!v.quoteOtherItem.ProductName__c}"/>
+
+            <h1 class="slds-m-top_large">판매가</h1>
+            <lightning:input aura:id="netPrice" label="" type="number" class="custom-input-text__right" value="{!v.quoteOtherItem.NetPrice__c}"/>
+
+            <section class="bbtnBox mb60">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="저장" class="bbtn btn_50" onclick="{!empty(v.qliWrapper) ? c.doSave : c.doModify}"/>
+            </section>
+
+        </div>
+    </section>
+</aura:component>

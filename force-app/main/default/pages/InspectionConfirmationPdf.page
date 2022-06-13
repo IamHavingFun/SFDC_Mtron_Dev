@@ -1,0 +1,644 @@
+<!--
+  * @filename      : InspectionConfirmationPdf
+  * @projectname   :
+  * @author        : jy.Kim
+  * @date          : 2020-06-17
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-06-17      jy.Kim          Create
+ -->
+<apex:page id="InspectionConfirmationPdf" showHeader="false" sideBar="false" standardStylesheets="false" applyBodyTag="false"
+           applyHtmlTag="false" renderAs="pdf" controller="InspectionConfirmationPdfController">
+
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <style type="text/css">
+        body {
+            font-family: Arial Unicode MS;
+            font-size:14px;
+        }
+        table tr, table td{
+            page-break-inside: avoid;
+            word-wrap: break-word;
+        }
+        @page {
+            size: A4;
+            margin: 5mm;
+        }
+        @page:first {
+             size: A4 ;
+             margin: 5mm;
+             margin-top: 3mm;
+         }
+         .noneTopBorder {
+             border-top : 0px
+         }
+         .alignCenter {
+             text-align:center;
+         }
+         .alignRight {
+             text-align:right;
+         }
+         .alignLeft {
+             text-align:left;
+         }
+         .fontSubTitle {
+             font-weight:bold;
+             font-size: 16px;
+             background:#F2F2F2;
+         }
+         .fontCompanyTitle {
+             font-weight:bold;
+             font-size: 25px;
+         }
+         .fontMainTitle {
+             font-weight:bold;
+             font-size: 20px;
+         }
+         .fontBold {
+             font-weight:bold;
+         }
+         .fontWhiteTitle {
+             font-weight:bold;
+             font-size: 15px;
+         }
+         .fontWhiteBigTitle {
+             font-weight:bold;
+             font-size: 15px;
+         }
+         .checkBoxStyle {
+            width:15px;
+            height:15px;
+            border:1px solid;
+            background-color:black;
+            display:inline-block;
+         }
+         .noneCheckboxStyle{
+            width:15px;
+            height:15px;
+            border:1px solid;
+            display:inline-block;
+         }
+         .checkBoxLeftMargin {
+             margin-right:26px;
+         }
+         .checkBoxRightMargin {
+             margin-right:13px;
+         }
+         .tableMargin{
+             margin-top:5px;
+         }
+         .verticalAlignMiddle{
+             vertical-align:middle;
+         }
+         .borderStyle{
+             border:1px solid black;
+         }
+         .defaultHeight {
+             height:30px;
+         }
+         .yesNoPadding{
+             padding-left:13px;
+         }
+         .fourPadding{
+             padding-left:10px;
+         }
+         .threePadding{
+             padding-left:22px;
+         }
+         .twoPadding{
+             padding-left:60px;
+         }
+         .borderTop {
+             border-top:1px solid black;
+         }
+         .borderLeft {
+             border-left:1px solid black;
+         }
+         .textAction {
+             text-align:left;
+             vertical-align:top;
+             padding:4px;
+             font-size: 15px;
+         }
+         .backColor {
+             background:#F2F2F2;
+         }
+         </style>
+    </head>
+    <body>
+    <table cellspacing="0" cellpadding="0" border="1px solid" class="alignCenter" width="100%">
+        <tr>
+            <td class="fontSubTitle defaultHeight borderTop borderLeft" width="15%">
+                인<span class="fourPadding"/>도<span class="fourPadding"/>장<span class="fourPadding"/>소
+            </td>
+            <td width="20%" class="borderTop">
+            </td>
+            <td class="noneTopBorder fontCompanyTitle" width="50%">
+                LS 트랙터
+            </td>
+            <td class="fontSubTitle borderTop">
+                고<span class="fourPadding"/>객<span class="fourPadding"/>확<span class="fourPadding"/>인
+            </td>
+        </tr>
+        <!-- tr -->
+        <tr>
+            <td class="fontSubTitle defaultHeight borderLeft">
+                일<span class="twoPadding"/>자
+            </td>
+            <td>
+                <apex:outputText value="{0, date, yyyy'년' MM'월'  dd'일'  }">
+                    <apex:param value="{!pdi.HandoverDate__c}" />
+                </apex:outputText>
+            </td>
+            <td rowspan="2" class="fontMainTitle">
+                제품 인도전 점검 확인서
+            </td>
+            <td rowspan="2" style="text-align:center;">
+                <img src="/sfc/servlet.shepherd/version/download/{!pdi.CustomerSignatureApex__c}?big" style="width:70px"/>
+            </td>   
+        </tr>
+        <tr>
+            <td class="fontSubTitle defaultHeight borderLeft">
+                점<span class="threePadding"/>검<span class="threePadding"/>자
+            </td>
+            <td>
+                {!pdi.Owner.Name}
+            </td>
+        </tr>
+    </table>
+
+    <table cellspacing="0" cellpadding="0" border="1px solid" class="alignCenter tableMargin" width="100%">
+        <tr>
+            <td class="fontSubTitle defaultHeight borderLeft borderTop" width="15%">
+                기<span class="twoPadding"/>종
+            </td>
+            <td width="20%" class="borderTop">
+                {!pdi.Asset__r.Product2.ProductType__c}
+            </td>
+            <td class="fontSubTitle borderTop" width="15%">
+                모<span class="threePadding"/>델<span class="threePadding"/>명
+            </td>
+            <td width="20%" class="borderTop">
+                {!pdi.Asset__r.Product2.Name}
+            </td>
+            <td class="fontSubTitle borderTop" width="15%">
+                기<span class="fourPadding"/>대<span class="fourPadding"/>번<span class="fourPadding"/>호
+            </td>
+            <td width="20%" class="borderTop">
+                {!pdi.Asset__r.Name}
+            </td>
+        </tr>
+        <tr>
+            <td class="fontSubTitle defaultHeight borderLeft">
+                성<span class="twoPadding"/>명
+            </td>
+            <td>
+                {!pdi.Consumer__r.Name}
+            </td>
+            <td class="fontSubTitle">
+                주<span class="twoPadding"/>소
+            </td>
+            <td colspan="3">
+                {!pdi.Consumer__r.BillingState} {!pdi.Consumer__r.BillingCity} {!pdi.Consumer__r.BillingStreet}
+            </td>
+        </tr>
+        <tr>
+            <td class="fontSubTitle defaultHeight borderLeft">
+                구<span class="threePadding"/>입<span class="threePadding"/>처
+            </td>
+            <td colspan="2" class="fontBold">
+                대리점 (
+                <apex:outputText rendered="{!pdi.Consumer__r.RecordType.DeveloperName != 'BusinessAccount1'}">
+                    O
+                </apex:outputText>
+                <apex:outputText rendered="{!pdi.Consumer__r.RecordType.DeveloperName == 'BusinessAccount1'}">
+                    <span style="padding-left:15px;"></span>
+                </apex:outputText>
+                )
+                , 농협 (
+                <apex:outputText rendered="{!pdi.Consumer__r.RecordType.DeveloperName != 'BusinessAccount1'}">
+                    <span style="padding-left:15px;"></span>
+                </apex:outputText>
+                <apex:outputText rendered="{!pdi.Consumer__r.RecordType.DeveloperName == 'BusinessAccount1'}">
+                    O
+                </apex:outputText>
+                )
+            </td>
+            <td class="fontSubTitle">
+                전<span class="fourPadding"/>화<span class="fourPadding"/>번<span class="fourPadding"/>호
+            </td>
+            <td colspan="2">
+                {!if(pdi.Consumer__r.RecordType.DeveloperName == 'PersonAccount',pdi.Consumer__r.PersonMobilePhone,pdi.Consumer__r.Mobile__c)}
+            </td>
+        </tr>
+    </table>
+
+    <table cellspacing="0" cellpadding="0" width="100%" class="tableMargin">
+        <tr>
+            <td class="fontSubTitle verticalAlignMiddle borderStyle alignCenter" width="4%">
+                교<br/><br/>육<br/><br/>사<br/><br/>항
+            </td>
+            <td width="5px;">
+                &nbsp;
+            </td>
+            <td style="border:1px solid;">
+                <table cellspacing="0" cellpadding="0" style="padding:10px;" width="100%">
+                    <tr>
+                        <td width="85%">
+                        </td>
+                        <td class="fontWhiteTitle alignRight">
+                            <span>예</span> <span class="yesNoPadding">아니요</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            1.{!$ObjectType.PDI__c.Fields.Education1__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education1__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education1__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            2.{!$ObjectType.PDI__c.Fields.Education2__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education2__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education2__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            3.{!$ObjectType.PDI__c.Fields.Education3__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education3__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education3__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            4.{!$ObjectType.PDI__c.Fields.Education4__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education4__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education4__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            5.{!$ObjectType.PDI__c.Fields.Education5__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education5__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education5__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            6.{!$ObjectType.PDI__c.Fields.Education6__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education6__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education6__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            7.{!$ObjectType.PDI__c.Fields.Education7__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education7__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education7__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            8.{!$ObjectType.PDI__c.Fields.Education8__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education8__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education8__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteTitle">
+                            9.{!$ObjectType.PDI__c.Fields.Education9__c.Label}
+                        </td>
+                        <td class="alignRight">
+                            <div class="{!if(pdi.Education9__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                            <div class="{!if(!pdi.Education9__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table cellspacing="0" cellpadding="0" width="100%" class="tableMargin">
+        <tr>
+            <td width="60%">
+                <table cellspacing="0" cellpadding="0" border="1px solid" class="alignCenter" width="100%">
+                    <tr>
+                        <td class="fontSubTitle defaultHeight borderTop borderLeft" width="100%" colspan="2">
+                            외장 및 성능 점검사항
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="borderLeft">
+                        <!-- Sub Table Start -->
+                        <table cellspacing="0" cellpadding="0" style="padding:5px;" width="100%">
+                            <tr>
+                                <td>
+                                </td>
+                                <td class="fontWhiteTitle alignRight" width="100px">
+                                    <span>예</span> <span class="yesNoPadding">아니요</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    1.{!$ObjectType.PDI__c.Fields.Check1_1__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_1__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_1__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    2.{!$ObjectType.PDI__c.Fields.Check1_2__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_2__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_2__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    3.{!$ObjectType.PDI__c.Fields.Check1_3__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_3__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_3__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    4.{!$ObjectType.PDI__c.Fields.Check1_4__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_4__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_4__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    5.{!$ObjectType.PDI__c.Fields.Check1_5__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_5__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_5__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    6.{!$ObjectType.PDI__c.Fields.Check1_6__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_6__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_6__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    7.{!$ObjectType.PDI__c.Fields.Check1_7__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_7__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_7__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    8.{!$ObjectType.PDI__c.Fields.Check1_8__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_8__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_8__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    9.{!$ObjectType.PDI__c.Fields.Check1_9__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check1_9__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check1_9__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    10.{!$ObjectType.PDI__c.Fields.Check2_1__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_1__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_1__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    11.{!$ObjectType.PDI__c.Fields.Check2_2__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_2__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_2__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    12.{!$ObjectType.PDI__c.Fields.Check2_3__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_3__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_3__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    13.{!$ObjectType.PDI__c.Fields.Check2_4__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_4__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_4__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    14.{!$ObjectType.PDI__c.Fields.Check2_5__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_5__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_5__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    15.{!$ObjectType.PDI__c.Fields.Check2_7__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_7__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_7__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fontWhiteTitle alignLeft">
+                                    16.{!$ObjectType.PDI__c.Fields.Check2_8__c.Label}
+                                </td>
+                                <td class="alignRight">
+                                    <div class="{!if(pdi.Check2_8__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                    <div class="{!if(!pdi.Check2_8__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- Sub Table End -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%" class="fontWhiteTitle alignLeft borderLeft" style="padding:5px;">
+                            17.오일량 점검
+                        </td>
+                        <td>
+                            <!-- Sub Table Start -->
+                            <table cellspacing="0" cellpadding="0" style="padding:5px;" width="100%">
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td class="fontWhiteTitle alignRight" width="100px">
+                                        <span>예</span> <span class="yesNoPadding">아니요</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        엔진
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_1__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_1__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        조향 오일탱크
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_2__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_2__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        주변속
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_3__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_3__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        센터 케이스
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_4__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_4__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        차동 케이스
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_5__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_5__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        후륜 구동 케이스
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_6__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_6__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fontWhiteTitle alignLeft">
+                                        전륜 구동 케이스
+                                    </td>
+                                    <td class="alignRight">
+                                        <div class="{!if(pdi.Check3_7__c,'checkBoxLeftMargin checkBoxStyle','checkBoxLeftMargin noneCheckboxStyle')}"></div>
+                                        <div class="{!if(!pdi.Check3_7__c,'checkBoxRightMargin checkBoxStyle','checkBoxRightMargin noneCheckboxStyle')}"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Sub Table End -->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="5px;">
+            </td>
+            <td height="100%">
+                <table cellspacing="0" cellpadding="0" border="1px solid" class="alignCenter" width="100%">
+                    <tr>
+                        <td class="fontSubTitle defaultHeight borderTop borderLeft" width="100%" colspan="2">
+                            안전 사항
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontWhiteBigTitle alignCenter borderLeft" colspan="2" height="80px">
+                            사용설명서에 표기된<br/>
+                            안전표시데칼(경고라벨)을 확인하고<br/>
+                            상세 내용을 설명 받으셨습니까?
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="{!if(pdi.ETC__c,'fontWhiteBigTitle alignCenter borderLeft backColor','fontWhiteBigTitle alignCenter borderLeft')}" width="50%" height="30px">
+                            예
+                        </td>
+                        <td class="{!if(!pdi.ETC__c,'fontWhiteBigTitle alignCenter backColor','fontWhiteBigTitle alignCenter')}" width="50%">
+                            아니오
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fontSubTitle defaultHeight borderLeft" colspan="2">
+                            미 출고 부품 및 조치사항
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" height="424px" class="borderLeft textAction">
+                                <apex:outputText value="{!actionText}" style="white-space:pre;" escape="false"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <div style="float:right;padding-top:5px;">
+        {!pdi.Name}
+    </div>
+    </body>
+    </html>
+</apex:page>

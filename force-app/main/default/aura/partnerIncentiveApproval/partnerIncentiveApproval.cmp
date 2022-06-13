@@ -1,0 +1,309 @@
+<!--
+  * @filename      : partnerIncentiveApproval
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2022-04-11
+  * @group         :
+  * @group-content :
+  * @description   : 파트너 대리점주 판매장려 기표 승인 처리
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * =========================================================================
+  * ver     date                    author                    description
+  * =========================================================================
+  0.1     2020-03-30 오전 9:29     i2max_Junseok.Kwon        Create
+-->
+
+<aura:component extends="c:lacComBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                controller="PartnerIncentiveApproval"
+                description="partnerIncentiveApproval">
+
+    <aura:attribute name="dealerDataList" type="List" description="대리점 수수료 목록"/>
+    <aura:attribute name="serviceDataList" type="List" description="서비스위탁 수수료 목록"/>
+    <aura:attribute name="targetList" type="List" description="데이터 저장용"/>
+    <aura:attribute name="dealerAccount" type="Account" />
+    <aura:attribute name="totalIncentiveAmount" type="Decimal" />
+    <aura:attribute name="totalIncentiveRate" type="Decimal" />
+    <aura:attribute name="assetCount" type="Decimal" default="0"/>
+    <aura:attribute name="processYearMonth" type="String" />
+    <aura:attribute name="processDate" type="String" />
+    <aura:attribute name="isApproval" type="Boolean" default="{#false}"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <ltng:require scripts="{!$Resource.downloadjs}"/>
+
+    <!--  Header -->
+    <c:lacComHeader isCommunity="{!v.isCommunity}" type="" title="이번달 수수료 집계" aura:id="header" iconName="custom:custom46">
+        <!-- 기본적인 Save, Search Excel 버튼은 액션을 넘겨 처리함. 위치와 형태 고정.-->
+    </c:lacComHeader>
+
+    <div class="slds-m-bottom_x-small"></div>
+
+    <lightning:card>
+        <!-- 검색 조건 영역 -->
+        <lightning:layout class="slds-m-around_small" multipleRows="true">
+            <lightning:layoutItem size="2">
+                지급연월
+            </lightning:layoutItem>
+            <lightning:layoutItem size="10">
+                {!v.processYearMonth}
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2">
+                영업소
+            </lightning:layoutItem>
+            <lightning:layoutItem size="10">
+                {!v.dealerAccount.BusinessOffice__r.Name}&nbsp;{!v.dealerAccount.Owner.Name}
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2">
+                대리점
+            </lightning:layoutItem>
+            <lightning:layoutItem size="10">
+                {!v.dealerAccount.Name}&nbsp;{!v.dealerAccount.ErpName__c}&nbsp;{!v.dealerAccount.ERPCode__c}&nbsp;{!v.dealerAccount.DealerOwner__r.Name}님
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2">
+                대상 대수
+            </lightning:layoutItem>
+            <lightning:layoutItem size="10">
+                <lightning:formattedNumber value="{!v.assetCount}" maximumFractionDigits="0" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2">
+                수수료 총계
+            </lightning:layoutItem>
+            <lightning:layoutItem size="10">
+                <lightning:formattedNumber value="{!v.totalIncentiveAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>&nbsp;/&nbsp;
+                <lightning:formattedNumber value="{!v.totalIncentiveRate}" maximumFractionDigits="0" />%
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    <lightning:card>
+        <!-- Table 또는 Body -->
+
+        <div class="slds-p-top_medium slds-p-left_large slds-page-header__title"><span>대리점 유형 수수료</span></div>
+        <c:lacComSectionFrame hasHeader="{!false}" title="">
+            <c:lacComTableFrame aura:id="table" isPaging="{!false}" isCommunity="{#v.isCommunity}" >
+                <c:lacComTable aura:id="dataTable1" style="width:1200px" hasScroll="true" left="10" fixedHeader="{!true}" ><!--scrollHeight="350px"-->
+                    <thead>
+                    <tr>
+                        <c:lacComTh style="width:140px"  title="입고일자">입고일자</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="기대번호">기대번호</c:lacComTh>
+                        <c:lacComTh style="width:150px" title="모델">모델</c:lacComTh>
+                        <c:lacComTh style="width:80px" title="제품구분">제품구분</c:lacComTh>
+                        <c:lacComTh style="width:70px" title="기표유형">기표유형</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="공급가격" class="slds-text-align_right">공급가격</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="소계" class="slds-text-align_right">수수료 소계<br/><span class="THSUBTIT">(금액)</span></c:lacComTh>
+                        <c:lacComTh style="width:60px" title="소계" class="slds-text-align_right">수수료 소계<br/><span class="THSUBTIT">(%)</span></c:lacComTh>
+                        <c:lacComTh style="width:100px" title="부가세" class="slds-text-align_right">부가세</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="총계" class="slds-text-align_right">총계<br/><span class="THSUBTIT">(부가세포함)</span></c:lacComTh>
+                        <c:lacComTh style="width:160px" title="PDI 등록" colspan="2" class="slds-text-align_center">PDI 등록<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:160px" title="Sales I.Q 등록" colspan="2" class="slds-text-align_center">Sales I.Q 등록<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:160px" title="조기판매장려" colspan="2" class="slds-text-align_center">조기판매장려</c:lacComTh>
+                        <c:lacComTh style="width:160px" title="조기안착지원" colspan="2" class="slds-text-align_center">조기안착지원<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:160px" title="시승체험지원" colspan="2" class="slds-text-align_center">시승체험지원<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:160px" title="사양차액지원" colspan="2" class="slds-text-align_center">사양차액지원</c:lacComTh>
+                        <c:lacComTh style="width:160px" title="특별판촉지원" colspan="2" class="slds-text-align_center">특별판촉지원</c:lacComTh>
+                        <c:lacComTh style="width:160px" title="작업기지원" colspan="2" class="slds-text-align_center">작업기지원</c:lacComTh>
+                        <c:lacComTh style="width:160px" title="과거판매장려" colspan="2" class="slds-text-align_center">과거판매장려<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.dealerDataList}" var="row" indexVar="idx">
+                        <tr>
+                            <c:lacComTd style="width:140px" title="{!row.DealerReceiptDate}">{!row.DealerReceiptDate}</c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.AssetName}">{!row.AssetName}</c:lacComTd>
+                            <c:lacComTd style="width:150px" title="{!row.ProductName}">{!row.ProductName}</c:lacComTd>
+                            <c:lacComTd style="width:70px" title="{!row.ProductDivision}">{!row.ProductDivision}</c:lacComTd>
+                            <c:lacComTd style="width:70px" title="{!row.DealerIncentiveInput.PaymentType__c}">{!row.DealerIncentiveInput.PaymentType__c}</c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.SalesSellingAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.SalesSellingAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.SubTotalAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.SubTotalAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.SubTotalRate}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.SubTotalRate}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.TaxAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.TaxAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.TotalAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.TotalAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate3Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate3Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate3Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate3Rate__c}" maximumFractionDigits="0"/>%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate4Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate4Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate4Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate4Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate6Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate6Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate6Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate6Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate8Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate8Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate8Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate8Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate12Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate12Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate12Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate12Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate13Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate13Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate13Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate13Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate14Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate14Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate14Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate14Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate15Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate15Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate15Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate15Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </c:lacComTable>
+
+            </c:lacComTableFrame>
+        </c:lacComSectionFrame>
+        <div class="slds-p-top_medium">&nbsp;</div>
+        <div class="slds-p-top_medium slds-p-left_large slds-page-header__title"><span>서비스위탁 유형 수수료</span></div>
+        <c:lacComSectionFrame hasHeader="{!false}" title="">
+            <c:lacComTableFrame aura:id="table" isPaging="{!false}" isCommunity="{#v.isCommunity}" >
+                <c:lacComTable aura:id="dataTable2" style="width:900px" hasScroll="true" left="11" fixedHeader="{!true}" >
+                    <thead>
+                    <tr>
+                        <c:lacComTh style="width:120px"  title="입고일자">입고일자</c:lacComTh>
+                        <c:lacComTh style="width:140px" title="고객">고객</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="기대번호">기대번호</c:lacComTh>
+                        <c:lacComTh style="width:140px" title="모델">모델</c:lacComTh>
+                        <c:lacComTh style="width:80px" title="제품구분">제품구분</c:lacComTh>
+                        <c:lacComTh style="width:70px" title="기표유형">기표유형</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="공급가격" class="slds-text-align_right">공급가격</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="소계" class="slds-text-align_right">소계<br/><span class="THSUBTIT">(금액)</span></c:lacComTh>
+                        <c:lacComTh style="width:60px" title="소계" class="slds-text-align_right">소계<br/><span class="THSUBTIT">(%)</span></c:lacComTh>
+                        <c:lacComTh style="width:100px" title="부가세" class="slds-text-align_right">부가세</c:lacComTh>
+                        <c:lacComTh style="width:100px" title="총계" class="slds-text-align_right">총계<br/><span class="THSUBTIT">(부가세포함)</span></c:lacComTh>
+                        <c:lacComTh style="width:200px" title="농협사후봉사" colspan="2" class="slds-text-align_center">농협사후봉사<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:200px" title="관납사후봉사" colspan="2" class="slds-text-align_center">관납사후봉사<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:200px" title="중개영업지원" colspan="2" class="slds-text-align_center">중개영업지원<br/><span class="THSUBTIT">(과세)</span></c:lacComTh>
+                        <c:lacComTh style="width:200px" title="과거판매장려" colspan="2" class="slds-text-align_center">과거판매장려<br/><span class="THSUBTIT">(CS수수료,판매수수료)(과세)</span></c:lacComTh>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.serviceDataList}" var="row" indexVar="idx">
+                        <tr>
+                            <c:lacComTd style="width:120px" title="{!row.DealerReceiptDate}">{!row.DealerReceiptDate}</c:lacComTd>
+                            <c:lacComTd style="width:140px" title="{!row.DealerIncentiveInput.Asset__r.Account.Name}">{!row.DealerIncentiveInput.Asset__r.Account.Name}</c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.AssetName}">{!row.AssetName}</c:lacComTd>
+                            <c:lacComTd style="width:140px" title="{!row.ProductName}">{!row.ProductName}</c:lacComTd>
+                            <c:lacComTd style="width:80px" title="{!row.ProductDivision}">{!row.ProductDivision}</c:lacComTd>
+                            <c:lacComTd style="width:70px" title="{!row.DealerIncentiveInput.PaymentType__c}">{!row.DealerIncentiveInput.PaymentType__c}</c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.SalesSellingAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.SalesSellingAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:120px" title="{!row.SubTotalAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.SubTotalAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:60px" title="{!row.SubTotalRate}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.SubTotalRate}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.TaxAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.TaxAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:100px" title="{!row.TotalAmount}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.TotalAmount}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:120px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate10Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate10Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:80px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate10Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate10Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:120px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate9Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate9Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:80px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate9Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate9Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:120px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate11Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate11Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:80px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate11Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate11Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                            <c:lacComTd style="width:120px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Amount__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Amount__c}" maximumFractionDigits="0" style="currency" currencyCode="KRW"/>
+                            </c:lacComTd>
+                            <c:lacComTd style="width:80px" title="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Rate__c}" class="slds-text-align_right">
+                                <lightning:formattedNumber value="{!row.DealerIncentiveInput.fm_DealerIncentiveCalculate1Rate__c}" maximumFractionDigits="0" />%
+                            </c:lacComTd>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </c:lacComTable>
+
+            </c:lacComTableFrame>
+        </c:lacComSectionFrame>
+
+    </lightning:card>
+
+    <lightning:card >
+        <lightning:layout class="slds-m-around_small" multipleRows="true">
+            <lightning:layoutItem size="12" class="slds-text-align_right slds-p-right_medium">
+                상기 내역이 사실과 틀림이 없음을 확인 합니다.
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12" class="slds-text-align_right slds-p-right_medium slds-p-bottom_x-large">
+                {!v.processDate}
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12" class="slds-text-align_right slds-p-right_medium">
+                상호 : {!v.dealerAccount.ErpName__c}
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12" class="slds-text-align_right slds-p-right_medium">
+                대표 : {!v.dealerAccount.DealerOwner__r.Name}
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <aura:set attribute="footer">
+            <lightning:layout class="slds-m-around_small">
+                <lightning:layoutItem size="12" class="slds-text-align_right slds-p-right_medium">
+                    <lightning:button aura:id="excelButton" label="출력" onclick="{!c.doExcel}" variant="destructive"/>&nbsp;&nbsp;
+                    <aura:if isTrue="{!not(v.isApproval)}">
+                        <lightning:button aura:id="approveButton" label="승인" onclick="{!c.doApprove}" variant="brand"/>
+                    </aura:if>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+    </lightning:card>
+
+</aura:component>

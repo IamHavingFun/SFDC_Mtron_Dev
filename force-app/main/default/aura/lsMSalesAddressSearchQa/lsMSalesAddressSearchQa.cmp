@@ -1,0 +1,199 @@
+<!--
+  * @filename      : lsMSalesAddressSearchQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-30 오후 5:12
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-30 오후 5:12    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesAddressSearchQa"
+                description="lsMSalesAddressSearchQa">
+
+    <aura:attribute name="mobileStepVO" type="LsMSalesStepVO"/>
+
+    <aura:attribute name="sObjectName" type="String" description="Object (Account, Contact, Lead)"/>
+    <aura:attribute name="recordId" type="String" description="Record Id"/>
+    <aura:attribute name="LabelMap" type="Map" description="라벨"/>
+
+    <!-- 주소관련 -->
+    <aura:attribute name="postcode" type="String" description="우편번호"/>
+    <aura:attribute name="address1" type="String" description="기본 주소"/>
+    <aura:attribute name="address2" type="String" description="상세 주소"/>
+
+    <!-- 주소검색관련 -->
+    <aura:attribute name="totalCount" type="Integer" default="0" description="검색 된 건수"/>
+    <aura:attribute name="searchTerm" type="String" description="검색조건"/>
+    <aura:attribute name="isSearch" type="Boolean" default="false" description="검색 결과 건수를 표시하기 위한 속성"/>
+    <aura:attribute name="showSaveButton" type="Boolean" default="false" description="주소를 선택하고 입력화면으로 넘어온 경우만 버튼 표시"/>
+
+    <!-- Paging -->
+    <aura:attribute name="isPaging" type="Boolean" default="true" description="페이징 처리 부분 출력 여부"/>
+    <aura:attribute name="pageNumber" type="Integer" default="1" description="페이지 번호"/>
+    <aura:attribute name="pageSize" type="Integer" default="10" description="출력 할 페이지의 사이즈"/>
+    <aura:attribute name="isLastPage" type="Boolean" default="false" description="마지막 페이지 여부"/>
+
+    <aura:attribute name="action" type="Aura.Action" description="제일 바닥페이지에서 넘어온 Action"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <!-- handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--Custom Styles for Modal Header and Footer-->
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+    </aura:html>
+
+    <div class="bg-white">
+        <!-- Header Start -->
+        <header class="modal_header">
+			<article class="left">
+			</article>
+			<article class="center">
+				<div class="tit">주소검색</div>
+			</article>
+			<article class="right">
+			</article>
+		</header>
+        <!-- Header End -->
+
+        <!-- body Start -->
+        <div class="modal_body">
+            <div class="top_searchBox slds-list_horizontal slds-p-vertical_xx-small">
+                <div class="slds-size_1-of-2" onkeyup="{!c.handleKeyUp}"><lightning:input type="search" name="address" label="주소" aura:id="address" placeholder="도로명,건물명,지번" variant="label-hidden"/></div>
+                <div class="slds-m-left_x-small"><lightning:button title="search" label="조회" class="btn_search" variant="brand" iconName="utility:search" iconPosition="left" onclick="{!c.doSearch}"/></div>
+            </div>
+            
+            <div class="body_contBox mt50">
+                
+                <div class="slds-list_horizontal slds-p-vertical_xx-small slds-text-align_right">
+                    <aura:if isTrue="{!v.isSearch}">
+                        <div class="slds-size_2-of-2">검색 결과 (<lightning:formattedNumber value="{!v.totalCount}" /> 건)</div>
+                    </aura:if>
+                </div>
+    
+                <div aura:id="addressList" class="slds-show">
+                    <!-- 테이블 Start -->
+                    <div class="slds-scrollable_y" style="height:32rem">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                            <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">도로명 주소</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">우편번호</div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <aura:iteration items="{!v.recordList}" var="record">
+                                <tr class="slds-hint-parent">
+                                    <th scope="row">
+                                        <div class="slds-truncate" title="{!record.roadAddr}">
+                                            <a onclick="{!c.doSelect}" title="{!record.roadAddr}" data-postcode="{!record.zipNo}" data-address="{!record.roadAddr}">{!record.roadAddr}</a>
+                                            <br/>지번 : {!record.jibunAddr}
+                                        </div>
+                                    </th>
+                                    <td>
+                                        <div class="slds-truncate" title="{!record.zipNo}">{!record.zipNo}</div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 테이블 End -->
+    
+                    <aura:if isTrue="{!v.isSearch}">
+                        <!-- 페이징 Start -->
+                        <div class="c-container slds-m-top_xxx-small">
+                            <lightning:layout pullToBoundary="small" horizontalAlign="center">
+                                <!-- 페이징 처리 여부 판단 -->
+                                <aura:if isTrue="{!v.isPaging}">
+                                    <lightning:layoutItem padding="around-small" flexibility="auto">
+                                        <lightning:button label="Prev" iconName="utility:chevronleft" iconPosition="left" disabled="{!v.pageNumber == 1}" onclick="{!c.navigate}"/>
+                                        <span class="slds-p-horizontal_small">페이지 번호 : {!v.pageNumber}</span>
+                                        <lightning:button label="Next" iconName="utility:chevronright" iconPosition="right" disabled="{!v.isLastPage}" onclick="{!c.navigate}"/>
+                                    </lightning:layoutItem>
+                                </aura:if>
+                            </lightning:layout>
+                        </div>
+                        <!-- 페이징 End -->
+                    </aura:if>
+                </div>
+    
+    
+                <!-- 선택한 상세주소 입력창 Start -->
+                <div aura:id="inputAddress" class="slds-hide">
+                    <div class="c-container slds-m-top_large">
+                        <div class="slds-p-vertical_xx-small">
+    
+                            <aura:if isTrue="{!v.sObjectName == 'Account'}">
+                                <lightning:select name="i2_Addreess" label="주소선택" aura:id="i2_Addreess">
+                                    <option text="{!v.LabelMap.billingaddress}" value="billingaddress" selected="true"/>
+                                    <aura:if isTrue="{!v.accountAddressNumber == '2'}"><option text="{!v.LabelMap.shippingaddress}" value="shippingaddress"/></aura:if>
+                                </lightning:select>
+                            </aura:if>
+    
+                            <aura:if isTrue="{!v.sObjectName == 'Contact'}">
+                                <lightning:select name="i2_Addreess" label="주소선택" aura:id="i2_Addreess">
+                                    <option text="{!v.LabelMap.mailingaddress}" value="mailingaddress" selected="true"/>
+                                    <aura:if isTrue="{!v.contactAddressNumber == '2'}"><option text="{!v.LabelMap.otheraddress}" value="otheraddress"/></aura:if>
+                                </lightning:select>
+                            </aura:if>
+    
+                            <aura:if isTrue="{!v.sObjectName == 'Lead'}">
+                                <lightning:select name="i2_Addreess" label="주소선택" aura:id="i2_Addreess">
+                                    <option text="{!v.LabelMap.address}" value="address"/>
+                                </lightning:select>
+                            </aura:if>
+                        </div>
+    
+                        <div class="slds-p-vertical_xx-small">
+                            <lightning:input label="우편번호" disabled="true" value="{!v.postcode}"/>
+                        </div>
+                        <div class="slds-p-vertical_xx-small">
+                            <lightning:input label="도로명주소" disabled="true" value="{!v.address1}"/>
+                        </div>
+                        <div class="slds-p-vertical_xx-small">
+                            <lightning:input label="상세주소" value="{!v.address2}"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- 선택한 상세주소 입력창 End -->
+                
+                <!-- footer Start -->
+                <footer class="bbtnBox mb30">
+
+                    <aura:if isTrue="{!v.showSaveButton}">
+                        <button class="bbtn_white btn_50" onclick="{!c.doCancel}">취소</button>
+                        <button class="bbtn btn_50" onclick="{!c.doSave}">적용</button>
+                    </aura:if>
+                </footer>
+                <!-- footer End -->
+            </div>
+        </div>
+        <!-- body End -->
+
+        
+    </div>
+</aura:component>

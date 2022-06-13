@@ -1,0 +1,18 @@
+/**
+ * Created by MS on 2020-08-28.
+ */
+
+.THIS {
+}
+
+.THIS .col_board_amount .right {
+    width: 320px;
+}
+
+.THIS .col_board_amount .left {
+    width: calc(100% - 320px);
+}
+
+.THIS .col_board_amount .right .row .mark {
+    width: 160px;
+}

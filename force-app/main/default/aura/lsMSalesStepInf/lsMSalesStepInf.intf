@@ -1,0 +1,24 @@
+<!--
+  * @filename      : lsMSalesStepInf
+  * @projectname   :
+  * @author        : i2max
+  * @date          : 2020-05-15
+  * @group         :
+  * @group-content :
+  * @description   : [모바일] Step별로 처리되는 업무의 기본 Attribute 정의
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date            author         description
+  * ===============================================================
+    0.1     2020-05-15     	i2max          Create
+ -->
+<aura:interface description="lsMSalesStepInf">
+    <!-- ============================================================================
+    ==== 모바일 전용 공통 VO
+    ============================================================================= -->
+    <!-- [Object object] Error로 인해 주석 처리. -->
+    <!--    <aura:attribute name="mobileStepVO" type="LsMSalesStepVO" default="{}" required="true" description="모바일 공통 VO : DataStructure"/>-->
+    <aura:attribute name="mobileStepVO" type="LsMSalesStepVO" default="{}" required="true" description="모바일 공통 VO : DataStructure"/>
+</aura:interface>

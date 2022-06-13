@@ -1,0 +1,19 @@
+<!--
+  * @filename      : i2SEMA_KakaoButtonListView
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/24 9:55 AM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020/04/24 9:55 AM     i2max_shlee       Create
+ -->
+
+<aura:component description="i2SEMA_KakaoButtonListView">
+</aura:component>

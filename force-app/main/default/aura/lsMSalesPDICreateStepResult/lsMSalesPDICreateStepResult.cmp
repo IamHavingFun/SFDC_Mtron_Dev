@@ -1,0 +1,71 @@
+<!--
+ - Created by MS on 2020-07-06.
+ -->
+
+<aura:component extends="c:lsMSalesStepBase"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreateStepResult">
+
+    <c:lacComService aura:id="lacComService"/>
+    <aura:html tag="style">
+        .w120 {
+        width: 120px !important;
+        }
+    </aura:html>
+    <aura:html tag="style">
+        .comm-layout-column:not(:empty){
+        padding: 0px !important;
+        }
+        .uiContainerManager {
+            width: 0%;
+        }
+    </aura:html>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contractItem.fm_ProductType__c}] {!v.mobileStepVO.bizData.contractItem.ProductId__r.Name}({!v.mobileStepVO.bizData.contractItem.ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+        <article class="content">
+            <div class="">
+                <label class="form_tit">API 연동 결과</label>
+                <div class="grayBox">
+                    <div class="txt">
+                        <aura:if isTrue="{!if(v.mobileStepVO.bizData.pdi.IFStatus__c =='Complete', true, false)}">
+                            성공
+                            <aura:set attribute="else">
+                                실패 / {!v.mobileStepVO.bizData.pdi.IFMessage__c}
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <lightning:button label="홈 화면" class="bbtn" onclick="{!c.doCancel}"/>
+            </section>
+            <!-- //하단버튼 -->
+        </article>
+    </div>
+</aura:component>

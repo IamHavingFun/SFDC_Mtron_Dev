@@ -1,0 +1,42 @@
+<!--
+  * @filename      : orderInvalidNotifyQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-07-21 오후 2:13
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-07-21 오후 2:13    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                description="orderInvalidNotifyQa">
+    <aura:attribute name="comment" type="String" description=""/>
+    <aura:attribute name="orderId" type="String" description=""/>
+
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="주문 생성 완료" hasSelfFooter="true" isSmall="true">
+
+        <div class="slds-align-middle slds-m-around_large">
+            <p class="slds-text-body_regular slds-text-align_center" style="font-size: 15px">
+                주문이 생성되었습니다.<br/>
+                영업소 및 본사검토 확정 후 주문이 완료됩니다.<br/>
+            </p>
+        </div>
+        <div class="center-align">
+            <lightning:formattedText class="left-align" style="font-size: 15px" value="{#v.comment}"/>
+        </div>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnConfirm" label="확인" variant="brand" onclick="{!c.doNavigateToOrder}"/>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

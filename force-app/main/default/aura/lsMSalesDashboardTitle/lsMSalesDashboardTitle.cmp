@@ -1,0 +1,29 @@
+<!--
+ - Created by MS on 2020-06-30.
+ -->
+<!-- **************************************************************************************
+  * @filename      : lsMSalesDashboardTitle
+  * @projectname   : LS_PS
+  * @author        : MS
+  * @date          : 2020-06-30 18 50
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author          description
+  * ===============================================================
+    0.1     2020-06-30 18 50       Park He         Create
+************************************************************************************ -->
+<aura:component description="lsMSalesDashboardTitle"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
+
+    <header id="header" class="bgW">
+        <article class="TopLeft"></article>
+        <article class="TopName">대시보드</article>
+        <article class="TopRright"></article>
+    </header>
+</aura:component>

@@ -1,0 +1,82 @@
+<!--
+  * @filename       : i2SEMA_ManualSendQuickAction
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-08 오후 2:10
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-08 오후 2:10     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_ManualSendQuickAction"
+                extends="c:i2SEMA_Base"
+                access="global"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <aura:attribute name="recordId"
+                    type="String"
+                    access="global"
+                    description="Record ID"/>
+
+    <aura:attribute name="templateId"
+                    type="String"
+                    access="global"
+                    description="template Record ID"/>
+
+    <aura:attribute name="previewReferenceData"
+                    type="Object"
+                    access="global"
+                    description="[i2SEMA_Template.ReferenceData] Preview 참조정보"/>
+
+    <!-- Preview Event -->
+    <aura:handler name="previewEvent"
+                  event="c:i2SEMA_NotificationPreviewEvent"
+                  action="{!c.handlePreview}"/>
+
+    <!-- QuickAction Style -->
+    <aura:html tag="style">
+        .slds-modal__container{
+            max-width : 70vw !important;
+            width : 70vw !important;
+        }
+        .slds-modal__content{
+            height:unset !important;
+            max-height:unset !important;
+        }
+        .slds-p-around--medium {
+            padding: 0rem !important;
+        }
+        .cuf-content {
+            padding: 0 0rem !important;
+        }
+    </aura:html>
+
+    <!-- Header -->
+    <div class="slds-modal__header">
+        <h4 class="title slds-text-heading--medium">{!$Label.c.i2SEMA_LAB_SEND_NOTIFICATION}</h4>
+
+        <!-- Body -->
+        <div class="slds-modal__content slds-p-around--x-small">
+            <div class="flexBox">
+                <div class="flexItem">
+                    <c:i2SEMA_ManualSendForm aura:id="form" recordId="{!v.recordId}" standAlone="false"/>
+                </div>
+                <div class="flexItem">
+                    <c:i2SEMA_NotificationPreview aura:id="preview" recordId="{!v.templateId}" referenceData="{!v.previewReferenceData}"/>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div class="slds-modal__footer slds-size_1-of-1">
+            <lightning:button label="{!$Label.site.cancel}" onclick="{!c.doCancel}"/>
+            <lightning:button label="{!$Label.c.i2SEMA_LAB_SEND}" variant="brand" onclick="{!c.doSave}"/>
+        </div>
+    </div>
+</aura:component>

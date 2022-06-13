@@ -1,0 +1,115 @@
+<!--
+ - Created by MS on 2020-07-02.
+ -->
+
+<aura:component extends="c:lsMSalesStepBase"
+                controller="lsMSalesPDICreate"
+                description="lsMSalesPDICreateStep0">
+
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        .w120 {
+            width: 120px !important;
+        }
+    </aura:html>
+    <aura:html tag="style">
+        .comm-layout-column:not(:empty){
+            padding: 0px !important;
+        }
+        .uiContainerManager {
+            width: 0%;
+        }
+    </aura:html>
+
+    <header id="header" class="bgW">
+        <article class="TopLeft">
+            <!--<button type="button" class="btn_pre"></button>-->
+        </article>
+        <article class="TopName">PDI 등록</article>
+        <article class="TopRright">
+        </article>
+    </header>
+
+    <div id="container" class="bgW">
+        <div class="top_searchBox">
+            <span class="slds-list_horizontal">
+                <lightning:input label="" style="width:calc(100% - 66px);" type="text" placeholder="기대번호 입력" value="{!v.mobileStepVO.bizData.asset.Name}"/>
+                <lightning:button type="button" class="btn_search_icon" onclick="{!c.doSearch}"/>
+            </span>
+            <ul class="searchInfo">
+                <li>
+                    <span class="name">고객명</span>
+                    <span class="tit_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.asset.Customer__r.Name}, {!v.mobileStepVO.bizData.asset.Customer__r.fm_Mobile__c}</span>
+                </li>
+                <li>
+                    <span class="name">모델명</span>
+                    <span class="tit_right">:</span>
+                    <span class="txt">
+                        {!v.mobileStepVO.bizData.asset.Product2.Name}
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <!-- //상단 검색영역 -->
+        <article class="content">
+            <aura:if isTrue="{!not(empty(v.mobileStepVO.bizData.assetMessage))}">
+                <div style="text-align:center;margin-top:50px;">
+                    {!v.mobileStepVO.bizData.assetMessage}
+                </div>
+                <section class="bbtnBox mb60">
+                    <lightning:button label="취소" class="bbtn_white width100" onclick="{!c.doCancel}"/>
+                </section>
+
+                <aura:set attribute="else">
+<!--                    <aura:if isTrue="{!if(empty(v.mobileStepVO.bizData.assetMessage), true, false)}">-->
+                        <!-- 테이블 -->
+                        <aura:if isTrue="{!not(empty(v.mobileStepVO.bizData.targetContracts))}">
+                            <div class="row_board_pdi mt20">
+                                <ul>
+                                    <aura:if isTrue="{!and(not(empty(v.mobileStepVO.bizData.targetContracts)), v.mobileStepVO.bizData.targetContracts.length > 0)}">
+                                        <aura:iteration items="{!v.mobileStepVO.bizData.targetContracts}" var="record">
+                                            <li class="{!equals(v.mobileStepVO.bizData.contract.Id, record.Id) ? 'box_select' : ''}"  aura:id='item' onclick="{!c.doSelected}" data-recordid="{!record.Id}">
+                                                {!record.Customer__r.Name}<span class="bar"></span>{!record.Customer__r.fm_Mobile__c}<span class="bar"></span>
+                                                <aura:iteration items="{!record.ContractLineItem__r}" var="rec">
+                                                    {!rec.ProductId__r.Name}
+                                                </aura:iteration>
+                                            </li>
+                                        </aura:iteration>
+                                    </aura:if>
+                                </ul>
+                            </div>
+
+                            <section class="bbtnBox">
+                                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                                <lightning:button label="PDI 작성" class="{!empty(v.mobileStepVO.bizData.contract) ? 'bbtn_gray btn_50' : 'bbtn btn_50'}" onclick="{!c.doNextSelf}" disabled="{!empty(v.mobileStepVO.bizData.contract)}"/>
+                            </section>
+
+                            <aura:set attribute="else">
+                                <div style="text-align:center;margin-top:50px;">
+                                    {!$Label.c.lsMSalesPDICreateStep0_NotFoundMsg}
+                                </div>
+                                <section class="bbtnBox mb60">
+                                    <lightning:button label="취소" class="bbtn_white width100" onclick="{!c.doCancel}"/>
+                                </section>
+                            </aura:set>
+                        </aura:if>
+                        <!-- // 테이블 -->
+<!--                        <aura:set attribute="else">-->
+<!--                            <div style="text-align:center;margin-top:50px;">-->
+<!--                                {!v.mobileStepVO.bizData.assetMessage}-->
+<!--                            </div>-->
+<!--                            <section class="bbtnBox mb60">-->
+<!--                                <lightning:button label="취소" class="bbtn_white width100" onclick="{!c.doCancel}"/>-->
+<!--                            </section>-->
+<!--                        </aura:set>-->
+<!--                    </aura:if>-->
+
+                </aura:set>
+            </aura:if>
+
+
+        </article>
+    </div>
+</aura:component>

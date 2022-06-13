@@ -1,0 +1,48 @@
+<!--
+  * @filename       : i2SEMA_Base
+  * @projectname    : i2sema
+  * @author         : i2max_byeon.jw
+  * @date           : 2020-04-07 오전 11:18
+  * @group          :
+  * @group-content  : 
+  * @description    : 
+  * @reference      : 
+  * @copyright      : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020-04-07 오전 11:18     i2max_byeon.jw       Create
+ -->
+
+<aura:component description="i2SEMA_Base"
+                controller="i2SEMA_Base"
+                extensible="true">
+
+    <!-- ==============================================================================
+    = i2SEMA 공통 Attribute
+    ============================================================================== -->
+    <aura:attribute     name="config"
+                        type="i2SEMA_Config__c"
+                        description="Custom Setting 설정값"/>
+
+    <aura:attribute     name="objectType"
+                        type="Map"
+                        description="SObject Label 조회값"/>
+
+    <aura:attribute     name="isSpinner"
+                        type="Boolean"
+                        default="{!false}"
+                        description="Global Spinner"/>
+
+    <!-- ==============================================================================
+    실제 데이터가 들어가는 부분
+    ============================================================================== -->
+    <div class="slds-is-relative">
+        <aura:if isTrue="{!v.isSpinner}">
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand" />
+        </aura:if>
+        {!v.body}
+    </div>
+
+</aura:component>

@@ -1,0 +1,129 @@
+<!--
+  * @filename      : lsMSalesContractAmtQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-06-27 오후 5:14
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-27 오후 5:14    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="LsMSalesContractAmtQa"
+                description="lsMSalesContractAmtQa">
+
+    <!-- param 값으로 전달 받는 att. -->
+    <aura:attribute name="mobileStepVO" type="LsMSalesStepVO"/>
+    <aura:attribute name="contract" type="Contract__c" description=""/>
+    <aura:attribute name="amtType" type="String" description=""/>
+    <aura:attribute name="totalPrice" type="Decimal" description=""/>
+    <aura:attribute name="totalViewPrice" type="Decimal" description=""/>
+    <aura:attribute name="tempDate" type="Date" description=""/>
+
+    <!-- 해당 Cmp에서 계산을 위해 사용할 att. -->
+    <aura:attribute name="changedPrice" type="Decimal" description=""/>
+    <aura:attribute name="amount" type="Decimal" description=""/>
+
+    <!-- 취소 버튼 시, 원래 값으로 세팅 하기 위한 att. -->
+    <aura:attribute name="initTotalPrice" type="Decimal" description="초기 총 계약 금액"/>
+    <aura:attribute name="initAmount" type="Decimal" description="초기 각 금액"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:html tag="style">
+        .slds-p-around--medium{
+        padding: 0px !important;
+        }
+    </aura:html>
+
+    <header class="modal_header">
+        <article class="left"></article>
+        <article class="center">
+            <div class="tit">{!v.amtType}</div>
+        </article>
+        <article class="right"></article>
+    </header>
+
+    <article class="modal_body">
+        <section class="body_contBox">
+            <div>
+                <section class="body_graytotalBox2">
+                    <div class="left">{#v.amtType} 차감 전 잔액</div>
+                    <div class="right">
+                        <lightning:formattedNumber value="{!v.changedPrice}"/>
+                    </div>
+                </section>
+
+                <!-- 공통 -->
+                <div class="form_tit_col mt20">
+                    <div class="left">{!v.amtType}</div>
+                    <div class="right"><lightning:input label="" class="custom-input-text__right" type="number" value="{!v.amount}" onfocus="{!c.doInputFocusNumber}" onblur="{!c.doInputBlurNumber}" onkeyup="{!c.doChange}"/></div>
+                </div>
+
+                <aura:if isTrue="{!not(equals(v.amtType, '중고인수'))}">
+                    <div class="form_tit_col mt20">
+                        <div class="left">{!or(equals(v.amtType, '융자금'), equals(v.amtType, '리스')) ? '약정기일' : '지급기일'}</div>
+                        <div class="right">
+                            <span class="input_birthday">
+                                <lightning:combobox aura:id="year" label="" class="input_year" options="{!v.mobileStepVO.dateData.yearAmtList}" value="{!v.mobileStepVO.dateData.tempAmtYear}" placeholder="년"/>
+                                <lightning:combobox aura:id="month" label="" class="input_month" options="{!v.mobileStepVO.dateData.monthList}" value="{!v.mobileStepVO.dateData.tempAmtMonth}" placeholder="월"/>
+                                <lightning:combobox aura:id="day" label="" class="input_day" options="{!v.mobileStepVO.dateData.dayList}" value="{!v.mobileStepVO.dateData.tempAmtDay}" placeholder="일"/>
+                            </span>
+                        </div>
+                    </div>
+                </aura:if>
+
+                <!-- 중고인수 -->
+                <aura:if isTrue="{!v.amtType == '중고인수'}">
+                    <div class="form_tit_col mt20">
+                        <div class="left">제조사</div>
+                        <div class="right">
+                            <lightning:recordEditForm objectApiName="Contract__c">
+                                <lightning:inputField fieldName="Company__c" value="{!v.mobileStepVO.bizData.contract.Company__c}" variant="label-hidden"/>
+                            </lightning:recordEditForm>
+                        </div>
+                    </div>
+                    <div class="form_tit_col mt20">
+                        <div class="left">연식</div>
+                        <div class="right">
+                            <lightning:combobox label="" class="" options="{!v.resData.yearList}" value="{!v.mobileStepVO.bizData.contract.UsedUndertakingYear__c}" placeholder="년"/>
+                        </div>
+                    </div>
+                    <div class="form_tit_col mt20">
+                        <div class="left">모델명</div>
+                        <div class="right">
+                            <lightning:input label="" type="text" value="{!v.mobileStepVO.bizData.contract.UsedUndertakingModel__c}"/>
+                        </div>
+                    </div>
+                </aura:if>
+                <div class="body_graytotalFBox">
+                    <div class="left">{!v.amtType} 차감 후 잔액</div>
+                    <div class="right">
+                        <lightning:formattedNumber value="{!subtract(v.changedPrice, v.amount)}"/>
+                    </div>
+                </div>
+                <aura:if isTrue="{!equals(v.amtType, '융자금')}">
+                    <div class="form_tit_col mt20">
+                        <div class="left">총 융자한도</div>
+                        <div class="number_right">
+                            <lightning:formattedNumber value="{!empty(v.mobileStepVO.bizData.quote.TotalLoanLimit__c) ? 0 : v.mobileStepVO.bizData.quote.TotalLoanLimit__c}"/>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+
+            <section class="bbtnBox mb60">
+                <lightning:button label="취소" class="bbtn_white btn_50" onclick="{!c.doCancel}"/>
+                <lightning:button label="{!v.amtType + ' 저장'}" class="bbtn btn_50" onclick="{!c.doSave}"/>
+            </section>
+        </section>
+    </article>
+</aura:component>

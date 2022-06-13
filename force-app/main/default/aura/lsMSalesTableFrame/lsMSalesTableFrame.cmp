@@ -1,0 +1,80 @@
+<!--
+  * @filename      : ZZ_lsMSalesTableFrame.cmp
+  * @projectname   :
+  * @author        : i2max_ParkJW
+  * @date          : 2020-06-12 오전 11:17
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-12 오전 11:17           i2max_ParkJW        Create
+    0.2     2020-06-29 오전 10:31           i2max_ParkJW        퍼블리싱 반영, 로직 변경으로 인한 렌더러 삭제
+ -->
+<aura:component extends="c:lacComBase"
+                description="lsMSalesTableFrame">
+    <!-- ====================================================================================================
+     * Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="isPaging" type="Boolean" default="true" description="페이징 처리 부분 출력 여부"/>
+    <aura:attribute name="pageNumber" type="Integer" default="1" description="페이지 번호"/>
+    <aura:attribute name="pageSize" type="Integer" default="10" description="출력 할 페이지의 사이즈"/>
+    <aura:attribute name="searchTerm" type="String" default="" description="검색조건"/>
+    <aura:attribute name="isLastPage" type="Boolean" default="false" description="마지막 페이지 여부"/>
+    <aura:attribute name="resultSize" type="Integer" default="0"/>
+    <aura:attribute name="isCount" type="Boolean" default="true" description="레코드 카운트 표시"/>
+    <aura:attribute name="totalSize" type="Integer" default="0" description="레코드 전체 개수 표시"/>
+
+    <!-- 간단한 페이징 -->
+    <aura:attribute name="simple" type="Boolean" default="true" description="단순 다음, 이전 페이징"/>
+
+    <!-- 숫자 페이징 -->
+    <aura:attribute name="number" type="Boolean" default="false" description="숫자 페이징"/>
+    <aura:attribute name="pageLength" type="Integer" default="5" description="숫자 페이징인 경우, 페이지 길이"/>
+    <aura:attribute name="pageView" type="Integer" description="숫자 페이징인 경우, 보이는 페이지 길이"/>
+
+    <aura:attribute name="isCommunity" type="Boolean" />
+
+    <!-- apex call method -->
+    <aura:attribute name="apexCallMethodName" type="String" default="search" description="페이징 처리 리스트 조회 호출 apex 메소드명"/>
+
+    <!-- ====================================================================================================
+     * Method
+    ==================================================================================================== -->
+    <aura:method name="sortData" description="메소드" >
+        <aura:attribute name="message" type="List" />
+    </aura:method>
+    <aura:method name="reSet" description="강제 초기화" action="{!c.doReset}" />
+    <!-- ====================================================================================================
+     * Event
+    ==================================================================================================== -->
+    <aura:registerEvent name="tableEvent" type="c:lacComEvent" description=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- ====================================================================================================
+     * Body
+    ==================================================================================================== -->
+    <!-- 원래는 표준 data table을 사용하는 구조였으나 워낙 요건같은 것이 다양하므로 일반 html table로 변형 -->
+    <lightning:layout multipleRows="true" horizontalAlign="center" class="background">
+
+        <lightning:layoutItem padding="{#v.isCommunity ? 'around-small' : ''}" size="12">
+            {!v.body}
+        </lightning:layoutItem>
+
+        <!-- 페이징 처리 여부 판단 -->
+        <aura:if isTrue="{!v.isPaging}">
+            <lightning:layoutItem padding="around-small" flexibility="auto">
+                <aura:if isTrue="{! !v.isLastPage}">
+                    <div class="more" onclick="{!c.onNext}">더 보기<img src="{!$Resource.publish + '/img/img_select_arrow.png'}"/></div>
+                </aura:if>
+            </lightning:layoutItem>
+        </aura:if>
+        <!-- </div> -->
+    </lightning:layout>
+</aura:component>

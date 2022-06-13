@@ -1,0 +1,57 @@
+<!--
+  * @filename      : lsMSalesInventoryStatusQa
+  * @projectname   : 
+  * @author        : i2max_Parkjw
+  * @date          : 2020-06-19 오후 2:07
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-06-19 오후 2:07    i2max_Parkjw      Create
+    0.2     2020-06-24 오전 11:17   i2max_Parkjw      퍼블리싱 반영
+    0.3     2020-07-01 오후 17:24   i2max_Parkjw      데이터 없을 시 로직 추가(gfn_toast)
+ -->
+
+<aura:component extends="c:lsMSalesQuickActionBase"
+                controller="lsMSalesInventoryStatusQa"
+                description="lsMSalesInventoryStatusQa">
+
+    <aura:attribute name="targetProduct" type="Product2" default="{}" required="true" description="재고현황 조회 제품"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:lsMSalesQuickAction>
+        <aura:set attribute="headers">
+            <div class="tit">전국 유통재고현황</div>
+        </aura:set>
+        <aura:set attribute="titBox">
+            <div class="tit alignC">
+                모델명 : {!v.targetProduct.Name}
+            </div>
+            <div class="stit alignC">
+                {!v.targetProduct.Option1__c + '/' + v.targetProduct.Option2__c + '/' + v.targetProduct.Option3__c + '/' + v.targetProduct.Option4__c}
+            </div>
+        </aura:set>
+        <aura:set attribute="contents">
+            <dl class="toggle_accodion">
+                <aura:iteration items="{!v.recordList}" var="record" indexVar="idx">
+                    <dt>
+                        <div class="left">{!record.officeName}</div>
+                        <div class="right"><lightning:formattedNumber value="{!record.assetCount}"/></div>
+                    </dt>
+                </aura:iteration>
+            </dl>
+        </aura:set>
+        <aura:set attribute="btnSet">
+            <div class="txt">실제 현황과 차이가 있을 수 있습니다.<br/>정확한 정보는 해당 영업소에 문의하세요.</div>
+            <lightning:button label="닫기" class="bbtn" onclick="{!c.doCancel}"/>
+        </aura:set>
+    </c:lsMSalesQuickAction>
+</aura:component>

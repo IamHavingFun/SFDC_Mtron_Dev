@@ -1,0 +1,20 @@
+.THIS {
+}
+
+.THIS .top_searchBoxN input {
+    border: 1px solid #000;
+}
+.THIS .col_board li {
+    width: 100%; border-bottom: 1px solid #CBCBCB;
+    padding: 34px 0 30px 0; box-sizizng: border-box; display: flex;
+}
+.THIS .col_board .left {
+    width: calc(100% - 150px); display: inline-block;
+}
+.THIS .col_board .right {
+    width: 150px; font-size:23px; display: inline-block; text-align: right;
+}
+.THIS .col_board .right .btn {
+    width:150px;
+    padding: 0 20px;
+}

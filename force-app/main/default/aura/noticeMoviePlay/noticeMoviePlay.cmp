@@ -1,0 +1,33 @@
+<aura:component extends="c:lacComBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                controller="NoticeMoviePlay"
+                description="noticeMoviePlay">
+
+    <aura:attribute name="movieType" type="String" description="동영상 구분" default="true"/>
+    <aura:attribute name="movieUrl" type="String" description="동영상 URL" default="true"/>
+    <aura:attribute name="isMovie" type="Boolean" description="동영상 여부" default="true"/>
+    <aura:attribute name="isPartner" type="Boolean" description="파트너 여부" default="true"/>
+    <aura:attribute name="test" type="String" description="파트너 여부" default="true"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit }"/>
+<!--
+
+    {!v.isPartner} || {!v.isMovie} || {!v.movieType} || {!v.movieUrl}
+-->
+
+    <aura:if isTrue="{!v.isMovie}">
+        <lightning:card title="   > 동영상 정보">
+            <div style="text-align: center">
+                <iframe width="95%" height="450" src="{!v.movieUrl}" frameborder="0" allow="controls; vmode; disabledkb; showinfo; fullscreen; autoplay;" ></iframe>
+<!--
+                <video controls="true" preload="auto" width="95%" height="450" src="https://lsmtron&#45;&#45;ps&#45;&#45;c.documentforce.com/sfc/servlet.shepherd/document/download/0691m0000008FGzAAM"><p>There was an error playing the video.</p></video>
+                &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;<br/>
+                <aura:unescapedHtml value="{!v.vidVal}"> </aura:unescapedHtml>
+                ==================<br/>
+                <video controls="true" preload="auto" width="400" height="300" src="https://lsmtron&#45;&#45;ps&#45;&#45;c.documentforce.com/sfc/servlet.shepherd/document/download/0691m0000008FGzAAM"><p>There was an error playing the video.</p></video>
+-->
+            </div>
+        </lightning:card>
+    </aura:if>
+</aura:component>

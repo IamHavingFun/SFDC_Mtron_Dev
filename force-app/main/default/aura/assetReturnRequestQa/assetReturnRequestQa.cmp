@@ -1,0 +1,99 @@
+<!--
+  * @filename      : lsSalesStageCommentQa
+  * @projectname   :
+  * @author        : I2MAX
+  * @date          : 2021-06-29
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @reference     :
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2021-06-29                 I2MAX                Create
+ -->
+
+
+<aura:component extends="c:lsSalesBase"
+                controller="AssetReturnRequestQa"
+                implements="force:appHostable,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId"
+                description="assetReturnRequestQa">
+
+
+    <!-- =============================================================================================================
+    ==== public attribute
+    ============================================================================================================== -->
+    <aura:attribute name="asset"        type="Asset" description="자산"/>
+    <aura:attribute name="assetReturn"  type="AssetReturn__c" description="반환 신청"/>
+    <aura:attribute name="isTarget"     type="Boolean" description="반환 신청 대상 여부"/>
+    <aura:attribute name="isAssetReturns"     type="Boolean" description="반환 신청중 여부"/>
+
+    <aura:attribute name="returnTypeOption" type="List" description="반환 유형  옵션" default="[
+        {'label' : '고객 변심', 'value' : '고객 변심'},
+        {'label' : '품질 문제', 'value' : '품질 문제'}
+    ]"/>
+    <!-- =============================================================================================================
+    ==== handler
+    ============================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- =============================================================================================================
+    ==== component
+    ============================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- =============================================================================================================
+    ==== content
+    ============================================================================================================== -->
+
+    <c:lacComQuickAction title="반환승인 요청" aura:id="quickAction" hasSelfFooter="{#false}">
+
+        <lightning:layout horizontalAlign="center" class="slds-m-around_small" multipleRows="true">
+            <lightning:layoutItem flexibility="auto" size="2" class="slds-text-align_right">
+                <p class="slds-p-right_medium">기대 번호</p>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="9" class="slds-p-right_medium">
+                <p class="slds-p-right_medium">{!v.asset.Name}</p>
+                <br/>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="2" class="slds-text-align_right">
+                <p class="slds-p-right_medium">재고 유형</p>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="9" class="slds-p-right_medium">
+                <p class="slds-p-right_medium">{!v.asset.InventoryType__c}</p>
+                <br/>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="2" class="slds-text-align_right">
+                <p class="slds-p-right_medium">반환 유형</p>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="9" >
+                <lightning:combobox aura:id="returnType"
+                                    name="returnType"
+                                    label="반환유형"
+                                    options="{!v.returnTypeOption}"
+                                    value="{!v.assetReturn.ReturnType__c}"
+                                    onchange="{!c.doStageChange}"
+                                    variant="label-hidden"
+                />
+                <br/>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="2" class="slds-text-align_right">
+                <p class="slds-p-right_medium">주요 사유</p>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" size="9" >
+                <lightning:textarea value="{!v.assetReturn.ReturnComment__c}" placeholder="내용을 입력 해주세요." variant="label-hidden" disabled="{!v.assetReturn.ReturnType__c == '고객 변심'}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isTarget}">
+                <lightning:button aura:id="btnSave" label="저장 및 제출" variant="brand" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+
+</aura:component>

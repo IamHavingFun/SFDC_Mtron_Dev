@@ -1,0 +1,31 @@
+/****************************************************************************************
+ * @filename      : lsMSalesLeaseInspectionReportCreate0.css
+ * @author        : I2MAX
+ * @date          : 2021-03-29
+ * @group         :
+ * @group-content :
+ * @description   :
+ * @tester        :
+ * @reference     :
+ * @release       : v1.0.0
+ * @copyright     : Copyright © I2max. All Rights Reserved.
+ * @modification Log
+ * ===============================================================
+ * ver     date          author        description
+ * ===============================================================
+   0.1     2021-03-29       I2MAX          Create
+ ****************************************************************************************/
+.THIS {
+}
+
+.THIS .width100{
+    width:100%;
+}
+
+.THIS .bbtn_gray {height: 100px; background: gray;
+    border: 1px solid #000; color: white;
+    font-size: 28px; text-align: center;
+    cursor: pointer; margin: 60px 0 0 0;
+    display: inline-block;
+    border-radius: 0;
+}

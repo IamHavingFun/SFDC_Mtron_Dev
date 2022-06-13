@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>기본 Lightning 플랫폼 페이지/데이터를 찾을 수 없음 페이지</description>
+    <label>FileNotFound</label>
+</ApexPage>

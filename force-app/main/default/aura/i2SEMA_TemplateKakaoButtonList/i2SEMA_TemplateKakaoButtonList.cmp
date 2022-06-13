@@ -1,0 +1,99 @@
+<!--
+  * @filename      : i2SEMA_TemplateKakaoButtonList
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/24 9:57 AM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : 카카오 버튼 수정 추가/수정 기능
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 2:07     i2max_ys.seo        Create
+    0.1     2020/04/24 9:57 AM      i2max_shlee         Rename i2SEMA_NotificationKakaoButtonLink -> i2SEMA_TemplateKakaoButtonList
+ -->
+
+<aura:component extends="c:i2SEMA_Base"
+                access="global"
+                controller="i2SEMA_TemplateKakaoButton"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                description="i2SEMA_TemplateKakaoButtonList">
+
+    <!--Attribute -->
+    <aura:attribute name="isOpen"           type="Boolean" default="false" description="Dialog 상태"/>
+    <aura:attribute name="referenceData"    type="object" description="카카오톡 버튼 발송요청 설정값"  />
+    <!--Event / Handler -->
+    <aura:registerEvent name="previewEvent"
+                        type="c:i2SEMA_NotificationPreviewEvent"/>
+    <!--Method -->
+    <aura:method name="open" action="{!c.doOpen}" access="public" description="Dialog Open">
+        <aura:attribute name="param" type="Object"/>
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+
+    <div class="{!if(v.isOpen,'slds-show','slds-hide')}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <article class="slds-card slds-card_boundary">
+                    <div class="slds-modal__header">
+                        <h4 class="slds-text-heading--medium">{!$Label.c.i2SEMA_LAB_KAKAO_BUTTON}</h4>
+                    </div>
+                    <!--body-->
+                    <div class="slds-card__body slds-card__body--inner btnTable">
+                        <a class="slds-button slds-button--neutral slds-float--right slds-m-bottom--small" onclick="{!c.doAddRow}">{!$Label.c.i2SEMA_LAB_KAKAO_BUTTON_ADD}</a>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered" >
+                            <thead id="head" cass="kakao-thead">
+                            <tr>
+                                <th class="kakao-th" width="2%"></th>
+                                <th class="kakao-th" width="15%"><span class="required"></span>{! v.objectType.KakaoTalkButton__c.Name.label}</th>
+                                <th class="kakao-th" width="15%"><span class="required"></span>{! v.objectType.KakaoTalkButton__c.Button_Type__c.label}</th>
+                                <th class="kakao-th" width="35%"><span class="required"></span>{! v.objectType.KakaoTalkButton__c.ButtonLink1__c.label}</th>
+                                <th class="kakao-th" width="33%">{! v.objectType.KakaoTalkButton__c.ButtonLink2__c.label}</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="kakao-tbody">
+                            <aura:iteration items="{!v.referenceData.kakaoButtons}" var="btn" indexVar="i">
+                                <tr>
+                                    <td class="kakao-td" style="text-align: center;">
+                                        <lightning:buttonIcon aura:id="row" title="{!i}" iconName="utility:delete" value="{! btn.buttonId }" onclick="{!c.doRemoveRow}"/>
+                                    </td>
+                                    <td class="kakao-td">
+                                        <lightning:input aura:id="field" class="slds-float--left" type="text" required="true" value="{!btn.Name}" variant="label-hidden" />
+                                    </td>
+                                    <td class="kakao-td">
+                                        <p >&nbsp;</p>
+                                        <lightning:select aura:id="btnType" value="{!btn.Button_Type__c}" messageWhenValueMissing="{!$Label.c.i2SEMA_MSG_BLANK_KAKAO_BUTTON_TYPE}">
+                                            <option aura:id="opt" value="" >--None--</option>
+                                            <aura:iteration items="{!v.objectType.KakaoTalkButton__c.Button_Type__c.picklistOptions}" var="item">
+                                                <option aura:id="opt" value="{!item.value}" selected="{!btn.Button_Type__c== item.value}" >{!item.label}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </td>
+                                    <td class="kakao-td">
+                                        <lightning:input aura:id="field" class="slds-float--left" required="true" type="url" value="{!btn.ButtonLink1__c}" variant="label-hidden"/>
+                                    </td>
+                                    <td class="kakao-td">
+                                        <lightning:input aura:id="field" type="url" value="{!btn.ButtonLink2__c}" variant="label-hidden"/>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </article>
+
+                <footer class="slds-modal__footer">
+                    <lightning:button label="{!$Label.site.cancel}" onclick="{!c.doCancel}"/>
+                    <lightning:button aura:id="submit" variant="brand" label="{!$Label.site.save}" onclick="{!c.doSave}" type="submit"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

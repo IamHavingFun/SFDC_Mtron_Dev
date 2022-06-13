@@ -1,0 +1,466 @@
+<!--
+  * @filename      : orderNewQa
+  * @projectname   : 
+  * @author        : i2max_my.Seo 
+  * @date          : 2020-04-16 오후 1:32
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-04-16 오후 1:32    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:actionOverride"
+                controller="OrderNewQa"
+                description="orderNewQa">
+
+    <aura:attribute name="divisionList" type="List" default="[
+        {'label': '공장주문', 'value': '공장주문'},
+        {'label': '전수배주문', 'value': '전수배'}
+    ]"/>
+    <aura:attribute name="purposeOfOrder" type="List" default="[
+        {'label': '재고보충', 'value': '재고보충'},
+        {'label': '판매기회', 'value': '실판매기회'}
+    ]"/>
+    <aura:attribute name="vstelOptions" type="List" default="[
+        {'label': '전주공장(M620)', 'value': 'M620'},
+        {'label': '경기(영)(M621)', 'value': 'M621'},
+        {'label': '충북(영)(M622)', 'value': 'M622'},
+        {'label': '전북(영)(M623)', 'value': 'M623'},
+        {'label': '경북(영)(M624)', 'value': 'M624'},
+        {'label': '강원(영)(M625)', 'value': 'M625'},
+        {'label': '충남(영)(M626)', 'value': 'M626'},
+        {'label': '전남(영)(M627)', 'value': 'M627'},
+        {'label': '경남(영)(M628)', 'value': 'M628'},
+    ]"/>
+    <aura:attribute name="btnLabel" type="String" description="Button Label" default=""/>
+    <aura:attribute name="wrapperData" type="OrderNewQa.WrapperData" description=""/>
+    <aura:attribute name="soldToList" type="List" description=""/>
+    <aura:attribute name="valid1" type="String" description=""/>
+    <aura:attribute name="isGov" type="Boolean" description="관납 또는 농협인지에 대한 Boolean값(Internal에서만 사용)"/>
+    <aura:attribute name="labelMap" type="Map" description="다국어 지원"/>
+    <!-- 납품요청월 관련 Att.-->
+    <aura:attribute name="orderScheduleDateList" type="List"/>
+    <aura:attribute name="priceChangeCommentOptions" type="List"/>
+    <aura:attribute name="isOrderScheduleDate" type="Boolean" default="false"/>
+    <aura:attribute name="oldPriceDecisionDate" type="Date" description="현재 가격 결정일"/>
+
+    <!-- 버튼 제어용 -->
+    <aura:attribute name="isOldSaveButton" type="Boolean" default="false"/>
+    <aura:attribute name="isOldErpSaveButton" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:dependency resource="markup://c:orderInvalidNotifyQa"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <c:lacComQuickAction title="{!v.wrapperData.isInsert ? '주문 신청' : '주문 수정'}" aura:id="quickActionCon" hasSelfFooter="{#true}" isWide="{#true}" height="130">
+        <aura:set attribute="overrideStyle">
+            <aura:html tag="style">
+                .slds-modal__container {
+                    max-width: 110rem !important;
+                }
+            </aura:html>
+        </aura:set>
+        <div style="display: none">
+            ||{!v.isOldSaveButton}|| - ||{!v.isOldErpSaveButton}|| ||{!v.wrapperData.isSaveButton}|| - ||{!v.wrapperData.isERPSaveButton}||
+        </div>
+
+        <c:lacComSectionFrame title="주문 요약 정보" hasHeader="{#true}">
+            <lightning:recordEditForm objectApiName="Order__c">
+                <!-- 개인 / 영농 처리 -->
+                <aura:if isTrue="{!v.wrapperData.isPerFarCorp}">
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right ">
+                            <div class="slds-m-top_medium">주문 목적</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="2" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <c:lacComComboBox aura:id="purposeOfOrder" option="{!v.purposeOfOrder}" class=""
+                                              onchange="{!c.doChangeBtnLabel}"
+                                              value="{!v.wrapperData.order.PurposeOfOrder__c}"
+                                              disabled="{!not(v.wrapperData.isPurposeOfOrderChange)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="7" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <aura:if isTrue="{!or(
+                                        and(
+                                            v.wrapperData.isInsert
+                                        ),
+                                        and(
+                                            and(
+                                                not(v.wrapperData.isInsert),
+                                                v.wrapperData.isPurposeOfOrderChange
+                                            ),
+                                            v.wrapperData.order.PurposeOfOrder__c == '실판매기회'
+                                        )
+                                    )}">
+                                <lightning:button label="{!v.btnLabel}"
+                                                  type="button"
+                                                  class="slds-size_1-of-5 left-side custom-box slds-m-left_medium slds-m-top_medium"
+                                                  variant="brand"
+                                                  onclick="{!c.doMoveSearchList}"/>
+                            </aura:if>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end" class="slds-p-bottom_small">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div class="slds-m-top_medium">{!v.labelMap.Order__c.division__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <div class="slds-m-top_medium">입력된 주문은 영업소 판단에 따라 전수배 주문 전환을 요청드릴 수 있습니다.</div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <!-- 판매 기회 -->
+                    <aura:if isTrue="{!equals(v.wrapperData.order.PurposeOfOrder__c,'실판매기회')}">
+                        <lightning:layout horizontalAlign="end">
+                            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                                <div class="slds-m-top_medium">판매 기회</div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                                <div class="slds-m-top_medium">{!v.wrapperData.opptyName}</div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                        <lightning:layout horizontalAlign="end">
+                            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                                <div class="slds-m-top_medium">고객인도기일</div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                                <div class="slds-m-top_medium">
+                                    <lightning:formattedDateTime value="{!v.wrapperData.order.DeliveryDate__c}"/>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                    <!-- 납품월 -->
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.Order__c.orderscheduledate__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-top_xx-small slds-p-left_medium slds-text-align_left">
+                            <div class="slds-size_2-of-12">
+                                <lightning:inputField fieldName="OrderScheduleDate__c" class="slds-size_2-of-12" type="date" aura:id="orderScheduleDate"
+                                                      value="{!v.wrapperData.order.OrderScheduleDate__c}"
+                                                      variant="label-hidden"
+                                                      onchange="{!c.doOrderScheduleDateChange}"
+                                                      disabled="{!not(v.wrapperData.isOrderScheduleChange)}"
+                                />
+                            </div>
+<!--                                <c:lacComComboBox aura:id="orderScheduleDate" option="{!v.orderScheduleDateList}" value="{!v.wrapperData.order.OrderScheduleDate__c}"
+                                              isLabelHidden="true"
+                                              disabled="{!not(v.wrapperData.isOrderScheduleChange)}"/>-->
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                <!-- 농협 / 관납 처리 -->
+                <aura:if isTrue="{!not(v.wrapperData.isPerFarCorp)}">
+                    <!-- 주문 고객 -->
+                    <lightning:layout horizontalAlign="end" >
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div class="slds-m-top_medium">{!v.labelMap.Order__c.orderaccount__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <aura:if isTrue="{!v.wrapperData.isInsert}">
+                                <div class="slds-m-top_medium">
+                                    <lightning:inputField aura:id="orderAccount" fieldName="OrderAccount__c" variant="label-hidden" onchange="{!c.doGetSoldTo}" value="{!v.wrapperData.order.OrderAccount__c}"/>
+                                </div>
+                                <aura:set attribute="else">
+                                    <div class="slds-m-top_medium">{!v.wrapperData.order.OrderAccount__r.Name}</div>
+                                </aura:set>
+                            </aura:if>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <!-- 주문 목적 -->
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right ">
+                            <div class="slds-m-top_medium">주문 목적</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="1" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <div class="slds-m-top_medium">
+                                <aura:if isTrue="{!v.wrapperData.order.PurposeOfOrder__c == '재고보충'}">
+                                    {!v.wrapperData.order.PurposeOfOrder__c}
+                                    <aura:set attribute="else">
+                                        판매기회
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="8" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <aura:if isTrue="{!v.wrapperData.isInsert}">
+                                <lightning:button label="{!v.btnLabel}"
+                                                  type="button"
+                                                  class="slds-size_2-of-12 left-side custom-box slds-m-left_medium slds-m-top_medium"
+                                                  variant="brand"
+                                                  onclick="{!c.doMoveSearchList}"/>
+                            </aura:if>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <!-- 판매 기회 -->
+                    <aura:if isTrue="{!and(not(v.wrapperData.isInsert), not(empty(v.wrapperData.order.Opportunity__c)))}">
+                        <lightning:layout horizontalAlign="end">
+                            <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                                <div class="slds-m-top_medium">판매 기회</div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                                <div class="slds-m-top_medium">{!v.wrapperData.opptyName}</div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                    <!-- 납품처 -->
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.Order__c.deliverto__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-top_x-small slds-p-left_medium slds-text-align_left">
+                            <c:lacComComboBox aura:id="deliverTo" option="{!v.soldToList}" value="{!v.wrapperData.order.DeliverTo__c}"
+                                              isLabelHidden="true"
+                                              disabled="{!not(v.wrapperData.isInsert)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <!-- 납품월 -->
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.Order__c.orderscheduledate__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-top_xx-small slds-p-left_medium slds-text-align_left">
+                            <div class="slds-size_2-of-12">
+                                <lightning:inputField fieldName="OrderScheduleDate__c" class="slds-size_2-of-12" type="date" aura:id="orderScheduleDate"
+                                                      value="{!v.wrapperData.order.OrderScheduleDate__c}"
+                                                      variant="label-hidden"
+                                                      onchange="{!c.doOrderScheduleDateChange}"
+                                                      disabled="{!not(v.wrapperData.isOrderScheduleChange)}"
+                                />
+                            </div>
+                            <!--<c:lacComComboBox aura:id="orderScheduleDate" option="{!v.orderScheduleDateList}" value="{!v.wrapperData.order.OrderScheduleDate__c}"
+                                              isLabelHidden="true"
+                                              disabled="{!not(v.wrapperData.isOrderScheduleChange)}"/>-->
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                <!-- 출하 위치 정보 수정 -->
+                <aura:if isTrue="{!v.wrapperData.isErpDeliveryChange}">
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.Order__c.vstel__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-top_xx-small slds-p-left_medium slds-text-align_left">
+                            <lightning:inputField aura:id="VSTEL" fieldName="VSTEL__c" value="{!v.wrapperData.order.VSTEL__c}" disabled="{!equals(v.wrapperData.order.Division__c,'전수배')}" variant="label-hidden" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.Order__c.deliverycomment__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <lightning:inputField class="slds-size_6-of-12" aura:id="DeliveryComment" fieldName="DeliveryComment__c" value="{!v.wrapperData.order.DeliveryComment__c}" variant="label-hidden"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6"></lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                <!-- 가격 정보 수정 -->
+                <aura:if isTrue="{!v.wrapperData.isErpPriceChange}">
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.Order__c.pricedecisiondate__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <div class="slds-size_2-of-12">
+                                <lightning:inputField fieldName="PriceDecisionDate__c" class="slds-size_2-of-12" type="date" aura:id="PriceDecisionDate"
+                                                      value="{!v.wrapperData.order.PriceDecisionDate__c}"
+                                                      variant="label-hidden"
+                                                      onchange="{!c.doPriceDecisionDateChange}"
+                                />
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.OrderLineitem__c.basesellingprice__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <lightning:input class="slds-size_2-of-12" type="number" aura:id="BaseSellingPrice" value="{!v.wrapperData.orderLineItemList[0].BaseSellingPrice__c}" disabled="{!true}"  variant="label-hidden" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.OrderLineitem__c.correctionprice__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <lightning:input class="slds-size_2-of-12" type="number" aura:id="CorrectionPrice" value="{!v.wrapperData.orderLineItemList[0].CorrectionPrice__c}" variant="label-hidden" onchange="{!c.doPriceChange}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.OrderLineitem__c.sellingprice__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <lightning:input class="slds-size_2-of-12" type="number" aura:id="SellingPrice" label="{#v.wrapperData.orderLineItemList[0].SellingPrice__c}" value="{!v.wrapperData.orderLineItemList[0].SellingPrice__c}" disabled="{!true}" variant="label-hidden" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.OrderLineitem__c.pricechangecomment__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="9" class="slds-align-middle slds-p-top_xx-small slds-p-left_medium slds-text-align_left">
+                            <c:lacComComboBox class="slds-size_4-of-12" aura:id="PriceChangeComment" option="{!v.priceChangeCommentOptions}" value="{!v.wrapperData.orderLineItemList[0].PriceChangeComment__c}"
+                                            isLabelHidden="true"
+                            />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout horizontalAlign="end">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-p-right_medium slds-text-align_right">
+                            <div>{!v.labelMap.OrderLineitem__c.otherchangecomment__c}</div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" class="slds-align-middle slds-p-left_medium slds-text-align_left">
+                            <lightning:input class="slds-size_6-of-12" type="text" aura:id="OtherChangeComment"
+                                             value="{!v.wrapperData.orderLineItemList[0].OtherChangeComment__c}"
+                                             variant="label-hidden"
+                                             disabled="{!v.wrapperData.orderLineItemList[0].PriceChangeComment__c != '기타'}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="3"></lightning:layoutItem>
+                    </lightning:layout>
+
+
+                </aura:if>
+            </lightning:recordEditForm>
+            <div class="slds-m-bottom_medium">&nbsp;</div>
+        </c:lacComSectionFrame>
+
+
+        <c:lacComSectionFrame title="제품 정보" hasHeader="{#true}">
+            <aura:if isTrue="{!v.wrapperData.isPerFarCorp}">
+                <aura:if isTrue="{!not(v.wrapperData.isPartner)}">
+                    <colgroup>
+                        <col width="5%"/>
+                        <col width="20%"/>
+                        <col width="15%"/>
+                        <col width="20%"/>
+                        <col width="20%"/>
+                        <col width="20%"/>
+                    </colgroup>
+
+                    <aura:set attribute="else">
+                        <colgroup>
+                            <col width="5%"/>
+                            <col width="20%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
+                        </colgroup>
+                    </aura:set>
+                </aura:if>
+
+                <c:lacComTable aura:id="dataTable">
+                    <thead>
+                        <tr>
+                            <c:lacComTh title="{!v.labelMap.Product2.type__c}">{!v.labelMap.Product2.type__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.name}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.OrderLineitem__c.unitprice__c}">기준가격</c:lacComTh><!--{!v.labelMap.OrderLineitem__c.unitprice__c}-->
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.productdivision__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.horsepowerstandard__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.productcode}</c:lacComTh>
+<!--
+                            <c:lacComTh title="{!v.labelMap.OrderLineitem__c.listprice__c}">{!v.labelMap.OrderLineitem__c.listprice__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.OrderLineitem__c.fm_supplyhighamt__c}">{!v.labelMap.OrderLineitem__c.fm_supplyhighamt__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.OrderLineitem__c.fm_supplylowamt__c}">{!v.labelMap.OrderLineitem__c.fm_supplylowamt__c}</c:lacComTh>
+-->
+                            <aura:if isTrue="{!not(v.wrapperData.isPartner)}">
+                                <c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>
+                            </aura:if>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <c:lacComTd>{!v.wrapperData.orderLineItemList[0].ProductId__r.Type__c}</c:lacComTd>
+                            <c:lacComTd>{!v.wrapperData.orderLineItemList[0].ProductId__r.Name}</c:lacComTd>
+                            <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.orderLineItemList[0].UnitPrice__c}" maximumFractionDigits="3"/></c:lacComTd>
+                            <c:lacComTh>{!v.wrapperData.orderLineItemList[0].ProductId__r.ProductDivision__c}</c:lacComTh>
+                            <c:lacComTh>{!v.wrapperData.orderLineItemList[0].ProductId__r.HorsePowerStandard__c}</c:lacComTh>
+                            <c:lacComTh>{!v.wrapperData.orderLineItemList[0].ProductId__r.ProductCode}</c:lacComTh>
+<!--
+
+                            <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.orderLineItemList[0].ListPrice__c}" maximumFractionDigits="3"/></c:lacComTd>
+                            <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.supplyHighAmt}" maximumFractionDigits="3"/></c:lacComTd>
+                            <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.supplyLowAmt}" maximumFractionDigits="3"/></c:lacComTd>
+-->
+
+                            <aura:if isTrue="{!not(v.wrapperData.isPartner)}">
+                                <c:lacComTd>{!v.wrapperData.asset.Name}</c:lacComTd>
+                            </aura:if>
+                        </tr>
+                    </tbody>
+                </c:lacComTable>
+
+                <aura:set attribute="else">
+                    <colgroup>
+                        <col width="20%"/>
+                        <col width="30%"/>
+                        <col width="20%"/>
+                        <col width="30%"/>
+                    </colgroup>
+
+                    <c:lacComTable aura:id="dataTable">
+                        <thead>
+                        <tr>
+                            <c:lacComTh title="{!v.labelMap.Product2.type__c}">{!v.labelMap.Product2.type__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.name}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.OrderLineitem__c.unitprice__c}">기준가격</c:lacComTh><!--{!v.labelMap.OrderLineitem__c.unitprice__c}-->
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.productdivision__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.horsepowerstandard__c}</c:lacComTh>
+                            <c:lacComTh title="{!v.labelMap.Product2.namec}">{!v.labelMap.Product2.productcode}</c:lacComTh>
+                            <!--<c:lacComTh title="{!v.labelMap.OrderLineitem__c.nhgovlistprice__c}">{!v.labelMap.OrderLineitem__c.nhgovlistprice__c}</c:lacComTh>-->
+                            <!--<c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <c:lacComTd>{!v.wrapperData.orderLineItemList[0].ProductId__r.Type__c}</c:lacComTd>
+                            <c:lacComTd>{!v.wrapperData.orderLineItemList[0].ProductId__r.Name}</c:lacComTd>
+                            <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.orderLineItemList[0].UnitPrice__c}" maximumFractionDigits="3"/></c:lacComTd>
+                            <c:lacComTh>{!v.wrapperData.orderLineItemList[0].ProductId__r.ProductDivision__c}</c:lacComTh>
+                            <c:lacComTh>{!v.wrapperData.orderLineItemList[0].ProductId__r.HorsePowerStandard__c}</c:lacComTh>
+                            <c:lacComTh>{!v.wrapperData.orderLineItemList[0].ProductId__r.ProductCode}</c:lacComTh>
+                            <!--<c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.orderLineItemList[0].NhGovListPrice__c}" maximumFractionDigits="3"/></c:lacComTd>-->
+                            <!--<c:lacComTd>{!v.wrapperData.asset.Name}</c:lacComTd>-->
+                        </tr>
+                        </tbody>
+                    </c:lacComTable>
+                </aura:set>
+            </aura:if>
+        </c:lacComSectionFrame>
+        <div class="slds-m-bottom_medium"></div>
+
+        <aura:set attribute="footer">
+            <lightning:button aura:id="btnCancel" label="취소" onclick="{!c.doCancel}"/>
+            <lightning:button aura:id="btnShow" label="공장 재고 보기" variant="brand" onclick="{!c.doAssetSearchForDisplay}" disabled="{!notequals(v.wrapperData.order.Division__c, '공장주문')}"/>
+            <aura:if isTrue="{!and(v.wrapperData.isInsert, and(v.wrapperData.isSaveButton == true, not(v.wrapperData.isPartner)))}">
+                <lightning:button aura:id="btnSave"
+                                  label="저장 및 새로 만들기"
+                                  variant="brand"
+                                  onclick="{!c.doSaveNew}"
+                />
+            </aura:if>
+            <aura:if isTrue="{!v.wrapperData.isSaveButton == true}">
+                <lightning:button aura:id="btnSave"
+                                  label="저장"
+                                  variant="brand"
+                                  onclick="{!c.doSave}"
+                />
+            </aura:if>
+            <aura:if isTrue="{!v.wrapperData.isERPSaveButton == true}">
+                <lightning:button aura:id="btnErpSave"
+                                  label="저장"
+                                  variant="brand"
+                                  onclick="{!c.doErpSave}"
+                />
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

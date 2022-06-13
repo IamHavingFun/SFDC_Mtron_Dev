@@ -1,0 +1,27 @@
+/**
+ * Created by ms on 2020-04-17.
+ */
+
+.THIS table {
+    width: 100%;
+    font-size:15px;
+    margin:15px;
+}
+.THIS table td {
+    padding:5px;
+    vertical-align:top;
+    text-overflow: ellipsis ; white-space: nowrap; overflow: hidden;word-wrap:break-word;
+    display: inline-block;
+}
+.THIS .slds-text-body{
+   font-size:19px;
+}
+.THIS .slds-grid--align-center{
+    height:100px;
+}
+.THIS .slds-size_1-of-5{
+    min-width: 250px;
+}
+.THIS .notFoundLabel{
+    font-size:13px;
+}

@@ -1,0 +1,86 @@
+<!--
+  * @filename      : i2SEMA_TemplateActivity
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/17 11:21 AM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file 
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020/04/17 11:21 AM     i2max_shlee       Create
+ -->
+
+<aura:component description="i2SEMA_TemplateActivity"
+                access="global"
+                extends="c:i2SEMA_Base"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,lightning:actionOverride,force:hasRecordId">
+
+    <aura:attribute name="recordId"
+                    type="String"
+                    description="Record ID"/>
+
+    <aura:attribute name="isScreen"
+                    type="String"
+                    default="New"
+                    description="화면 상태 : Read 읽기모드, New 생성, Edit 수정"/>
+    <aura:attribute name="isDisable"
+                    type="Boolean"
+                    default="{!false}"
+                    description="템플릿 활성 유무" />
+
+    <aura:attribute name="templateId"
+                    type="String"
+                    description="template Record ID"/>
+
+    <aura:attribute name="previewReferenceData"
+                    type="object"
+                    description="Preview 참조정보"/>
+
+    <!-- Design Attribute -->
+    <aura:attribute name="align"
+                    access="global"
+                    type="String"
+                    description="하위컴포넌트 Align 방향"
+                    default="vertical"/>
+    <!-- Event / Handler -->
+    <aura:handler name="init"
+                  action="{!c.doInit}"
+                  value="{!this}"/>
+    <!-- Preview Event -->
+    <aura:handler name="previewEvent"
+                  event="c:i2SEMA_NotificationPreviewEvent"
+                  action="{!c.handlePreview}"/>
+
+    <!-- Body -->
+    <div class="container slds-modal__header">
+        <h4 class="title slds-text-heading--medium" style="padding-bottom:5px;">
+            <aura:if isTrue="{!equals(v.isScreen, 'New')}">{!$Label.c.i2SEMA_LAB_NEW_NOTIFICATION_TEMPLATE}</aura:if>
+            <aura:if isTrue="{!equals(v.isScreen, 'Edit')}">{!$Label.c.i2SEMA_LAB_EDIT_NOTIFICATION_TEMPLATE}</aura:if>
+        </h4>
+
+        <div>
+            <div class="flexBox">
+                <div class="{!if(equals(v.align,'Vertical'),'flexItem-vertical','flexItem-horizontal')}">
+                    <c:i2SEMA_TemplateForm aura:id="form" recordId="{!v.recordId}" standAlone="false"  isPopup="false"/>
+                </div>
+                <div class="{!if(equals(v.align,'Vertical'),'flexItem-vertical','flexItem-horizontal')}">
+                    <c:i2SEMA_NotificationPreview aura:id="preview" recordId="{!v.templateId}" referenceData="{!v.previewReferenceData}"/>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <aura:if isTrue="{!not(v.isDisable)}">
+            <div class="slds-grid slds-m-top--medium">
+                <div class="slds-col_bump-left">
+                    <lightning:button label="{!$Label.site.cancel}" onclick="{!c.doCancel}"/>
+                    <lightning:button label="{!$Label.site.save}" variant="brand" onclick="{!c.doSave}"/>
+                </div>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

@@ -1,0 +1,57 @@
+<!--
+  * @filename      : orderKeepDeliveryRequestQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-04-16 오후 1:32
+  * @group         :
+  * @group-content :
+  * @description   : 보관처리 요청
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2022-03-23 오후 1:32    i2max               Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:actionOverride"
+                controller="OrderKeepDeliveryRequestQa"
+                description="orderKeepDeliveryRequestQa">
+
+    <aura:attribute name="order" type="Order__c" default="{}" description="Order__c SObject"/>
+    <aura:attribute name="requestComment" type="String" default=""/>
+    <aura:attribute name="isButtonSave" type="Boolean" default="false" description="승인 가능 여부 체크."/>
+    <aura:attribute name="pageComment" type="String" description="페이지 코멘트"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <aura:html tag="style">
+        textarea {
+        height:200px;
+        }
+    </aura:html>
+
+    <c:lacComQuickAction title="보관 처리" aura:id="quickAction" isSmall="{#true}" hasSelfFooter="{#false}">
+        <aura:if isTrue="{!v.isButtonSave}">
+            <div class="slds-text-align_center">
+                <div class="slds-p-around_medium">
+                    <lightning:badge label="요청 내용" />
+                    <br/><br/>
+                    <lightning:TextArea value="{!v.requestComment}" label="cc" variant="label-hidden"/>
+                </div>
+            </div>
+            <aura:set attribute="else">
+                <br/><br/>
+                <div class="slds-text-align_center">{!v.pageComment}</div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="footer">
+            <aura:if isTrue="{!v.isButtonSave}">
+                <lightning:button aura:id="btnSave" label="제출" variant="brand" onclick="{!c.doSave}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

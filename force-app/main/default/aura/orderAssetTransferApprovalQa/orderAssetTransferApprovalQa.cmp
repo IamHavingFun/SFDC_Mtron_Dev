@@ -1,0 +1,94 @@
+<!--
+  * @filename      : orderAssetTransferApprovalQa
+  * @projectname   :
+  * @author        : i2max_my.Seo
+  * @date          : 2020-11-19 오전 11:10
+  * @group         :
+  * @group-content :
+  * @description   : 주문 자산 전배 승인 / 거부 처리
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author              description
+  * ===============================================================
+    0.1     2020-11-19 오전 11:10    i2max_my.Seo      Create
+ -->
+<aura:component extends="c:lsSalesBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                controller="OrderAssetTransferApprovalQa"
+                description="orderAssetTransferApprovalQa">
+
+    <!-- ===================================================================================================
+    ==== public Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="order" type="Order__c" access="public" description=""/>
+    <aura:attribute name="isProcessed" type="Boolean" access="public" description=""/>
+    <aura:attribute name="isNotRequested" type="Boolean" access="public" description=""/>
+    <aura:attribute name="division" type="String" access="public" default="승인"/>
+
+    <!-- ===================================================================================================
+    ==== private Attribute
+    ==================================================================================================== -->
+    <aura:attribute name="options" type="List" access="private" default="[
+        {'label': '승인', 'value': '승인'},
+        {'label': '거부', 'value': '거부'} ]"/>
+
+    <!-- ===================================================================================================
+    ==== component
+    ==================================================================================================== -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- ===================================================================================================
+    ==== handler
+    ==================================================================================================== -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <c:lacComQuickAction title="전수배 전환 동의" aura:id="quickAction" hasSelfFooter="{#false}" isSmall="{#true}">
+
+        <aura:if isTrue="{!v.isNotRequested}">
+            <div class="slds-text-align_center slds-m-top_medium">
+                영업소의 전수배 전환 요청이 없는 주문입니다.
+            </div>
+
+            <aura:set attribute="else">
+                <aura:if isTrue="{!not(v.isProcessed)}">
+                        <div class="slds-text-align_center slds-m-top_medium">
+                            <span>해당 주문건에 대한 전수배 전환 공급에 대해서 승인 하시겠습니까? </span>
+                        </div>
+
+                    <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
+                        <lightning:layoutItem size="3" class="slds-align-middle slds-m-right--large">
+                            <label class="slds-m-top_medium">승인 여부</label>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="4">
+                            <lightning:radioGroup label=""
+                                                  type="radio"
+                                                  options="{!v.options}"
+                                                  value="{!v.division}"
+                                                  class="radio_horizontal"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
+                    <aura:set attribute="else">
+                        <div class="slds-text-align_center slds-m-top_medium">
+                            이미 해당 주문건에 대한 전수배 전환 공급에 대해서 [{!v.order.AssetTransferAgreeStatus__c}] 처리 하였습니다.
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+
+        <aura:set attribute="footer">
+<!--            <aura:if isTrue="{!not(v.isProcessed)}">-->
+<!--                <lightning:button aura:id="btnSave" label="승인" variant="brand" onclick="{!c.doApprove}"/>-->
+<!--                <lightning:button aura:id="btnSave" label="거부" variant="brand" onclick="{!c.doReject}" />-->
+<!--            </aura:if>-->
+            <aura:if isTrue="{!not(v.isProcessed)}">
+                <lightning:button aura:id="btnSave" label="저장" variant="brand" onclick="{!c.doSelect}" disabled="{!or(v.isNotRequested, v.isProcessed)}"/>
+            </aura:if>
+        </aura:set>
+
+    </c:lacComQuickAction>
+</aura:component>

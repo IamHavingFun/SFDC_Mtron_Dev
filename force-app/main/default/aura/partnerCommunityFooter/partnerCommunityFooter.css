@@ -1,0 +1,113 @@
+/**
+ * Created by MS on 2020-06-25.
+ */
+
+/**
+ * Created by ms on 2017-07-04.
+ */
+.THIS.cFooter {
+    background: #000;
+    color: #fff;
+    margin-top: 60px;
+    font-size: 20px;
+}
+
+.THIS.cFooter .cFooterMenus {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 60px 1rem; }
+.THIS.cFooter .cFooterMenus:before,
+.THIS.cFooter .cFooterMenus:after {
+    content: "";
+    display: table; }
+.THIS.cFooter .cFooterMenus:after {
+    clear: both; }
+.THIS.cFooter .cFooterMenus .cFooterMenus-col {
+    /* float: left;
+    width: 33.33333%; */
+    padding: 0 .75rem;
+    text-align: left; }
+.THIS.cFooter .cFooterMenus .cFooterMenus-col .cFooterMenu-title {
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 5px; }
+.THIS.cFooter .cFooterMenus .cFooterMenus-col .cFooterMenu-list {
+    font-size: 20px; }
+.THIS.cFooter .cFooterMenus .cFooterMenus-col .cFooterMenu-list a {
+    color: #ddd; }
+
+/* 글로벌 푸터 카피라이트 */
+.THIS.cFooter .cFooterCopyright {
+    max-width: 1440px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    color: #ccc;
+    padding: 20px 1rem; }
+
+.THIS.cFooter .cFooterCopyright .cFooterCopyrightLinks {
+    margin-top: 5px;
+}
+
+.THIS.cFooter .cFooterCopyright .cFooterCopyrightLinks a {
+    color: #fff;
+}
+
+.THIS.cFooter .cChangeCountry {
+    text-align: right;
+}
+
+.THIS.cFooter .cChangeCountry .cChangeCountry_button .cChangeCountry_icon {
+    margin-right: 6px;
+}
+
+.THIS.cFooter .cChangeCountry .cChangeCountry_button .cChangeCountry_icon .slds-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.THIS .cFooterMenu-mtop {
+    margin-top: 30px;
+}
+/*
+.THIS .cFooterMenu-socialIcons {
+    margin-top: 30px;
+}
+*/
+
+.THIS .cFooterMenu-socialIcons li {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-right: 30px;
+}
+
+.THIS .cFooterMenu-socialIcons li a:hover {
+    opacity: .6;
+}
+
+.THIS .cFooterMenu-socialIcons li img {
+    width: 100%;
+    height: auto;
+}
+
+@media only screen and (max-width: 64em) {
+    .THIS.cFooterPanel .cFooterMenus {
+        padding: 0 !important; }
+    .THIS.cFooter .cFooterMenus .cFooterMenus-col {
+        margin-bottom: 30px;
+        text-align: center;}
+    .THIS.cFooter .cFooterMenus .cFooterMenus-col:last-child {
+        margin-bottom: 0;
+    }
+    .THIS.cFooterPanel .cFooterMenus .cFooterMenus-col:last-child {
+        border-bottom: 0 !important; }
+    .THIS.cFooter .cFooterCopyright {
+        text-align: center;
+    }
+    .THIS.cFooter .cChangeCountry {
+        text-align: center;
+        margin-top: 20px;
+        width: 100%;
+    }
+}

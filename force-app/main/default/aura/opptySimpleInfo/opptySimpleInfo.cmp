@@ -1,0 +1,126 @@
+<!--
+ - Created by ms on 2020-04-08.
+ -->
+<!--****************************************************************************************
+  * @filename      : opptySimpleInfo
+  * @projectname   : LS
+  * @author        : ms
+  * @date          : 2020-04-08 16 11
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @tester        : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                     author              description
+  * ===============================================================
+    0.1     2020-04-08 16 11     Park He           Create
+****************************************************************************************/
+-->
+
+<aura:component description="opptySimpleInfo"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes"
+                extends="c:lsSalesBase"
+                controller="OpptySimpleInfoController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="force:refreshView" action="{! c.doInit }"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- 관심모델 사라지면서 slds-size_1-of-5 를 slds-size_1-of-4로 변경-->
+    <div class="slds-list_horizontal slds-heading slds-scrollable_x">
+        <div class="slds-size_1-of-4 ">
+            <lightning:card title="고객 정보" iconName="standard:customers">
+                <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-center">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td style="width: 30%;">고객명 :</td>
+                            <td>
+                                <a data-recordid="{!v.resData.AccountId}" onclick="{!c.doNaviService}">
+                                    {!v.resData.Account.Name}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30%;">연락처 :</td>
+                            <td>
+                                <aura:if isTrue="{!(empty(v.resData.Account.fm_Mobile__c))}">
+                                    <div class="notFoundLabel">{!$Label.c.accSimpleInfo_notFound}</div>
+                                    <aura:set attribute="else">
+                                        {!v.resData.Account.fm_Mobile__c}
+                                    </aura:set>
+                                </aura:if>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </lightning:card>
+        </div>
+
+        <!--<div class="slds-size_1-of-4 slds-p-left_small" >
+            <lightning:card title="관심 모델" iconName="standard:customers">
+                <div class="slds-grid slds-grid&#45;&#45;vertical-align-center slds-grid&#45;&#45;align-center slds-text-body">
+                    <aura:if isTrue="{!(empty(v.resData.InterestModel__c))}">
+                        <div class="notFoundLabel">{!$Label.c.accSimpleInfo_notFound}</div>
+                        <aura:set attribute="else">
+                            <div>{!v.resData.InterestModel__c}</div>
+                        </aura:set>
+                    </aura:if>
+
+                </div>
+            </lightning:card>
+        </div>-->
+
+        <div class="slds-size_1-of-4 slds-p-left_small">
+            <lightning:card title="고객 제안 가격" iconName="standard:customers">
+                <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-center slds-text-body">
+                    <aura:if isTrue="{!(empty(v.resData.Amount))}">
+                        <div class="notFoundLabel">{!$Label.c.accSimpleInfo_notFound}</div>
+                        <aura:set attribute="else">
+                            <div>
+                                <lightning:formattedNumber value="{!v.resData.Amount}"/>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </lightning:card>
+        </div>
+
+        <!-- 관심 모델 -->
+        <div class="slds-size_1-of-4  slds-p-left_small ">
+            <lightning:card title="관심 모델" iconName="standard:customers">
+                <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-center slds-text-body">
+                    <aura:if isTrue="{!(empty(v.resData.InterestModel__r.Name))}">
+                        <div class="notFoundLabel">{!$Label.c.accSimpleInfo_notFound}</div>
+                        <aura:set attribute="else">
+                            <div>
+                                <a data-recordid="{!v.resData.InterestModel__r.Name}" onclick="{!c.doNaviService}">
+                                    {!v.resData.InterestModel__r.Name}</a>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </lightning:card>
+        </div>
+
+        <div class="slds-size_1-of-4 slds-p-left_small ">
+            <lightning:card title="최근 수정일자" iconName="standard:customers">
+                <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-center slds-text-body">
+                    <aura:if isTrue="{!(empty(v.resData.LastModifiedDate))}">
+                        <div class="notFoundLabel">{!$Label.c.accSimpleInfo_notFound}</div>
+                        <aura:set attribute="else">
+                            <div>
+                                <lightning:formattedDateTime value="{!v.resData.LastModifiedDate}"/>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </lightning:card>
+        </div>
+    </div>
+</aura:component>

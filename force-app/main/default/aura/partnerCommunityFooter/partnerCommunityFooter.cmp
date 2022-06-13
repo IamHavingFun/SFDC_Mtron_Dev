@@ -1,0 +1,109 @@
+<!--
+  * ===============================================================
+  * File Name   : CommunityFooter.cmp
+  * Description : Global Partner Landing Footer
+  * Author      : i2max
+  * Modification Log
+  * ===============================================================
+  * Ver  Date          Author         Modification
+  * ===============================================================
+  * 1.0  2017. 08. 01  i2max        Create
+  * ===============================================================
+-->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+                description="partnerCommunityFooter">
+
+    <aura:attribute name="isUserLogin" type="Boolean" description="" default="false"/>
+
+    <c:lacComService aura:id="lacComService"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="cFooter">
+        <div class="cFooterMenus">
+            <div class="cFooterMenus-grid slds-grid slds-wrap">
+                <!-- Further Information -->
+                <div class="cFooterMenus-col cLandingPad slds-col slds-size--1-of-1 slds-medium-size--1-of1 slds-large-size--1-of-3">
+                    <h3 class="cFooterMenu-title">구글 PLAY</h3>
+                    <ul class="cFooterMenu-list">
+                            <li>
+                                <img src="{!$Resource.AppQRImage}" style="width:35%;height:35%;"/>
+                            </li>
+                    </ul>
+                    <ul class="cFooterMenu-list">
+                        <li style="margin-top:20px;">
+                            <a  href="https://play.google.com/store/apps/details?id=com.lsmtron.se" target="_blank" >LS 트랙터 파트너 앱 다운받기</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Related Site -->
+                <div class="cFooterMenus-col cLandingPad slds-col slds-size--1-of-1 slds-medium-size--1-of1 slds-large-size--1-of-3">
+                    <h3 class="cFooterMenu-title">관련 사이트</h3>
+                    <ul class="cFooterMenu-list">
+                        <li>
+                            <a  href="https://www.lstractor.co.kr:8002" target="_blank" >LS엠트론 트랙터 공식 홈페이지</a>
+                        </li>
+                        <li>
+                            <a  href="https://lws.lsmtron.com" target="_blank">LS엠트론 워런티청구 시스템</a>
+                        </li>
+                        <li>
+                            <a  href="http://mts.lstractor.com/auth/login" target="_blank">정비 교육 영상 사이트</a>
+                        </li>
+                    </ul>
+                    <h3 class="cFooterMenu-title cFooterMenu-mtop">LS 트랙터 SNS 링크</h3>
+                    <ul class="cFooterMenu-list cFooterMenu-socialIcons">
+                        <li>
+                            <a href="https://blog.naver.com/lsmtron113" target="_blank" title="LS엠트론 공식 블로그">
+                                <img src="{!$Resource.naver_icon}" style="margin-right:10px;"/>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/user/LSTractor1" target="_blank" title="LS엠트론 공식 유투브 채널">
+                                <img src="{!$Resource.youtube_icon}" style="margin-right:10px;"/>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/ls.tractor.korea" target="_blank" title="LS엠트론 페이스북">
+                                <img src="{!$Resource.facebook_icon}" style="margin-right:10px;"/>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Social Link -->
+                <div class="cFooterMenus-col cLandingPad slds-col slds-size--1-of-1 slds-medium-size--1-of1 slds-large-size--1-of-3">
+                    <aura:if isTrue="{!v.isUserLogin}">
+                        <h3 class="cFooterMenu-title">LS 엠트론 파트너 포탈 사용법</h3>
+                        <ul class="cFooterMenu-list">
+                            <li>
+                                <a  href="https://www.youtube.com/channel/UCWdQPSDgvwYxZer6ljXkUkw" target="_blank" >파트너 포탈 사용법(PC)</a>
+                            </li>
+                            <li>
+                                <a  href="https://lsmtron.force.com/Partner/s/noticeboard/a0Y2w000000eLANEA2" target="_blank">파트너 앱 사용법(스마트폰)</a>
+                            </li>
+                        </ul>
+                    </aura:if>
+                    <h3 class="cFooterMenu-title cFooterMenu-mtop">문의사항</h3>
+                    <p class="cFooterMenu-description">담당자 연락처 : &nbsp;
+                        <a href="mailto://gotogether@lsmtron.com" >gotogether@lsmtron.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 하단 -->
+        <div class="cFooterCopyright slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of2 slds-large-size--1-of-2">
+                <p>Copyright ⓒ 2020 LS Mtron Tractor. All Rights Reserved</p>
+                <div class="cFooterCopyrightLinks">
+                    <a href="https://www.lstractor.co.kr:8002/html/extra/privacy.html" target="_blank">개인정보처리방침</a>
+                </div>
+            </div>
+            <div class="cChangeCountry slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+            </div>
+        </div>
+    </div>
+
+</aura:component>

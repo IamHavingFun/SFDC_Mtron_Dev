@@ -1,0 +1,94 @@
+<!--
+  * @filename      : lsMSalesLeaseInspectionReportCreate2
+  * @author        : I2MAX
+  * @date          : 2021-03-29
+  * @group         : 
+  * @group-content : 
+  * @description   : 
+  * @reference     : 
+  * @release       : v1.0.0
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author       description
+  * ===============================================================
+    1.0     2021-03-29         I2MAX          Create
+ -->
+<aura:component extends="c:lsMSalesStepBase"
+                controller="LsMSalesLeaseInspectionReport"
+                description="lsMSalesLeaseInspectionReportCreate2">
+
+    <ltng:require styles="{!join(','
+							, $Resource.signature + '/docs/css/signature-pad.css')}"
+
+                  scripts="{!join(','
+				  			, $Resource.signature + '/docs/js/signature_pad.umd.js')}"
+                  afterScriptsLoaded="{!c.scriptsLoaded}" />
+
+    <aura:html tag="style">
+        .w120 {
+        width: 120px !important;
+        }
+    </aura:html>
+
+    <!-- =============================================================================================================
+    ==== public attribute
+    ============================================================================================================== -->
+    <aura:attribute name="inspectorSign" type="String"/>
+    <aura:attribute name="inspectorPad" type="Object"/>
+
+    <!-- =============================================================================================================
+    ==== component
+    ============================================================================================================== -->
+    <c:lacComService aura:id="lacComService"/>
+
+    <!-- =============================================================================================================
+    ==== content
+    ============================================================================================================== -->
+    <header id="header">
+        <article class="TopLeft"></article>
+        <article class="TopName">제품 인도전 점검확인서</article>
+        <article class="TopRright"></article>
+    </header>
+
+    <div id="container" class="bgW">
+        <article class="top_infoBox">
+            <ul class="manInfo" aura:id="sizeCanvas">
+                <li>
+                    <span class="name">매수자</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Customer__r.Name} ({!v.mobileStepVO.bizData.contract.Customer__r.fm_Mobile__c})</span>
+                </li>
+                <li>
+                    <span class="name">제품명</span>
+                    <span class="name_right">:</span>
+                    <span class="txt"> [{!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].fm_ProductType__c}] {!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.Name}({!v.mobileStepVO.bizData.contract.ContractLineItem__r[0].ProductId__r.ProductCode})</span>
+                </li>
+                <li>
+                    <span class="name">계약번호</span>
+                    <span class="name_right">:</span>
+                    <span class="txt">{!v.mobileStepVO.bizData.contract.Name}</span>
+                </li>
+            </ul>
+        </article>
+
+        <article class="content">
+            <div class="">
+                <label class="form_tit" style="display:block;">검수자 서명</label>
+                <canvas aura:id="inspectorCanvas" class="" style="border:1px solid black"></canvas>
+            </div>
+
+            <!-- 하단버튼 -->
+            <section class="bbtnBox mb60">
+                <lightning:button label="이전" class="bbtn_white btn_50" onclick="{!c.doPrev}"/>
+                <aura:if isTrue="{!!v.mobileStepVO.bizData.isViewMode}">
+                    <lightning:button label="저장" class="bbtn btn_50" onclick="{!c.doSave}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="돌아가기" class="bbtn" onclick="{!c.doPreSelf}"/>
+                    </aura:set>
+                </aura:if>
+            </section>
+        </article>
+
+    </div>
+</aura:component>

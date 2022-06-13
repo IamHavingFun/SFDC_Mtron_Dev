@@ -1,0 +1,35 @@
+/**
+ * Created by MS on 2020-06-23.
+ */
+
+.THIS {
+}
+
+.THIS .slds-input {
+    border-radius: 0;
+}
+.THIS .slds-combobox__input {
+    padding: 0 30px;
+    box-sizing: border-box;
+    background-color: #fff;
+    font-size: inherit;
+    border-color: #bbb;
+}
+.THIS .slds-input__icon {
+    margin-right: 30px;
+    top:-5px;
+}
+.THIS .slds-icon-text-default {
+    fill: rgb(0,0,0);
+}
+.THIS .slds-icon_xx-small {
+    width: 35px;
+    height: 45px;
+}
+.THIS [role="combobox"] input[readonly] {
+    padding-left: 0.75rem;
+    background-color: rgb(255, 255, 255);
+    font-size: inherit;
+    font-weight: 400;
+    border-color: #bbb;
+}

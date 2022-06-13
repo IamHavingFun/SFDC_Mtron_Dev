@@ -1,0 +1,73 @@
+<!--
+ - Created by MS on 2020-07-08.
+ -->
+<!-- **************************************************************************************
+  * @filename      : lsMSalesEFormViewQa
+  * @projectname   : LS_PS
+  * @author        : MS
+  * @date          : 2020-07-08 08 31
+  * @group         :
+  * @group-content :
+  * @description   :
+  * @tester        :
+  * @reference     :
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                    author          description
+  * ===============================================================
+    0.1     2020-07-08 08 31       Park He         Create
+************************************************************************************ -->
+<aura:component extends="c:lsMSalesQuickActionBase"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                controller="LsMSalesEFormQa"
+                description="lsMSalesEFormViewQa">
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:attribute name="contract" type="Contract__c" access="public" description=""/>
+    <aura:attribute name="isDownload" type="Boolean" access="public" default="false" description=""/>
+    <aura:attribute name="contentDocumentId" type="String" access="public" description=""/>
+    <aura:attribute name="partnerUrl" type="String" description="파트너 도메인"/>
+    <aura:attribute name="pdfViewPageUrl" type="String" description="계약서 URL"/>
+    <aura:attribute name="pdfDownloadPageUrl" type="String" description="계약서 URL"/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:html tag="style">
+        <!--.slds-p-around&#45;&#45;medium{
+        padding: 0px !important;
+        }-->
+        .slds-modal__container {
+        margin: 0 auto;
+        width: 70% !important;
+        max-width: 70rem !important;
+        min-width: 20rem;
+        }
+    </aura:html>
+
+    <c:lacComQuickAction title="매매계약서" aura:id="quickAction" hasSelfFooter="{!true}">
+        <!--||{!v.pdfViewPageUrl}||-->
+        <article class="modal_body">
+            <section class="body_contBox">
+                <iframe src="{!v.pdfViewPageUrl}" width="100%" height="500px;"></iframe>
+            </section>
+            <aura:if isTrue="{!v.isDownload}">
+                <div style="display: none">
+                    <iframe src="{!v.pdfDownloadPageUrl}"></iframe>
+                </div>
+            </aura:if>
+        </article>
+
+        <aura:set attribute="footer">
+            <lightning:button label="닫기" onclick="{!c.doCancel}"/>
+            <aura:if isTrue="{!not(v.contract.CustomerReviewCheck__c)}">
+                <lightning:button label="확인" variant="brand" onclick="{!c.doConfirm}" />
+            </aura:if>
+            <aura:if isTrue="{!and(v.contract.CustomerReviewCheck__c, equals(v.contract.eFormsignStatus__c,'계약체결'))}">
+                <lightning:button label="다운로드" onclick="{!c.doDownload}"/>
+            </aura:if>
+        </aura:set>
+    </c:lacComQuickAction>
+</aura:component>

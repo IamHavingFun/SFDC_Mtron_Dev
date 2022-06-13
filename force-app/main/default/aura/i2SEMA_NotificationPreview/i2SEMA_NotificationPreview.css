@@ -1,0 +1,61 @@
+/****************************************************************************************
+  * @filename      : i2SEMA_NotificationPreview.css
+  * @projectname   : i2SEMA Core
+  * @author        : i2max_shlee 
+  * @date          : 2020/04/14 1:55 PM
+  * @group         : e.g)tab name
+  * @group-content : e.g)view file  
+  * @description   : 
+  * @reference     : 
+  * @copyright     : Copyright © I2max. All Rights Reserved.
+  * @modification Log
+  * ===============================================================
+  * ver     date                author              description
+  * ===============================================================
+    0.1     2020/04/14 1:55 PM     i2max_shlee       Create
+****************************************************************************************/
+.THIS {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/*
+.THIS .message-container {width:100%;display:flex;color:#000 !important;align-items:center;flex-flow:column;}
+.THIS .message-container .container-title {background-color:#e7eff2;height:60px;font-size:18px;display:block;line-height:60px;text-align:center;width:100%;}
+.THIS .message-container .container-body {background-color:#C6D4DF;min-height:540px;max-height:620px;height:auto;overflow:hidden;overflow-y:auto;}
+
+.THIS .message-container .kakao-text-wrap {min-width:360px;width:auto; max-width:550px;border-radius:15px;border:1px solid #ddd;overflow:hidden;margin:10px;background-color:#fff;}
+.THIS .message-container .attach-img {width:100%;}
+.THIS .message-container .kakao-header {font-size:22px !important;background-color:#fee949;padding:25px 20px;line-height:1;}
+.THIS .message-container .kakao-text {font-size:24px !important;padding:20px;}
+.THIS .message-container .kakao-btn-wrap {padding:0 20px 20px;}
+.THIS .message-container .kakao-btn-wrap a.kakao-btn {font-size:22px !important;height:66px;background-color:#f5f5f5;display:flex;align-items:center;justify-content:center;border-radius:10px;color:inherit;text-decoration:none;}
+.THIS .message-container .kakao-btn-wrap a.kakao-btn + a.kakao-btn {margin-top:10px;}
+
+.THIS .message-container {width:100%;display:flex;color:#000 !important;align-items:center;flex-flow:column;min-width:360px;width:auto; max-width:550px;}
+.THIS .message-container .container-title {background-color:#e7eff2;height:60px;font-size:18px;display:block;line-height:60px;text-align:center;width:100%;}
+.THIS .message-container .container-body {background-color:#C6D4DF;min-height:540px;max-height:620px;height:auto;overflow:hidden;overflow-y:auto;}
+
+.THIS .message-container .kakao-text-wrap {min-width:360px;width:auto; max-width:550px;border-radius:15px;border:1px solid #ddd;overflow:hidden;margin:10px;background-color:#fff;}
+.THIS .message-container .kakao-header {font-size:22px !important;background-color:#fee949;padding:25px 20px;line-height:1;}
+.THIS .message-container .kakao-text {font-size:24px !important;padding:20px;}
+.THIS .message-container .kakao-img {text-align:center;}
+.THIS .message-container .kakao-img a img {max-width:100%; height:auto;padding:0;margin:0;}
+.THIS .message-container .kakao-btn-wrap {padding:0 20px 20px;}
+.THIS .message-container .kakao-btn-wrap a.kakao-btn {font-size:22px !important;height:66px;background-color:#f5f5f5;display:flex;align-items:center;justify-content:center;border-radius:10px;color:inherit;text-decoration:none;}
+.THIS .message-container .kakao-btn-wrap a.kakao-btn + a.kakao-btn {margin-top:10px;}
+*/
+
+
+.THIS .body-wrap {min-width:360px;width:auto; max-width:500px;}
+.THIS .message-container {display:flex;color:#000 !important;flex-flow:column;flex-wrap:nowrap;width:100%;}
+.THIS .message-container .container-title {background-color:#e7eff2;height:60px;font-size:18px;line-height:60px;text-align:center;flex-shrink:0;}
+.THIS .message-container .container-body {background-color:#C6D4DF;min-height:540px;max-height:800px;height:auto;flex: 1 1 auto;overflow-y:auto;}
+
+.THIS .message-container .kakao-text-wrap {border-radius:15px;border:1px solid #ddd;overflow:hidden;margin:10px;background-color:#fff;}
+.THIS .message-container .kakao-header {font-size:18px !important;background-color:#fee949;padding:22px 20px;line-height:1;}
+.THIS .message-container .kakao-text {font-size:20px !important;padding:20px;text-align:left;}
+.THIS .message-container .kakao-img {text-align:center;}
+.THIS .message-container .kakao-img a img {max-width:100%; height:auto;padding:0;margin:0;display:block;}
+.THIS .message-container .kakao-btn-wrap {padding:0 20px 20px;}
+.THIS .message-container .kakao-btn-wrap a.kakao-btn {font-size:18px !important;height:60px;background-color:#f5f5f5;display:flex;align-items:center;justify-content:center;border-radius:10px;color:inherit;text-decoration:none;}
+.THIS .message-container .kakao-btn-wrap a.kakao-btn + a.kakao-btn {margin-top:10px;}
