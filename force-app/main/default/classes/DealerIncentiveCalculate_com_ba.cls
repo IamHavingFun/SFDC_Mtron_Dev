@@ -778,6 +778,12 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				'경제형',
 				'MINI'
 		};
+		// 2. 조기판매장려
+		Map<String, Decimal> incentiveCheckType2 = new Map<String, Decimal>{
+				'이앙기' => 7,
+				'콤바인' => 3
+		};
+
 		for (Asset target : scope) {
 			dealerIds.add(target.Dealer__c);
 			assetIds.add(target.Id);
@@ -841,6 +847,16 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				if(dic != null) insertDicList.add(dic);
 			}
 
+			// ITVOC-2022-04-0772
+			// 3. 조기판매장려 : 출하유형
+			// 수정일 : 2022/06/10
+			if(incentiveCheckType2.containsKey(target.Product2.ProductDivision__c) &&
+					nhChectType.contains(target.Account.CustomerType__c) == false) {
+				dic = DealerIncentiveCalculate_service.getPreSalesCreate(target, processDate, '계획', '지급');
+				if(dic != null) insertDicList.add(dic);
+			}
+
+
 		}
 
 		System.debug('건수 : ['+insertDicList.size()+']');
@@ -885,7 +901,7 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 		for (Asset target : scope) {
 			assetIds.add(target.Id);
 		}
-		System.debug(JSON.serializePretty(assetIds));
+//		System.debug(JSON.serializePretty(assetIds));
 		Map<String, DealerIncentiveCalculate__c> calMap = new Map<String, DealerIncentiveCalculate__c>();
 		for(DealerIncentiveCalculate__c r : [
 				SELECT Id,
@@ -911,7 +927,7 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				WHERE Asset__c IN : assetIds
 				AND Status__c = '지급'
 				AND Division__c = '계획'
-				AND IncentiveType__c IN ('PDI 등록','관납사후봉사','농협사후봉사','중개영업지원')
+				AND IncentiveType__c IN ('PDI 등록','관납사후봉사','농협사후봉사','중개영업지원','조기판매장려')
 				AND IsSendERP__c = FALSE
 		]) {
 			calMap.put(r.Asset__c+'/'+r.IncentiveType__c, r);
@@ -927,7 +943,7 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				if(calMap.containsKey(target.Id+'/'+'PDI 등록')) {
 					// 당월 PDI 처리건
 					dic = calMap.get(target.Id+'/'+'PDI 등록');
-					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + dic.Asset__r.Name + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
+					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
 					dic.CalculationDate__c = processDate;
 					dic.Division__c = '실적';
 					dic.Dealer__c = target.Dealer__c;
@@ -939,11 +955,62 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				}
 			}
 
-			// 2. 조기판매장려
+			// 2. 조기판매장려 : ITVOC-2022-04-0772
 			if(incentiveCheckType2.contains(target.Product2.ProductDivision__c) &&
 					nhChectType.contains(target.Account.CustomerType__c) == false) {
-				dic = DealerIncentiveCalculate_service.getPreSalesCreate(target, processDate, '실적', '지급');
-				if(dic != null) insertDicList.add(dic);
+				if(calMap.containsKey(target.Id+'/'+'조기판매장려')) {
+					// 당월 조기판매장려 처리건
+					// PDI 시 정상 요율로 변경 처리 위해서 기존 데이터 가져와서
+					// 판매월 기준으로 다시 처리 한다.
+					dic = calMap.get(target.Id+'/'+'조기판매장려');
+					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
+					dic.CalculationDate__c = processDate;
+					dic.Division__c = '실적';
+					dic.Dealer__c = target.Dealer__c;
+					dic.SalesAccount__c = target.AccountId;
+
+					Set<Integer> checkMonths1 = new Set<Integer>{
+							11, 12, 1, 2, 3, 4
+					};
+					Set<Integer> checkMonths2 = new Set<Integer>{
+							5, 6, 7, 8, 9, 10
+					};
+					Set<Integer> checkMonths3 = new Set<Integer>{
+							4, 5, 8, 9, 10
+					};
+					Set<Integer> checkMonths4 = new Set<Integer>{
+							11, 12, 1, 2, 3, 6, 7
+					};
+					Integer salesDateMonth;
+					if(target.Product2.ProductDivision__c == '이앙기') {
+						salesDateMonth = target.SalesDate__c.month();
+						if (checkMonths1.contains(salesDateMonth)) {
+							// 이앙기	판매일자=11월~4월 (11, 12, 1, 2, 3, 4월 間)
+							dic.PayoutRate__c = 8;
+						}
+						if (checkMonths2.contains(salesDateMonth)) {
+							// 판매일자=5월~10월	6%
+							dic.PayoutRate__c = 6;
+						}
+					} else if(target.Product2.ProductDivision__c == '콤바인') {
+						salesDateMonth = target.SalesDate__c.month();
+						if (checkMonths3.contains(salesDateMonth)) {
+							// 판매일자=4월~5월 & 8월~10월 (4, 5, 8, 9, 10월 內)	4%
+							dic.PayoutRate__c = 4;
+						}
+						if (checkMonths4.contains(salesDateMonth)) {
+							// 판매일자=11~3월 & 6월~7월 (11, 12, 1, 2, 3, 6, 7월 內)	2%
+							dic.PayoutRate__c = 2;
+						}
+					}
+					dic.PayoutAmount__c = (dic.SupplyAmount__c * dic.PayoutRate__c / 100).setScale(0);
+					dic.PayoutAmount__c = DealerIncentiveCalculate_service.amountRound1000(dic.PayoutAmount__c);
+					updateDicList.add(dic);
+				} else {
+					dic = DealerIncentiveCalculate_service.getPreSalesCreate(target, processDate, '실적', '지급');
+					if(dic != null) insertDicList.add(dic);
+				}
+
 			}
 
 			// 3. 관납사후봉사
@@ -951,7 +1018,7 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				if(calMap.containsKey(target.Id+'/'+'관납사후봉사')) {
 					// 당월 PDI 처리건
 					dic = calMap.get(target.Id+'/'+'관납사후봉사');
-					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + dic.Asset__r.Name + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
+					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
 					dic.CalculationDate__c = processDate;
 					dic.Division__c = '실적';
 					dic.Dealer__c = target.Dealer__c;
@@ -968,7 +1035,7 @@ public without sharing class DealerIncentiveCalculate_com_ba {
 				if(calMap.containsKey(target.Id+'/'+'농협사후봉사')) {
 					// 계획 ==> 실적
 					dic = calMap.get(target.Id+'/'+'농협사후봉사');
-					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + dic.Asset__r.Name + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
+					dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + dic.IncentiveType__c + '/' + '지급';
 					dic.CalculationDate__c = processDate;
 					dic.Division__c = '실적';
 					dic.Dealer__c = target.Dealer__c;

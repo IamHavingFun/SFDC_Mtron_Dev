@@ -305,6 +305,11 @@ public with sharing class SalesIQCalculator_ba implements Database.Batchable<sOb
 				a.SalesIQRate__c = ((salesIQ.Point__c / planSalesIQ.Point__c)*100).setScale(1);
 			}
 			a.IsSalesIQComplete__c = false;
+
+			// 모바일 화면 처리 때문에 기존 필드에 점수와 율을 등록 해준다.
+			a.SalesScoring__c = a.SalesIQPoint__c;
+			a.SalesIQRank__c = a.SalesIQRate__c;
+			////////////////////////////////////////////////////////////
 			if(a.SalesIQRate__c >= 100) {
 				a.IsSalesIQComplete__c = true;
 			}
@@ -319,98 +324,9 @@ public with sharing class SalesIQCalculator_ba implements Database.Batchable<sOb
 			accountIds.add(a.Id);
 			System.debug('Cal POINT : ' + calPoint + ' / Plan POINT' + planSalesIQ.Point__c);
 		}
-		System.debug(JSON.serializePretty(upsertSalesIQS));
+		//System.debug(JSON.serializePretty(upsertSalesIQS));
 		update scope;
 		if(upsertSalesIQS.isEmpty() == false) upsert upsertSalesIQS;
-
-		List<Asset> assetList =  [
-				SELECT Id, Name,
-						PDI__r.HandoverDate__c,
-						Account.CustomerType__c,
-						Account.BrokeringDealer__c,
-						Dealer__c,
-						Dealer__r.ERPCode__c,
-						Dealer__r.IsSalesIQComplete__c,
-						Dealer__r.DealerDivision__c,
-						Dealer__r.CustomerType__c,
-						Product2.ProductDivision__c,
-						Product2.NhFeeAmt__c,
-						Product2.BorkerFeeAmount__c,
-						Order__c,
-						Order__r.SalesDocNo__c,
-						Order__r.ErpPOSNR__c,
-						Order__r.PriceDecisionDate__c,
-						Order__r.ru_SellingPrice__c
-				FROM Asset
-				WHERE DealerReceiptDate__c = THIS_MONTH
-				AND Dealer__c IN :accountIds
-				AND InventoryType__c = '대리점재고'
-		];
-		Set<String> incentiveCheckType1 = new Set<String>{
-				'전략제품'
-		};
-		Set<String> nhChectType = new Set<String>{
-				'농협', '관납'
-		};
-		Set<String> assetIds = new Set<String>();
-		for(Asset target : assetList) {
-			assetIds.add(target.Id);
-		}
-
-		Map<String, DealerIncentiveCalculate__c> calMap = new Map<String, DealerIncentiveCalculate__c>();
-		for(DealerIncentiveCalculate__c r : [
-				SELECT Id,
-						Name,
-						AddSalesIncentiveItem__c,
-						Asset__c,
-						CalculationDate__c,
-						Division__c,
-						ERPSendDate__c,
-						ExternalKey__c,
-						IncentiveType__c,
-						IsSendERP__c,
-						Order__c,
-						PayoutAmount__c,
-						PayoutRate__c,
-						SalesDocNo__c,
-						SettlementDate__c,
-						Status__c,
-						SupplyAmount__c
-				FROM DealerIncentiveCalculate__c
-				WHERE Dealer__c IN :accountIds
-				AND Status__c = '지급'
-				AND CalculationDate__c = THIS_MONTH
-				AND IncentiveType__c IN ('Sales I.Q. 달성')
-		]) {
-			calMap.put(r.Asset__c, r);
-		}
-		List<DealerIncentiveCalculate__c> dicList = new List<DealerIncentiveCalculate__c>();
-		List<DealerIncentiveCalculate__c> deleteList = new List<DealerIncentiveCalculate__c>();
-		for(Asset target : assetList) {
-			DealerIncentiveCalculate__c dic;
-			// 2. SalesIQ
-			if(incentiveCheckType1.contains(target.Product2.ProductDivision__c) &&
-					nhChectType.contains(target.Account.CustomerType__c) == false &&
-					target.Dealer__r.IsSalesIQComplete__c == true) {
-				dic = DealerIncentiveCalculate_service.getSalesIQCreate(target, baseDate, '실적', '지급');
-				if(dic != null) dicList.add(dic);
-			} else if(incentiveCheckType1.contains(target.Product2.ProductDivision__c) &&
-					nhChectType.contains(target.Account.CustomerType__c) == false &&
-					target.Dealer__r.IsSalesIQComplete__c == false) {
-				if(calMap.containsKey(target.Id)) {
-					dic = calMap.get(target.Id);
-					if(dic.CalculationDate__c.toStartOfMonth() == baseDate.toStartOfMonth()) {
-						// 처리 한 달이 같으면 해당 레코드 삭제 처리.
-						deleteList.add(dic);
-					}
-				}
-			}
-		}
-		if(dicList.isEmpty() == false) {
-			Database.upsert(dicList, DealerIncentiveCalculate__c.ExternalKey__c, false);
-		}
-		if(deleteList.isEmpty() == false) delete deleteList;
-
 	}
 
 	public void finish(Database.BatchableContext BC) {

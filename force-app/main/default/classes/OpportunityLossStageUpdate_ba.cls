@@ -62,7 +62,8 @@ public with sharing class OpportunityLossStageUpdate_ba implements Database.Batc
         for(Opportunity opportunity : scope) {
             // 단계와 시스템상태를 동일하게 세팅함.[중요] - 트리거에서 체크
             opportunity.SystemStatus__c = opportunity.StageName = '실주';
-            opportunity.LossReason__c = '기타';
+            opportunity.LossReason__c = '기간 경과 자동 판매실패';
+            opportunity.IsAutoCancel__c = true;
 
             // Task 생성
             tempTask = new Task(

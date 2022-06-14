@@ -85,7 +85,9 @@ public with sharing class OpportunityLossStageUpdateContract_ba implements Datab
 
             // 단계와 시스템상태를 동일하게 세팅함.[중요] - 트리거에서 체크
             opportunity.SystemStatus__c = opportunity.StageName = '실주';
-            opportunity.LossReason__c = '기타';
+            opportunity.LossReason__c = '기간 경과 자동 판매실패';
+            opportunity.IsAutoCancel__c = true;
+
             updateOpportunityList.add(opportunity);
             lossOpptyIds.add(opportunity.Id);
 

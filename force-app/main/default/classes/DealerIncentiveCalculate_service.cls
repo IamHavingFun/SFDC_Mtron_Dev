@@ -53,7 +53,7 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.PayoutAmount__c = amountRound1000(dic.PayoutAmount__c);
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 	/**
@@ -74,7 +74,7 @@ public without sharing class DealerIncentiveCalculate_service {
 			11, 12, 1, 2, 3, 4
 		};
 		Set<Integer> checkMonths2 = new Set<Integer>{
-			5,6
+			5, 6, 7, 8, 9, 10
 		};
 		Set<Integer> checkMonths3 = new Set<Integer>{
 				4, 5, 8, 9, 10
@@ -85,6 +85,10 @@ public without sharing class DealerIncentiveCalculate_service {
 		Set<String> nhChectType = new Set<String>{
 				'농협', '관납'
 		};
+/*		Map<String, Decimal> productCheckMap = new Map<String, Decimal>{
+				'이앙기' => 7,
+				'콤바인' => 3
+		};*/
 		DealerIncentiveCalculate__c dic = new DealerIncentiveCalculate__c();
 		dic.CalculationDate__c = processDate;
 		dic.Division__c = division;
@@ -98,26 +102,33 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.LineNumber__c = String.isEmpty(target.Order__r.ErpPOSNR__c) ? '000010' : target.Order__r.ErpPOSNR__c;
 		dic.SupplyAmount__c = target.Order__r.ru_SellingPrice__c;
 		if(target.Product2.ProductDivision__c == '이앙기') {
-
-			salesDateMonth = target.fm_ActualSalesDate__c.month();
-			if(checkMonths1.contains(salesDateMonth)) {
-				// 이앙기	판매일자=11월~4월 (11, 12, 1, 2, 3, 4월 間)
-				dic.PayoutRate__c = 8;
-			}
-			if(checkMonths2.contains(salesDateMonth)) {
-				// 판매일자=5월~10월	6%
-				dic.PayoutRate__c = 6;
+			if(division == '계획') {
+				dic.PayoutRate__c = 7;
+			} else {
+				salesDateMonth = target.SalesDate__c.month();
+				if (checkMonths1.contains(salesDateMonth)) {
+					// 이앙기	판매일자=11월~4월 (11, 12, 1, 2, 3, 4월 間)
+					dic.PayoutRate__c = 8;
+				}
+				if (checkMonths2.contains(salesDateMonth)) {
+					// 판매일자=5월~10월	6%
+					dic.PayoutRate__c = 6;
+				}
 			}
 			if(dic.PayoutRate__c == null) return null;
 		} else if(target.Product2.ProductDivision__c == '콤바인') {
-			salesDateMonth = target.PDI__r.HandoverDate__c.month();
-			if(checkMonths3.contains(salesDateMonth)) {
-				// 판매일자=4월~5월 & 8월~10월 (4, 5, 8, 9, 10월 內)	4%
-				dic.PayoutRate__c = 4;
-			}
-			if(checkMonths4.contains(salesDateMonth)) {
-				// 판매일자=11~3월 & 6월~7월 (11, 12, 1, 2, 3, 6, 7월 內)	2%
-				dic.PayoutRate__c = 2;
+			if(division == '계획') {
+				dic.PayoutRate__c = 3;
+			} else {
+				salesDateMonth = target.SalesDate__c.month();
+				if (checkMonths3.contains(salesDateMonth)) {
+					// 판매일자=4월~5월 & 8월~10월 (4, 5, 8, 9, 10월 內)	4%
+					dic.PayoutRate__c = 4;
+				}
+				if (checkMonths4.contains(salesDateMonth)) {
+					// 판매일자=11~3월 & 6월~7월 (11, 12, 1, 2, 3, 6, 7월 內)	2%
+					dic.PayoutRate__c = 2;
+				}
 			}
 			if(dic.PayoutRate__c == null) return null;
 		}
@@ -126,7 +137,7 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.PayoutAmount__c = amountRound1000(dic.PayoutAmount__c);
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 
@@ -191,7 +202,7 @@ public without sharing class DealerIncentiveCalculate_service {
 
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 
@@ -231,7 +242,7 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.PayoutRate__c = ((dic.PayoutAmount__c / dic.SupplyAmount__c) * 100).setScale(0);
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 
@@ -311,7 +322,7 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.PayoutAmount__c = amountRound1000(dic.PayoutAmount__c);
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Account.BrokeringDealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Account.BrokeringDealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 
@@ -397,7 +408,7 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.PayoutAmount__c = amountRound1000(dic.PayoutAmount__c);
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 
@@ -432,7 +443,7 @@ public without sharing class DealerIncentiveCalculate_service {
 		dic.PayoutAmount__c = amountRound1000(dic.PayoutAmount__c);
 		dic.Status__c = status;
 		if(status == '회수') dic.PayoutAmount__c = dic.PayoutAmount__c * -1;
-		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.Name + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
+		dic.ExternalKey__c = ((Datetime)processDate).format('yyyyMM') + '/' + target.BatchNo__c + '/' + target.Dealer__r.ERPCode__c + '/' + IncentiveType + '/' + status;
 		return dic;
 	}
 

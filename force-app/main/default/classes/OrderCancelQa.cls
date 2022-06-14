@@ -61,9 +61,11 @@ public without sharing class OrderCancelQa {
 
         if ('OR'.equals(callType)) {
             returnMap = OrderServiceIF.OrderCancel_OR(order.Id);
-            order.isOrderCancel__c = true;
-            order.Status__c = '종료';
-            order.SystemStatus__c = '종료';
+            if(returnMap != null && returnMap.get('STATUS') == 'Y') {
+                order.isOrderCancel__c = true;
+                order.Status__c = '종료';
+                order.SystemStatus__c = '종료';
+            }
         } else if('ZORT'.equals(callType)) {
             if(order.ERPOrderCancelStatus__c == 'ZORT 취소성공' || order.ERPOrderCancelStatus__c == 'ZRET 취소실패') {
                 // ZORT 성공 이므로 ZRET만 처리 한다.

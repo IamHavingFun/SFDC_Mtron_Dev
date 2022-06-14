@@ -11,7 +11,7 @@
             component.set('v.assetReturn', resData.assetReturn);
             component.set('v.isTarget', resData.isTarget);
             component.set('v.isAssetReturns', resData.isAssetReturns);
-            if(resData.isTarget === false) {
+            if(resData.isTarget === false && resData.isAssetReturns === true) {
                 helper.gfn_toast('본 자산의 자산유형이 판매자산이 아니거나, 이미 반환 신청이 진행중인 자산입니다.', 'w', '');
             }
         }).catch((error) => {

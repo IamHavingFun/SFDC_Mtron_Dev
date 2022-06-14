@@ -67,7 +67,7 @@ public without sharing class AssetReturnRequestQa {
 		}
 
 		Asset asset = [SELECT Id, Name, InventoryType__c FROM Asset WHERE Id = :recordId];
-		List<AssetReturn__c> assetReturns = [SELECT Id FROM AssetReturn__c WHERE Asset__c = :recordId AND ApprovalStatus__c = '요청'];
+		List<AssetReturn__c> assetReturns = [SELECT Id FROM AssetReturn__c WHERE Asset__c = :recordId AND ApprovalStatus__c NOT IN ('승인','반려')];
 		System.debug(JSON.serializePretty(currentUser));
 		InitData initData = new InitData();
 		initData.asset = asset;
@@ -91,9 +91,6 @@ public without sharing class AssetReturnRequestQa {
 	 */
 	@AuraEnabled
 	public static void submitForApproval(final String recordId, Asset asset, AssetReturn__c assetReturn) {
-
-		//System.debug(JSON.serializePretty(asset));
-		//System.debug(JSON.serializePretty(assetReturn));
 
 		insert assetReturn;
 

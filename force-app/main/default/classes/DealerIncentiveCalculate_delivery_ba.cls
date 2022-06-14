@@ -36,7 +36,7 @@ public class DealerIncentiveCalculate_delivery_ba implements Database.Batchable<
 
 		if(String.isEmpty(query)) {
 			return Database.getQueryLocator([
-					SELECT Id, Name,
+					SELECT Id, Name, BatchNo__c,
 							Account.CustomerType__c,
 							Account.BrokeringDealer__c,
 							Account.BrokeringDealer__r.ERPCode__c,

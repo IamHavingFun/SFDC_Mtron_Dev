@@ -53,8 +53,9 @@ public class DealerIncentiveCalculate_pdi_ba implements Database.Batchable<SObje
 
         if(String.isEmpty(query)) {
             return Database.getQueryLocator([
-                    SELECT Id, Name,
+                    SELECT Id, Name, BatchNo__c,
                             DealerReceiptDate__c,
+                            SalesDate__c,
                             fm_ActualSalesDate__c,
                             PDI__r.HandoverDate__c,
                             Account.CustomerType__c,
@@ -105,7 +106,7 @@ public class DealerIncentiveCalculate_pdi_ba implements Database.Batchable<SObje
     }
 
     public void finish(Database.BatchableContext BC) {
-        if(isNextBatch) Database.executeBatch(new DealerIncentiveCalculate_addfee_ba(), 200);
+        if(isNextBatch) Database.executeBatch(new DealerIncentiveCalculate_salesiq_ba(), 1);
     }
 
     public static void runTest() {
