@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnimationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <animationFrequency>always</animationFrequency>
+    <developerName>Custom_Case_Path_CaseQuestion</developerName>
+    <isActive>true</isActive>
+    <masterLabel>문의/건의 내부 사용자 진행 단계 경로 (질의응답)</masterLabel>
+    <recordTypeContext>Custom</recordTypeContext>
+    <recordTypeName>QuestionAndAnswer</recordTypeName>
+    <sobjectType>CustomizedCase__c</sobjectType>
+    <targetField>Status__c</targetField>
+    <targetFieldChangeToValues>답변 완료 및 평가 대기,평가 완료 및 마감</targetFieldChangeToValues>
+</AnimationRule>
