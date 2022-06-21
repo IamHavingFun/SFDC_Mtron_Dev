@@ -56,7 +56,6 @@ public class DealerIncentiveCalculate_pdi_ba implements Database.Batchable<SObje
                     SELECT Id, Name, BatchNo__c,
                             DealerReceiptDate__c,
                             SalesDate__c,
-                            fm_ActualSalesDate__c,
                             PDI__r.HandoverDate__c,
                             Account.CustomerType__c,
                             Account.BrokeringDealer__c,

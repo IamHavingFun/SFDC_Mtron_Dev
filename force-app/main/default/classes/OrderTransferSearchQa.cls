@@ -98,10 +98,9 @@ public with sharing class OrderTransferSearchQa {
 
         String query = 'SELECT Id, BusinessOffice__r.Name, BusinessOffice__r.ERPCode__c,' +
                 'Dealer__c, Dealer__r.Name, Dealer__r.DealerOwner__c, Dealer__r.BusinessOffice__r.ERPCode__c, Account.CustomerType__c, ' +
-                'Name, ProductionDate__c, Product2.Name, IsSendReceiveItem__c, fm_DistributionStockExpiration__c ' +
+                'Name, ProductionDate__c, Product2.Name, fm_DistributionStockExpiration__c ' +
                 'FROM Asset ' +
                 'WHERE InventoryType__c = \'대리점재고\' ' +
-                'AND (DealerReceiptType__c = \'공장주문\' OR (DealerReceiptType__c = \'전수배주문\' AND IsAddTransferApprove__c = TRUE )) '+
                 'AND ( TransferCount__c < 2 OR TransferCount__c = NULL ) ' +
                 'AND Product2Id = :productId ' +
                 'AND DealerReceiptDate__c < THIS_MONTH ' +

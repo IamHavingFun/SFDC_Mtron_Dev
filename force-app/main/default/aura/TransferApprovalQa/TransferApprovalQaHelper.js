@@ -24,7 +24,7 @@
         let isTargetContract = component.get('v.isTargetContract');
         let isSendReceiveItem = component.get('v.isSendReceiveItem');
         let notiMessage = component.get('v.notiMessage');
-
+/*
         if(isRejectGrant) {
             // 거부 가능.
             if(isSendReceiveItem) {
@@ -66,7 +66,7 @@
                 return false;
             }
         }
-
+*/
         if (component.get('v.transferData.assetTransferRequest.Status__c') === '요청') {
             this.gfn_toast('승인 또는 거부를 선택 해야 합니다.', 'w');
             return false;

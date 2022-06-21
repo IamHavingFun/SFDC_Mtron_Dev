@@ -22,7 +22,7 @@ public without sharing class LsMSalesOrderAssetTransferApproval {
 		Order__c order = [SELECT Id, TransferProcessStatus__c, TransferBusinessOffice__c, TransferMachineNo__c, Division__c FROM Order__c WHERE Id = :assetTransferRequest.Order__c];
 
 		// 해당 Order__c 상태 승인, 영업소, 전배 기대번호, 주문 구분 업데이트
-		order.TransferProcessStatus__c = '승인';
+		order.TransferProcessStatus__c = status;
 		order.TransferBusinessOffice__c = assetTransferRequest.TransferDealer__c;
 		order.TransferMachineNo__c = assetTransferRequest.AssetNo__c;
 		order.Division__c = '전수배';
@@ -43,7 +43,7 @@ public without sharing class LsMSalesOrderAssetTransferApproval {
 		update oli;
 
 
-		assetTransferRequest.Status__c = '승인';     // 승인 / 거부
+		assetTransferRequest.Status__c = status;     // 승인 / 거부
 		update assetTransferRequest;
 
 		// TO-DO  주문 값 업데이트 해야 함..

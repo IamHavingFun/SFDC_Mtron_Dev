@@ -47,7 +47,7 @@ public class ActualSalesDailyUpdate_ba implements Database.Batchable<SObject>, D
 		List<AggregateResult> assetList = [
 				SELECT Dealer__c Dealer, Product2.ProductType__c ProductType, COUNT(Id) QTY
 				FROM Asset
-				WHERE fm_ActualSalesDate__c >= :startDate AND fm_ActualSalesDate__c <= :endDate
+				WHERE SalesDate__c >= :startDate AND SalesDate__c <= :endDate
 				AND InventoryType__c = '실판매'
 				AND Dealer__c IN : accounts
 				AND Account.CustomerType__c NOT IN ('농협','관납')

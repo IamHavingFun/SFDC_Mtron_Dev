@@ -49,7 +49,7 @@ public with sharing class I2SEMA_Custom_SMS_Send {
 				SELECT Name, Account.Name, Account.PersonMobilePhone, Account.IsCUPI__pc,
 						Dealer__r.Name, Dealer__r.Phone, Dealer__r.fm_Mobile__c
 				FROM Asset
-				WHERE fm_ActualSalesDate__c != NULL
+				WHERE SalesDate__c != NULL
 				AND InventoryType__c = '실판매'
 				AND Account.RecordType.DeveloperName  = 'PersonAccount'
 				AND Account.Name != 'UnKnown'

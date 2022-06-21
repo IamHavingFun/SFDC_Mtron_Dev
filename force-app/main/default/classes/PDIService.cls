@@ -145,7 +145,7 @@ public without sharing class PDIService {
 				SELECT Id, ReturnType__c, Asset__c, Asset__r.Id, Asset__r.Name, Asset__r.BatchNo__c,
 						Asset__r.DealerCode__c, Asset__r.Account.ERPCode__c, Asset__r.Account.Name,
 						Asset__r.Product2.ProductCode,
-						Asset__r.fm_ActualSalesDate__c, Asset__r.WtyStartDate__c, CreatedDate
+						Asset__r.SalesDate__c, Asset__r.WtyStartDate__c, CreatedDate
 				FROM AssetReturn__c
 				WHERE Id IN :assetReturnIds
 				AND ApprovalStatus__c = '승인'
@@ -167,7 +167,7 @@ public without sharing class PDIService {
 		if (assetReturns.isEmpty() == false) {
 			Integer seq = 1;
 			for (AssetReturn__c r : assetReturns) {
-				vkdat = r.Asset__r.fm_ActualSalesDate__c == null ? r.Asset__r.WtyStartDate__c : r.Asset__r.fm_ActualSalesDate__c;
+				vkdat = r.Asset__r.SalesDate__c == null ? r.Asset__r.WtyStartDate__c : r.Asset__r.SalesDate__c;
 				if(vkdat != null) vkdateString = ((Datetime)vkdat).format('yyyy-MM-dd');
 				inData = new IF_KR_SE_ERP_0041.INPUT_T_DATA();
 				inData.MATNR = r.Asset__r.Product2.ProductCode;

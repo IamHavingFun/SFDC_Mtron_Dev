@@ -61,11 +61,10 @@
                 <colgroup>
                     <col width="7%"/>
                     <col width="10%"/>
-                    <col width="10%"/>
-                    <col width="10%"/>
                     <col width="15%"/>
                     <col width="10%"/>
-                    <col width="15%"/>
+                    <col width="25%"/>
+                    <col width="10%"/>
                     <col width="12%"/>
                     <col width="11%"/>
                 </colgroup>
@@ -73,7 +72,7 @@
                 <thead>
                     <tr>
                         <c:lacComTh>선택</c:lacComTh>
-                        <c:lacComTh>{!v.labelMap.Asset.businessofficename__c}</c:lacComTh>
+                        <c:lacComTh>{!v.labelMap.Asset.businessoffice__c}</c:lacComTh>
                         <c:lacComTh>{!v.labelMap.Asset.dealer__c}</c:lacComTh>
                         <c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>
                         <c:lacComTh title="{!v.labelMap.Product2.name}">{!v.labelMap.Product2.name}</c:lacComTh>
