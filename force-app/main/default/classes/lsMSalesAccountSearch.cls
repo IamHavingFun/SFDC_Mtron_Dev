@@ -13,7 +13,8 @@
  * ===============================================================
  * ver     date                     author              description
  * ===============================================================
- 0.1     2020-06-10 오전 10:12     SEOKHO LEE          Create
+ 0.1     2020-06-10 오전 10:12     i2max_my.Seo         Create
+ 0.2     2022-06-20                i2max                ITVOC-2021-07-0404
  ****************************************************************************************/
 public with sharing class lsMSalesAccountSearch {
 	/**
@@ -48,12 +49,6 @@ public with sharing class lsMSalesAccountSearch {
 		System.debug(System.LoggingLevel.INFO, 'series :' + series);
 		return I2ComDependencyUtil.getDependentPickListOptions('Product2', 'Series__c', 'HorsePowerStandard__c', series,true, true);
 	}
-
-//	//구매년도
-//	@AuraEnabled
-//	public static List<I2ComClass.Option> getPurchaseDateOptions() {
-//		return I2ComUtil.makePickListOptions('Asset', 'fm_PurchaseDate__c', false, true);
-//	}
 
 	/**
      * 검색
@@ -105,11 +100,11 @@ public with sharing class lsMSalesAccountSearch {
 				Integer nPurchaseDate = Integer.valueOf(paramMap.get('srchPurchaseDate'));
 				//구매년도
 				if(nPurchaseDate == 1) {
-					whereClause += ' AND fm_PurchaseDate__c >= LAST_N_YEARS:' + nPurchaseDate + ' \n ';
+					whereClause += ' AND SalesDate__c >= LAST_N_YEARS:' + nPurchaseDate + ' \n ';
 				} else {
-//					whereClause += ' AND fm_PurchaseDate__c = LAST_N_YEARS:' + nPurchaseDate + ' \n ';
-					whereClause += ' AND fm_PurchaseDate__c = LAST_N_YEARS:' + nPurchaseDate  + ' \n';
-					whereClause += ' AND fm_PurchaseDate__c < LAST_N_YEARS:' + (nPurchaseDate -1)   + ' \n';
+//					whereClause += ' AND SalesDate__c = LAST_N_YEARS:' + nPurchaseDate + ' \n ';
+					whereClause += ' AND SalesDate__c = LAST_N_YEARS:' + nPurchaseDate  + ' \n';
+					whereClause += ' AND SalesDate__c < LAST_N_YEARS:' + (nPurchaseDate -1)   + ' \n';
 				}
 			}
 			whereClause += ' ) ';
@@ -124,7 +119,7 @@ public with sharing class lsMSalesAccountSearch {
 		System.debug('whereClause : ' + whereClause);
 
 		I2ComClass.ResData resData = I2ComHelper.gfnQuery(
-				'Id, Name, LastModifiedDate, PersonMobilePhone, CustomerStatus__c, FarmingForm__c, FarmingArea__c, Fm_Mobile__c, (SELECT Id, Name, Product2.Name, fm_PurchaseDate__c FROM Assets  ), (SELECT Id, Name FROM Opportunities ) ',
+				'Id, Name, LastModifiedDate, PersonMobilePhone, CustomerStatus__c, FarmingForm__c, FarmingArea__c, Fm_Mobile__c, (SELECT Id, Name, Product2.Name, SalesDate__c FROM Assets  ), (SELECT Id, Name FROM Opportunities ) ',
 				'Account',
 				whereClause,
 				'ORDER BY LastModifiedDate DESC, Name ASC ',

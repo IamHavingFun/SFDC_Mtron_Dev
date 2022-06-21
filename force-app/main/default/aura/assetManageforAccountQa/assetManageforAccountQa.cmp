@@ -44,17 +44,15 @@
                 <colgroup>
                     <col width="5%"/>
                     <col width="15%"/>
-                    <col width="15%"/>
+                    <col width="30%"/>
+                    <col width="10%"/>
                     <col width="20%"/>
-                    <col width="15%"/>
-                    <col width="15%"/>
-                    <col width="15%"/>
+                    <col width="20%"/>
                 </colgroup>
                 <thead>
                   <tr>
                       <c:lacComTh>선택</c:lacComTh>
                       <c:lacComTh title="{!v.labelMap.Asset.name}">{!v.labelMap.Asset.name}</c:lacComTh>
-                      <c:lacComTh title="{!v.labelMap.Asset.brand__c}">{!v.labelMap.Asset.brand__c}</c:lacComTh>
                       <c:lacComTh title="{!v.labelMap.Product2.name}">{!v.labelMap.Product2.name}</c:lacComTh>
                       <c:lacComTh title="{!v.labelMap.Asset.inventorytype__c}">{!v.labelMap.Asset.inventorytype__c}</c:lacComTh>
                       <c:lacComTh title="{!v.labelMap.Asset.customer__c}">{!v.labelMap.Asset.customer__c}</c:lacComTh>
@@ -67,33 +65,12 @@
                     <tr>
                         <c:lacComTd>
                             <lightning:input aura:id="mycheck" label="" type="checkbox" onchange="{!c.onCheck}" value="{!record}"
-                                             disabled="{!
-                                                 or(
-                                                    and(
-                                                        equals(record.Brand__c, 'LS'),
-                                                        or(
-                                                            not(empty(record.Customer__c)),
-                                                            notequals(v.customerData.account.Dealer__c,record.Dealer__c)
-                                                        )
-                                                    ),
-                                                    and(
-                                                        notequals(record.Brand__c, 'LS'),
-                                                        or(
-                                                            not(empty(record.Customer__c)),
-                                                            and(
-                                                                notequals(v.customerData.account.Dealer__c,record.Dealer__c),
-                                                                not(empty(record.Dealer__c))
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                                ? true : false}"
+                                             disabled="{!true}"
                             />
                         </c:lacComTd>
                         <c:lacComTd title="{!record.Name}">
                             {!record.Name}
                         </c:lacComTd>
-                        <c:lacComTd title="{!record.Brand__c}">{!record.Brand__c}</c:lacComTd>
                         <c:lacComTd title="{!record.Product2.Name}">{!record.Product2.Name}</c:lacComTd>
                         <c:lacComTd title="{!record.InventoryType__c}">{!record.InventoryType__c}</c:lacComTd>
                         <c:lacComTd title="{!record.Customer__r.Name}">{!record.Customer__r.Name}</c:lacComTd>

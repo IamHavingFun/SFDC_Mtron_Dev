@@ -15,6 +15,7 @@
 * ===============================================================
 0.1     2020-05-14 오전 09:06     Choi SeongWon          Create
 0.2     2020-07-08 오전 09:00     SEOKHO LEE             Modify
+0.3     2022-06-20                i2max                 ITVOC-2021-07-0404
  */
 
 public with sharing class AssetManageforAccountQa {
@@ -45,7 +46,6 @@ public with sharing class AssetManageforAccountQa {
         String whereClause = '';
         Map<String, String> paramMap = I2ComHelper.gfnCheckCondition(reqData);
 
-        //whereClause += 'WHERE ((Brand__c = \'LS\' AND AccountId = '+ ModelUser.getUserData().AccountId +' AND Customer__c = null) OR (Brand__c != \'LS\' AND Customer__c = null))';
         /*
          * ================================================================
          * 검색 조건이 변경 : 2020.07.16
@@ -55,11 +55,6 @@ public with sharing class AssetManageforAccountQa {
          * 4. 자산 검색조건(name)
          * ================================================================
          */
-/*        whereClause += 'WHERE Customer__c = null' + '\n';
-        whereClause += 'AND (' + '\n';
-        whereClause += '    (Brand__c = \'LS\' AND InventoryType__c IN (\'대리점재고\', \'실판매\') AND AccountId = \''+ ModelUser.getUserData().AccountId +'\')' + '\n';
-        whereClause += '     OR   Brand__c != \'LS\'' + '\n';
-        whereClause += ')' + '\n';*/
 
         if(I2ComHelper.gfnHasCondition(paramMap, 'name')) {
             final String likeIdioms = '\'%' + String.escapeSingleQuotes(paramMap.get('name')) + '%\'';
@@ -68,7 +63,7 @@ public with sharing class AssetManageforAccountQa {
         whereClause = I2ComHelper.gfnRefineCondition(whereClause);
 
         I2ComClass.ResData resData = I2ComHelper.gfnQuery(
-                'Name, Brand__c, Product2.Name, InventoryType__c, Dealer__c, Dealer__r.Name, Customer__c, Customer__r.Name, AccountId',
+                'Name, Product2.Name, InventoryType__c, Dealer__c, Dealer__r.Name, Customer__c, Customer__r.Name, AccountId',
                 'Asset',
                 whereClause,
                 null,
@@ -98,8 +93,8 @@ public with sharing class AssetManageforAccountQa {
 
         customerData.asset.Customer__c = customerData.account.Id;
         customerData.asset.AccountId = customerData.account.Id;
-        customerData.asset.AssetRegDate__c = System.today();
-
+        //customerData.asset.AssetRegDate__c = System.today();
+/*
         if('LS'.equals(customerData.asset.Brand__c)){
             customerData.asset.InventoryType__c = '실판매';
             customerData.asset.TransferOrder__c = null;
@@ -132,7 +127,7 @@ public with sharing class AssetManageforAccountQa {
             update customerData.asset;
             update customerData.account;
         }
-
+*/
         //Database.rollback(sp);
         return customerData;
     }

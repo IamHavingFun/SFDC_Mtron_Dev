@@ -4,7 +4,7 @@
   * @date          : 2020-11-19 오후 12:28
   * @group         : 
   * @group-content : 
-  * @description   : 
+  * @description   : 전수배 대상 조회
   * @tester        : OrderTransferSearchQa_ts.cls
   * @reference     : 
   * @copyright     : Copyright © I2max. All Rights Reserved.
@@ -96,6 +96,19 @@ public with sharing class OrderTransferSearchQa {
 
         Order__c order = [SELECT Id, OrderAccount__r.CustomerType__c, Dealer__c, BusinessOffice__r.ERPCode__c FROM Order__c WHERE Id = :orderId];
 
+        String query = 'SELECT Id, BusinessOffice__r.Name, BusinessOffice__r.ERPCode__c,' +
+                'Dealer__c, Dealer__r.Name, Dealer__r.DealerOwner__c, Dealer__r.BusinessOffice__r.ERPCode__c, Account.CustomerType__c, ' +
+                'Name, ProductionDate__c, Product2.Name, IsSendReceiveItem__c, fm_DistributionStockExpiration__c ' +
+                'FROM Asset ' +
+                'WHERE InventoryType__c = \'대리점재고\' ' +
+                'AND (DealerReceiptType__c = \'공장주문\' OR (DealerReceiptType__c = \'전수배주문\' AND IsAddTransferApprove__c = TRUE )) '+
+                'AND ( TransferCount__c < 2 OR TransferCount__c = NULL ) ' +
+                'AND Product2Id = :productId ' +
+                'AND DealerReceiptDate__c < THIS_MONTH ' +
+                'AND (Order__c = NULL OR Order__r.Status__c = \'종료\' ) ' +
+                'AND Dealer__c != NULL ' +
+                'AND Dealer__c != \''+order.Dealer__c+'\' ';
+/*
         String query = 'SELECT Id, BusinessOfficeName__c, BusinessOffice__r.Name, BusinessOffice__r.ERPCode__c,' +
                        'Dealer__c, Dealer__r.Name, Dealer__r.DealerOwner__c, Dealer__r.BusinessOffice__r.ERPCode__c, Account.CustomerType__c, ' +
                        'Name, ProductionDate__c, Product2.Name, IsSendReceiveItem__c, fm_DistributionStockExpiration__c ' +
@@ -109,16 +122,16 @@ public with sharing class OrderTransferSearchQa {
                        'AND (Order__c = NULL OR Order__r.Status__c = \'종료\' ) ' +
                        'AND Dealer__c != NULL ' +
                        'AND Dealer__c != \''+order.Dealer__c+'\' ';
-
+*/
 
         if(String.isNotBlank(reqData.get('businessOfficeName'))) {
             query += 'AND BusinessOffice__r.ERPCode__c = \'' + reqData.get('businessOfficeName') + '\' ';
         } else {
             query += 'AND BusinessOffice__r.ERPCode__c = \'' + currentUser.BusinessOffice__c + '\'';
         }
-        if(String.isNotBlank(reqData.get('assetTransferTarget'))) {
+/*        if(String.isNotBlank(reqData.get('assetTransferTarget'))) {
             query += 'AND IsSendReceiveItem__c = ' + reqData.get('assetTransferTarget') + '\n';
-        }
+        }*/
         if(String.isNotBlank(reqData.get('assetName'))) {
             final String likeIdioms = '\'%' + String.escapeSingleQuotes(reqData.get('assetName')) + '%\'';
             query += 'AND Name LIKE ' + likeIdioms;

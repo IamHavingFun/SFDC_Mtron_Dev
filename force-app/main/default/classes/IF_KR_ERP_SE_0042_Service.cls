@@ -63,7 +63,6 @@ public without sharing class IF_KR_ERP_SE_0042_Service {
 					asset.Dealer__c = dealer.Id;
 					asset.OwnerId = dealer.DealerOwner__c == null ? dealer.OwnerId : dealer.DealerOwner__c;
 					asset.BusinessOffice__c = dealer.BusinessOffice__c;
-					asset.BusinessOfficeName__c = dealer.BusinessOffice__r.ERPCode__c;
 				} else if(temp.ZREASON == '02') {
 					// 농협 이관.
 					if(dealer.CustomerType__c != '농협') {
@@ -74,7 +73,6 @@ public without sharing class IF_KR_ERP_SE_0042_Service {
 					asset.Dealer__c = dealer.Dealer__c;
 					asset.OwnerId = dealer.Dealer__r.DealerOwner__c == null ? dealer.Dealer__r.OwnerId : dealer.Dealer__r.DealerOwner__c;
 					asset.BusinessOffice__c = dealer.Dealer__r.BusinessOffice__c;
-					asset.BusinessOfficeName__c = dealer.Dealer__r.BusinessOffice__r.ERPCode__c;
 				} else if(temp.ZREASON == '03') {
 					// 농협경제지주 주식회사 자재부 재 이관. : 소유자 : 최상현
 					asset.AccountId = dealer.Id;
@@ -82,7 +80,6 @@ public without sharing class IF_KR_ERP_SE_0042_Service {
 					asset.Dealer__c = dealer.Id;
 					asset.OwnerId = dealer.OwnerId;
 					asset.BusinessOffice__c = dealer.BusinessOffice__c;
-					asset.BusinessOfficeName__c = dealer.BusinessOffice__r.ERPCode__c;
 				}
 			} else {
 				throw new IF_Base.IFException('기대번호 없음 : ['+temp.CHARG+']');

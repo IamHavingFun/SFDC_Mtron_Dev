@@ -25,8 +25,6 @@ private class AssetSendReceiveItemConfirm_ba_ts {
         TestDataSalesFactory.init();
 
         Asset testAsset = TestDataSalesFactory.baseAsset.clone(false, true);
-        testAsset.IsSendReceiveItem__c = false;
-        testAsset.SendReceiveSpecifiedDate__c = null;
         testAsset.Order__c = null;
         testAsset.DealerReceiptDate__c = TestDataUtilFactory.d.addDays(-90);
         insert testAsset;

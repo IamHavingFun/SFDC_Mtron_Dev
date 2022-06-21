@@ -389,10 +389,12 @@
                             <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.orderLineItemList[0].ListPrice__c}" maximumFractionDigits="3"/></c:lacComTd>
                             <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.supplyHighAmt}" maximumFractionDigits="3"/></c:lacComTd>
                             <c:lacComTd><lightning:formattedNumber value="{!v.wrapperData.supplyLowAmt}" maximumFractionDigits="3"/></c:lacComTd>
--->
-
                             <aura:if isTrue="{!not(v.wrapperData.isPartner)}">
                                 <c:lacComTd>{!v.wrapperData.asset.Name}</c:lacComTd>
+                            </aura:if>
+-->
+                            <aura:if isTrue="{!not(v.wrapperData.isPartner)}">
+                                <c:lacComTd>{!v.wrapperData.orderLineItemList[0].OrderId__r.TransferMachineNo__r.Name}</c:lacComTd>
                             </aura:if>
                         </tr>
                     </tbody>

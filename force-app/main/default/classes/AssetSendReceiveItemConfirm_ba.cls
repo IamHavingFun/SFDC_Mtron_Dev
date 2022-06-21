@@ -31,22 +31,23 @@ public with sharing class AssetSendReceiveItemConfirm_ba implements Database.Bat
          * ================================================================
          */
         return Database.getQueryLocator([
-            SELECT  Id, IsSendReceiveItem__c , SendReceiveSpecifiedDate__c
+            SELECT  Id
             FROM    Asset
             WHERE   Dealer__c != null
-            AND     IsSendReceiveItem__c = false
-            AND     SendReceiveSpecifiedDate__c = null
             AND     Order__c = null
             AND     DealerReceiptDate__c <= :this.targetDate
         ]);
+/*        AND     IsSendReceiveItem__c = false
+        AND     SendReceiveSpecifiedDate__c = null*/
     }
 
     public void execute(Database.BatchableContext BC, List<Asset> scope) {
-
+/*
         for(Asset asset : scope) {
             asset.IsSendReceiveItem__c = true;
             asset.SendReceiveSpecifiedDate__c = this.exeDate;
         }
+*/
 
         update scope;
 

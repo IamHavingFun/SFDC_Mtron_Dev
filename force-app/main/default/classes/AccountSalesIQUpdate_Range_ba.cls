@@ -12,7 +12,8 @@
   * ===============================================================
   * ver     date                     author              description
   * ===============================================================
-    0.1     2020-09-11 오전 9:45     i2max_my.Seo           Create
+    0.1     2020-09-11 오전 9:45     i2max_my.Seo        Create
+    0.2     2022-06-20               i2max               ITVOC-2021-07-0404
 ****************************************************************************************/
 public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batchable<SObject>, Database.Stateful {
 
@@ -33,6 +34,7 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
     public void execute(Database.BatchableContext BC, List<Account> accounts) {
         //scope.Id 기준으로 각 오브젝트 쿼리 + 합산
         Account scope = accounts.get(0); //batch size = 1
+/*
         List<AggregateResult> opptyAggregateResults = [
                 SELECT Dealer__c, SUM(SalesIQ_1__c) SalesIQ_1__c
                 FROM Opportunity
@@ -80,11 +82,11 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
                 GROUP BY Dealer__c
         ];
 
-        /**
+        **
          * 연체 체크는 월 1회만 처리 한다.
          * 주의 시작일과 종료일의 월이 다르면 수행.
          * 데이터 처리 기준은 전주 기준으로 처리 하고 있다.
-        */
+        *
         Date startDate = Date.today().toStartOfWeek().addDays(-7);
         Date endDate = startDate.addDays(6);
         List<AggregateResult> accountAggregateResults = new List<AggregateResult>();
@@ -112,7 +114,7 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
 
         scope.LastSalesScoring__c = 0;
         scope.SalesScoring__c = allSalesIQSum;
-
+*/
         update scope;
 
     }

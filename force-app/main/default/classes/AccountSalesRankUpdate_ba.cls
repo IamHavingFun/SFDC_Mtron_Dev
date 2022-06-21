@@ -13,7 +13,8 @@
   * ===============================================================
   * ver     date                     author              description
   * ===============================================================
-    0.1     2020-08-18 오전 9:08     i2max_my.Seo           Create
+    0.1     2020-08-18 오전 9:08     i2max_my.Seo        Create
+    0.2     2022-06-20               i2max               ITVOC-2021-07-0404
 ****************************************************************************************/
 public class AccountSalesRankUpdate_ba implements Database.Batchable<SObject>, Database.Stateful {
     public Database.QueryLocator start(Database.BatchableContext BC) {
@@ -27,6 +28,7 @@ public class AccountSalesRankUpdate_ba implements Database.Batchable<SObject>, D
     public void execute(Database.BatchableContext BC, List<Account> scope) {
         Map<Decimal, List<Account>> scoringMap          = new Map<Decimal, List<Account>>();
         List<Account>               targetUpdateList    = new List<Account>();
+/*
         List<Account>               accounts            = [
                 SELECT Id, SalesScoring__c, SalesIQRank__c
                 FROM Account
@@ -57,8 +59,8 @@ public class AccountSalesRankUpdate_ba implements Database.Batchable<SObject>, D
                 targetUpdateList.add(tempAcc);
             }
         }
-
         update targetUpdateList;
+ */
     }
 
     public void finish(Database.BatchableContext BC) {

@@ -47,7 +47,7 @@ public without sharing class TransferApprovalQa {
     public static TransferData init(final String recordId) {
         TransferData transferData = new TransferData();
         transferData.assetTransferRequest = [
-                SELECT AssetNo__r.Name, AssetNo__r.IsSendReceiveItem__c, Model__r.Name, WantedDealer__r.Name, Status__c, TransferDealer__c, Order__c, Contract__c,
+                SELECT AssetNo__r.Name, Model__r.Name, WantedDealer__r.Name, Status__c, TransferDealer__c, Order__c, Contract__c,
                         Order__r.TransferMachineNo__c, Order__r.TransferBusinessOffice__c, Order__r.TransferProcessStatus__c,
                         Contract__r.Status__c, Contract__r.ContractNumber__c, Contract__r.CustomerExpectedDate__c
                 FROM AssetTransferRequest__c
@@ -78,9 +78,8 @@ public without sharing class TransferApprovalQa {
                 WHERE AssetNo__c = :transferData.assetTransferRequest.AssetNo__c
         ];
 
-
         transferData.isProcessed      = false;
-        transferData.isRejectGrant    = false;   // 거부 권한이 있는가 체크.
+        transferData.isRejectGrant    = true;   // 거부 권한이 있는가 체크.
         transferData.isTargetContract = false;   // 고객 인도기일이 오늘 기준으로 30일 이하로만 남은 계약이 있는가?
         transferData.isSendReceiveItem = false;
         transferData.notiMessage      = '';
@@ -90,48 +89,6 @@ public without sharing class TransferApprovalQa {
             transferData.notiMessage = '해당건의 전배 요청에 대해서 ['+transferData.assetTransferRequest.Status__c+'] 처리 한건입니다.';
         }
 
-        if(transferData.assetTransferRequest.AssetNo__r.IsSendReceiveItem__c == true) {
-            transferData.isSendReceiveItem = true;
-            // 2. 해당 기대가 전배 대상 인가? 전배대상 : 거부 불가..
-            if(transferData.contracts.isEmpty() == false && transferData.contracts.size() > 0) {
-                // 3. 전배 요청을 받은 기대와 동일한 모델에 대한, 고객 인도기일이 오늘 기준으로 30일 이하로만 남은 계약이 있는가?
-                // YES :
-                transferData.isRejectGrant    = true;
-                transferData.isTargetContract = true;
-
-            } else {
-                if(checkRejectAssets.isEmpty() == true) {
-                    // 4. 해당 기대에 대해 전배 요청을 거부한 적이 있는가? 없음 : 거부 가능
-                    transferData.isRejectGrant    = true;
-                } else {
-                    // 4. 해당 기대에 대해 전배 요청을 거부한 적이 있는가? 있음 : 거부 붉가.
-                    //transferData.notiMessage = '※고객과의 계약을 근거로 전배를 거부한 이력이 있으나 이후 판매가 진행되지 않은 기대이기에, 전배 요청을 거부할 수 없습니다.';
-                }
-            }
-        } else {
-            // 2. 해당 기대가 전배 대상 인가? 전배대상이 아님 : 거부 가능.
-            transferData.isRejectGrant = true;
-        }
-/*
-                    1. 전배 대리점의 대답이;
-                     - 승인은 바로 누를 수 있음. → 승인 → 전수배 주문 진행
-                     - 거부를 누르려면... → 아래 프로세스 체크
-
-                    2. 해당 기대가 전배 대상 OX?
-                     - 전배 대상 X → 자유롭게 거부 할 수 있음.
-                     - 전배 대상 O → 3번으로
-
-                    3. 전배 요청을 받은 기대와 동일한 모델에 대한, 고객 인도기일이 오늘 기준으로 30일 이하로만 남은 계약이 있는가?
-                       --> fm_DeliveryDateOfDue30__c
-                     - 계약 O → 계약 첨부해서 거부 가능하나, 그 계약에 대한 Tracking 진행
-                    ※전배 요청 거부에 근거한 계약은 기재된 고객 인도기일 前 반드시 PDI 등록이 완료되어야 하며, 만약 등록되지 않을 경우 Sales IQ 30점이 차감됩니다.
-                     - 계약 X → 4번으로
-
-                    4. 해당 기대에 대해 전배 요청을 거부한 적이 있는가?
-                     - 거부 이력 O → 거부 불가
-                    ※고객과의 계약을 근거로 전배를 거부한 이력이 있으나 이후 판매가 진행되지 않은 기대이기에, 전배 요청을 거부할 수 없습니다.
-                     - 거부 이력 X → 거부 가능
- */
 
         return transferData;
     }
@@ -152,7 +109,6 @@ public without sharing class TransferApprovalQa {
                 assetTransferRequest.Order__r.Division__c = '전수배';
 
                 // 해당 Asset 업데이트
-                assetTransferRequest.AssetNo__r.TransferOrder__c = assetTransferRequest.Order__c;
                 update assetTransferRequest.AssetNo__r;
 
                 // 해당 OrderLineItem 업데이트

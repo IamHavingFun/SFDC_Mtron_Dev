@@ -13,7 +13,8 @@
  * ===============================================================
  * ver     date                     author              description
  * ===============================================================
- 0.1     2020-06-10 오전 10:12     i2max_my.Seo          Create
+ 0.1     2020-06-10 오전 10:12     i2max_my.Seo         Create
+ 0.2     2022-06-20                i2max                ITVOC-2021-07-0404
  ****************************************************************************************/
 public with sharing class lsMSalesAccountDetail {
 	/**
@@ -33,7 +34,7 @@ public with sharing class lsMSalesAccountDetail {
 		];
 		// 자산 정보 조회
 		List<Asset> assets = [
-				SELECT Id, Name, ProductionDate__c, fm_PurchaseDate__c,
+				SELECT Id, Name, ProductionDate__c, SalesDate__c,
 					   Product2.Name, Product2.HorsePowerStandard__c, Product2.Option1__c, Product2.Option2__c, Product2.Option3__c, Product2.Option4__c
 				FROM Asset
 				WHERE AccountId = :recordId

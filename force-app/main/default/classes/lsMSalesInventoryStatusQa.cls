@@ -37,12 +37,12 @@ public with sharing class lsMSalesInventoryStatusQa {
         ]);
 
         List<AggregateResult> dealerInventoryStatus = new List<AggregateResult>([
-                SELECT toLabel(BusinessOfficeName__c) officeName, COUNT(Id) assetCount
+                SELECT BusinessOffice__r.Name officeName, COUNT(Id) assetCount
                 FROM Asset
                 WHERE InventoryType__c = '대리점재고'
                 AND Product2.Id = :targetProduct.Id
                 AND BusinessOffice__c != null
-                GROUP BY BusinessOfficeName__c
+                GROUP BY BusinessOffice__r.Name
         ]);
 
         List<InventoryStatusClass> resultList = new List<InventoryStatusClass>();

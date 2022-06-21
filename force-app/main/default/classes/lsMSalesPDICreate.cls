@@ -41,12 +41,12 @@ public without sharing class lsMSalesPDICreate {
 
         User UserLoginAcc = [select id, Contact.AccountId from User where Id =:UserInfo.getUserId()]; // 로그인 사용자
         List<Asset> assets = [
-		        SELECT Id, Name, Dealer__c, AccountId, Account.CustomerType__c, Customer__c, Customer__r.Name, Customer__r.fm_Mobile__c, Account.Name, Account.fm_Mobile__c,
+		        SELECT Id, Name, BatchNo__c, Dealer__c, AccountId, Account.CustomerType__c, Customer__c, Customer__r.Name, Customer__r.fm_Mobile__c, Account.Name, Account.fm_Mobile__c,
 				        OwnerId, Product2Id, Product2.Name, Product2.ProductCode, InventoryType__c,
 				        Product2.WarrantyRange__c,
 		                (select Id,SalePrice__c from Asset_Price__r)
 		        FROM Asset
-		        WHERE Name = :assetName LIMIT 1
+		        WHERE (Name = :assetName OR BatchNo__c = :assetName) LIMIT 1
         ];
         if(assets.isEmpty()) {
             lsMSalesPDIVO.bizData.asset = new Asset();
@@ -223,12 +223,11 @@ public without sharing class lsMSalesPDICreate {
 		asset.AccountId                          = pdiData.bizData.pdi.Consumer__c; // 실소유자
 		asset.PDI__c                             = pdiData.bizData.pdi.Id; // PDI 연결
 		asset.Contract__c                        = pdiData.bizData.pdi.Contract__c; // 계약 연결
-		asset.IsSendReceiveItem__c               = false;
+/*		asset.IsSendReceiveItem__c               = false;
 		asset.SendReceiveSpecifiedDate__c        = null;
 		asset.DateSendReceiveExcept__c           = null;
 		asset.CondSendReceiveExcept__c           = '';
-		asset.NumSendReceiveExcept__c            = 0;
-		asset.TransferOrder__c                   = null;
+		asset.NumSendReceiveExcept__c            = 0;*/
 		asset.SalesDate__c                       = Date.today();        // 판매일자.
 		asset.WtyStartDate__c                    = Date.today();        // 처리일자.
 		asset.WtyEndDate__c                      = asset.WtyStartDate__c.addYears(warrantRange);
@@ -329,7 +328,6 @@ public without sharing class lsMSalesPDICreate {
 		if(pdiData.bizData.pdi.IFStatus__c == 'Complete') {
 			pdiData = save(pdiData, dealerSignPng, customerSignPng);
 			//getPdiPDF(pdiData.bizData.pdi.Id);
-			//TODO : 임시로 막자...
 		}
 		return pdiData;
 	}

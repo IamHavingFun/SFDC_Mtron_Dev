@@ -42,12 +42,12 @@ private class AssetManageforAccountQa_ts {
 
         // 자사 제품인 경우
         customerData.asset = TestDataSalesFactory.baseAsset;
-        customerData.asset.Brand__c = 'LS';
+        //customerData.asset.Brand__c = 'LS';
         AssetManageforAccountQa.save(customerData);
 
         // 타사 제품인 경우
         customerData.asset = TestDataSalesFactory.baseAsset;
-        customerData.asset.Brand__c = '대동';
+        //customerData.asset.Brand__c = '대동';
         AssetManageforAccountQa.save(customerData);
 
         // 대리점 유저로 조회

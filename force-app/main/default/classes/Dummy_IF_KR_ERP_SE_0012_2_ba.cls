@@ -15,6 +15,7 @@
   * ver     date            author         description
   * ===============================================================
     0.1     2022-03-28      i2max         Create
+    0.2     2022-06-20      i2max         ITVOC-2021-07-0404
 ****************************************************************************************/
 
 public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
@@ -234,8 +235,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						Dealer__c,
 						DealerCode__c,
 						BusinessOffice__c,
-						BusinessOfficeName__c,
-						Brand__c,
 						Order__c,
 						TransferCount__c
 				FROM    Asset
@@ -338,7 +337,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						tmpAsset.DealerCode__c = target.SoldTo__r.ERPCode__c;
 //						tmpAsset.SalesRep__c   = target.SoldTo__r.OwnerId;
 						tmpAsset.BusinessOffice__c = target.SoldTo__r.BusinessOffice__c;
-						tmpAsset.BusinessOfficeName__c = target.SoldTo__r.BusinessOfficeName__c;
 						tmpAsset.ErpLGORT__c = '3960';
 						// 대리점 입고일
 						tmpAsset.DealerReceiptDate__c = target.DateOfLoading__c == null ? Date.today() : target.DateOfLoading__c.date();
@@ -356,7 +354,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						tmpAsset.DealerCode__c = target.Dealer__r.ERPCode__c;
 //						tmpAsset.SalesRep__c   = target.Dealer__r.SalesRep__c;
 						tmpAsset.BusinessOffice__c = target.BusinessOffice__c;
-						tmpAsset.BusinessOfficeName__c = target.Dealer__r.BusinessOfficeName__c;
 						if(target.DeliveryType__c == '보관출고') {
 							// 보관출고시는 농협에서 고객으로 넘어 갔기 때문에 저장위치 값 모름.
 							tmpAsset.ErpLGORT__c = '';
@@ -378,7 +375,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 									tmpAsset.Dealer__c = tmpDeliveryAccount.Dealer__c;
 									tmpAsset.DealerCode__c = tmpDeliveryAccount.Dealer__r.ERPCode__c;
 									tmpAsset.BusinessOffice__c = tmpDeliveryAccount.BusinessOffice__c;
-									tmpAsset.BusinessOfficeName__c = tmpDeliveryAccount.BusinessOfficeName__c;
 									tmpAsset.OwnerId = tmpDeliveryAccount.Dealer__r.DealerOwner__c;
 								} else {
 									// 대리점 / 관납
@@ -397,7 +393,7 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						if(target.DeliveryType__c == '전수배출고') {
 							// 전수배주문
 							tmpAsset.TransferCount__c = (tmpAsset.TransferCount__c == null ? 0 : tmpAsset.TransferCount__c) + 1;
-							tmpAsset.TransferAssetReceiptDate__c = target.ReleaseDate__c;   //출하. 전수배인도일
+//							tmpAsset.TransferAssetReceiptDate__c = target.ReleaseDate__c;   //출하. 전수배인도일
 						}
 					}
 
@@ -406,7 +402,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 					if(tmpAsset.FirstDeliveryDate__c == null) {
 						tmpAsset.FirstDeliveryDate__c = tmpAsset.DealerReceiptDate__c;
 					}
-					tmpAsset.FilterText__c		  = target.AssetIdApex__c + ' ' + target.ProductName__r.Name;
 				} else {
 					// 반품 처리. : 반품, 전수배반품, 교환반품, 전시반품
 					if(target.DeliveryType__c != '전수배반품') {
@@ -415,28 +410,17 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						tmpAsset.InventoryType__c = '공장재고(가용)';
 						tmpAsset.Customer__c = null;
 						tmpAsset.AccountId = account.Id;
-						tmpAsset.SalesDate__c = null;       // 판맹리자
+						tmpAsset.SalesDate__c = null;       // 판매일자
 						tmpAsset.WtyStartDate__c = null;    // 워런티 기간 시작 초기화
 						tmpAsset.WtyEndDate__c = null;      // 워린티 기간 종료 초기화
 						tmpAsset.Dealer__c = null;
 						tmpAsset.DealerCode__c = null;
 						tmpAsset.SalesRep__c = null;
 						tmpAsset.BusinessOffice__c = null;
-						tmpAsset.BusinessOfficeName__c = null;
 						// 대리점 입고일
 						tmpAsset.DealerReceiptDate__c = null;
 					}
 				}
-				// 전수배대상 여부
-				tmpAsset.IsSendReceiveItem__c = false;
-				// 전수배대상 지정일
-				tmpAsset.SendReceiveSpecifiedDate__c = null;
-				// 전수배제외조건
-				tmpAsset.CondSendReceiveExcept__c = null;
-				// 전수배제외횟수
-				tmpAsset.NumSendReceiveExcept__c = null;
-				// 전수배제외신청일
-				tmpAsset.DateSendReceiveExcept__c = null;
 
 				tmpAsset.MigInfo__c = '출하정보 KEY : ['+target.fm_NewExternalkey__c+']';
 				asset_Target.put(tmpAsset.BatchNo__c, tmpAsset); // 중복 체크 Map

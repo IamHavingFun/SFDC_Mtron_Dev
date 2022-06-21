@@ -210,8 +210,7 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
                     Product2Id,
                     ProductionDate__c,
                     InventoryType__c,
-                    ErpLGORT__c,
-                    Brand__c
+                    ErpLGORT__c
             FROM    Asset
             WHERE   BatchNo__c IN :DummyByMachineNo.keySet()
         ]) {
@@ -324,9 +323,6 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
                     Product2Id          = tmpProduct.Id,
                     ProductionDate__c   = tmpProductDate,
                     ErpLGORT__c         = dummy.ErpLGORT__c
-//                    Brand__c            = 'LS',
-//                    FilterText__c       = tmpProduct.Name,
-//                    AssetNumber__c      = tmpMachineNo
                 ));
             }
             //============================================================================

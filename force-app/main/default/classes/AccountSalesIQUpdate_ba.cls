@@ -13,7 +13,8 @@
   * ===============================================================
   * ver     date                    author          description
   * ===============================================================
-    0.1     2020-05-14             Park HE         Create
+    0.1     2020-05-14             Park HE          Create
+    0.2     2022-06-20             i2max            ITVOC-2021-07-0404
 ****************************************************************************************/
 
 public class AccountSalesIQUpdate_ba implements Database.Batchable<SObject>, Database.Stateful {
@@ -32,6 +33,7 @@ public class AccountSalesIQUpdate_ba implements Database.Batchable<SObject>, Dat
     public void execute(Database.BatchableContext BC, List<Account> accounts) {
         //scope.Id 기준으로 각 오브젝트 쿼리 + 합산
         Account scope = accounts.get(0); //batch size = 1
+/*
         List<AggregateResult> opptyAggregateResults = [
                 SELECT Dealer__c, SUM(SalesIQ_1__c) SalesIQ_1__c
                 FROM Opportunity
@@ -60,12 +62,6 @@ public class AccountSalesIQUpdate_ba implements Database.Batchable<SObject>, Dat
                 GROUP BY Dealer__c
         ];
 
-/*        List<AggregateResult> caseAggregateResults = [
-                SELECT AccountId, SUM(SalesIQ_1__c) SalesIQ_1__c
-                FROM Case
-                WHERE CreatedDate = LAST_WEEK AND AccountId = :scope.Id
-                GROUP BY AccountId
-        ];*/
 
         List<AggregateResult> pdiAggregateResults = [
                 SELECT Contract__r.Dealer__c, SUM(SalesIQ_1__c) SalesIQ_1__c, SUM(SalesIQ_2__c) SalesIQ_2__c, SUM(SalesIQ_3__c) SalesIQ_3__c
@@ -81,11 +77,11 @@ public class AccountSalesIQUpdate_ba implements Database.Batchable<SObject>, Dat
                 GROUP BY Dealer__c
         ];
 
-        /**
+        **
          * 연체 체크는 월 1회만 처리 한다.
          * 주의 시작일과 종료일의 월이 다르면 수행.
          * 데이터 처리 기준은 전주 기준으로 처리 하고 있다.
-        */
+        *
         Date startDate = Date.today().toStartOfWeek().addDays(-7);
         Date endDate = startDate.addDays(6);
         List<AggregateResult> accountAggregateResults = new List<AggregateResult>();
@@ -116,7 +112,7 @@ public class AccountSalesIQUpdate_ba implements Database.Batchable<SObject>, Dat
 
         scope.LastSalesScoring__c = scope.SalesScoring__c;
         scope.SalesScoring__c += allSalesIQSum;
-
+*/
         update scope;
 
     }

@@ -177,7 +177,7 @@ public without sharing class LwsService {
 
             // Asset Map
             for (Asset ass : [
-                    SELECT Id, Name, Dealer__r.DealerOwner__c, WtyStartDate__c, Customer__c,InventoryType__c,WtyEndDate__c,IsSendReceiveItem__c,SendReceiveSpecifiedDate__c,DateSendReceiveExcept__c,CondSendReceiveExcept__c,NumSendReceiveExcept__c,TransferOrder__c,OwnerId
+                    SELECT Id, Name, Dealer__r.DealerOwner__c, WtyStartDate__c, Customer__c,InventoryType__c,WtyEndDate__c, OwnerId
                     FROM Asset
                     WHERE Name IN :assetNames
             ]
@@ -271,12 +271,6 @@ public without sharing class LwsService {
                     tmpAsset.AccountId                          = pdi.Consumer__c; // 실소유자
                     tmpAsset.PDI__c                             = pdi.Id; // PDI 연결
                     tmpAsset.Contract__c                        = pdi.Contract__c; // 계약 연결
-                    tmpAsset.IsSendReceiveItem__c               = false;
-                    tmpAsset.SendReceiveSpecifiedDate__c        = null;
-                    tmpAsset.DateSendReceiveExcept__c           = null;
-                    tmpAsset.CondSendReceiveExcept__c           = '';
-                    tmpAsset.NumSendReceiveExcept__c            = 0;
-                    tmpAsset.TransferOrder__c                   = null;
                     tmpAsset.WtyStartDate__c                    = String.isNotBlank(temp.WtyStartDate) ? Dummy_IF_BatchUtil.getIFDate(temp.WtyStartDate) : null;
                     tmpAsset.WtyEndDate__c                      = String.isNotBlank(temp.WtyEndDate) ? Dummy_IF_BatchUtil.getIFDate(temp.WtyEndDate) : null;
                     assets.add(tmpAsset);
@@ -360,6 +354,7 @@ public without sharing class LwsService {
         WarrantyClaim__c wc = [
                 SELECT
                         AssetId__r.Name,
+                        AssetId__r.BatchNo__c,
                         Customer__c,
                         Customer__r.Name,
                         Dealer__c,
@@ -400,7 +395,7 @@ public without sharing class LwsService {
 
         inputTData = new IF_KR_SE_LWS_0021.INPUT_T_DATA();
 
-        inputTData.AssetNo          = wc.AssetId__r.Name;       // 기대번호
+        inputTData.AssetNo          = wc.AssetId__r.BatchNo__c;       // 기대번호
         inputTData.AccountId        = wc.Customer__c;
         inputTData.AccountName      = wc.Customer__r.Name;
         inputTData.DealerId         = wc.Dealer__c;

@@ -100,6 +100,7 @@ public without sharing class OrderNewQa {
 
             initData.wrapperData.orderLineItemList = [
                     SELECT  Id,
+                            OrderId__r.TransferMachineNo__r.Name,
                             PriceChangeComment__c,
                             OtherChangeComment__c,
                             ProductId__c,
@@ -147,7 +148,7 @@ public without sharing class OrderNewQa {
                     initData.wrapperData.orderLineItemList[0].SellingPrice__c = initData.wrapperData.orderLineItemList[0].BaseSellingPrice__c;
                 }
             }
-
+/*
             if(initData.wrapperData.orderLineItemList[0].TransferAsset__c != null) {
                 List<Asset> tempAssetList = [
                         SELECT Id, TransferOrder__c, Name, Dealer__r.Name
@@ -157,7 +158,7 @@ public without sharing class OrderNewQa {
 
                 if(tempAssetList.size() > 0) initData.wrapperData.asset = tempAssetList[0];
             }
-
+*/
             initData.wrapperData.supplyHighAmt = initData.wrapperData.orderLineItemList[0].fm_SupplyHighAmt__c;
             initData.wrapperData.supplyLowAmt  = initData.wrapperData.orderLineItemList[0].fm_SupplyLowAmt__c;
 

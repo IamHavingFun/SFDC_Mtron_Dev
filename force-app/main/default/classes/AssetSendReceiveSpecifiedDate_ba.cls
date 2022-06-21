@@ -38,7 +38,7 @@ public with sharing class AssetSendReceiveSpecifiedDate_ba implements Database.B
         ]);*/
         if(String.isEmpty(query)) {
             query =
-                    ' SELECT  Id, InventoryType__c, IsSendReceiveItem__c, SendReceiveSpecifiedDate__c' +
+                    ' SELECT  Id, InventoryType__c ' +
                             ' FROM Asset' +
                             ' WHERE   InventoryType__c = \'대리점재고\'' +
                             ' AND     fm_SendReceiveExpectedDate__c <= :targetDate' +
@@ -48,11 +48,13 @@ public with sharing class AssetSendReceiveSpecifiedDate_ba implements Database.B
     }
 
     public void execute(Database.BatchableContext BC, List<Asset> scope) {
+/*
 
         for(Asset asset : scope) {
             asset.IsSendReceiveItem__c = true;
             asset.SendReceiveSpecifiedDate__c = this.targetDate;
         }
+*/
 
         update scope;
     }

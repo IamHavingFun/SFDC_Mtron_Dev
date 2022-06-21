@@ -23,9 +23,6 @@ private class OrderTransferSearchQa_ts {
         Asset testAsset = TestDataSalesFactory.baseAsset.clone(false, true);
         testAsset.Name = '2300000001';
         testAsset.BatchNo__c = '2300000001';
-        testAsset.BusinessOfficeName__c = '71A';
-        testAsset.IsSendReceiveItem__c = true;
-        testAsset.TransferOrder__c = null;
         testAsset.Order__c = null;
 
         insert testAsset;

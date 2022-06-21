@@ -26,8 +26,6 @@ private class AssetReturn_tr_ts {
 		TestDataSalesFactory.init();
 
 		Asset testAsset = TestDataSalesFactory.baseAsset.clone(false, true);
-		testAsset.IsSendReceiveItem__c = false;
-		testAsset.SendReceiveSpecifiedDate__c = null;
 		testAsset.Name = 'Test1000';
 		testAsset.Order__c = null;
 		insert testAsset;

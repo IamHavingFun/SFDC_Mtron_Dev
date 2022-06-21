@@ -290,8 +290,6 @@ public class Dummy_IF_KR_ERP_SE_0012_ba extends Dummy_IF_Batch {
                         Dealer__c,
                         DealerCode__c,
                         BusinessOffice__c,
-                        BusinessOfficeName__c,
-                        Brand__c,
                         Order__c,
                         TransferCount__c
                 FROM    Asset

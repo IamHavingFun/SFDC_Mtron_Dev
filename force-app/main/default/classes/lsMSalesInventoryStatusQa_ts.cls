@@ -31,7 +31,6 @@ private class lsMSalesInventoryStatusQa_ts {
         testAsset.Product2 = testProduct;
         testAsset.InventoryType__c = '대리점재고';
         testAsset.BusinessOffice__r = businessAccount;
-        testAsset.BusinessOfficeName__c = '71A';
         lsMSalesInventoryStatusQa.init(testAsset.Product2);
     }
 }
