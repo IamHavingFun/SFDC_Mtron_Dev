@@ -128,10 +128,11 @@ public without sharing class OrderAssetDeliveryQa {
                 FROM Order__c
                 WHERE Status__c != '종료'
                 AND isOrderCancel__c = FALSE
+                AND IsOutAsset__c = FALSE
                 AND VSTEL__c IN ('', 'M620')
                 AND OrderScheduleDate__c != NULL
                 AND OrderProduct__c = :initData.order.OrderProduct__c
-                ORDER BY fm_RecordTypeOrder__c, fm_OrderScheduleYearMonth__c, fm_IsPreOrder__c, fm_OrderPurposeOrder__c, OrderScheduleDate__c, CreatedDate
+                ORDER BY DeliverySeq__c, fm_RecordTypeOrder__c, fm_OrderScheduleYearMonth__c, fm_IsPreOrder__c, fm_OrderPurposeOrder__c, OrderScheduleDate__c, CreatedDate
         ];
 //        System.debug(JSON.serializePretty(orderDeliverySeqs));
         Integer seq = 1;

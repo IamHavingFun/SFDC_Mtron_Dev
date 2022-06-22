@@ -57,6 +57,7 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 							Name,
 							OwnerId,
 							OrderSellIn__c,
+							OrderSellIn__r.ru_SellingPrice__c,
 							Division__c,
 							AssetId__c,
 							AssetIdApex__c,
@@ -313,7 +314,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 				newTask.OwnerId = target.OwnerId;
 				taskList.add(newTask);
 
-
 				//'공장출고','보관처리','보관출고','반품','일반출고','직납','전수배출고','전수배반품','교환반품', '교환출고', '전시출고', '전시반품', '무상출고'
 				// 출고 처리.
 				// 대리점입고유형
@@ -324,6 +324,7 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 				}
 				if(target.OrderSellIn__c != null && target.DeliveryType__c != '보관출고') {
 					tmpAsset.Order__c = target.OrderSellIn__c;
+					tmpAsset.SupplyConfirmedAmt__c = target.OrderSellIn__r.ru_SellingPrice__c;      // 공급가격
 				}
 				System.debug(target.DeliveryType__c + ' ===> ' + target.AssetIdApex__c );
 				// 출고 처리 케이스.
