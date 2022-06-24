@@ -51,23 +51,25 @@ public with sharing class Asset_tr extends TriggerHandler {
 		Map<Id, Asset> oldAssetMap = (Map<Id, Asset>)Trigger.oldMap;
 		List<Asset> assetList = (List<Asset>) Trigger.new;
 		for(Asset r : assetList) {
-			assetNoSet.add(r.Name);
+			assetNoSet.add(r.BatchNo__c);
 		}
 		Map<String, String> assetDupCheckMap = new Map<String, String>();
 		for(Asset r : [
-				SELECT Name FROM Asset WHERE Name IN :assetNoSet
+				SELECT Id, Name, BatchNo__c FROM Asset WHERE BatchNo__c IN :assetNoSet
 		]) {
-			assetDupCheckMap.put(r.Name, r.Name);
+			assetDupCheckMap.put(r.BatchNo__c, r.BatchNo__c);
 		}
 		for(Asset r : assetList) {
 			if(isUpdate == true) {
 				// 수정시 체크.
 				if(oldAssetMap.get(r.Id).Name != r.Name) {
-					//r.addError('기대번호는 변경이 불가 합니다.');
+					r.addError('기대번호는 변경이 불가 합니다.');
 				}
 			} else {
 				// 신규 체크
-				if(assetDupCheckMap.containsKey(r.Name)) {
+				if(assetDupCheckMap.containsKey(r.BatchNo__c)) {
+//					System.debug('기대번호 : ' + r.BatchNo__c);
+//					System.debug(JSON.serializePretty(assetDupCheckMap));
 					r.addError('기존에 중복 기대번호가 존재 합니다.');
 				}
 			}

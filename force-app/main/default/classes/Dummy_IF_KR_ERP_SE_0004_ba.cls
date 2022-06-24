@@ -52,9 +52,9 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
         List<Account> fixAccounts = [SELECT Id, OwnerId FROM Account WHERE Name = '공장재고' AND ERPCode__c = '100000'];
         fixAccountForAsset = fixAccounts.isEmpty() ? null : fixAccounts[0];
 
-         //============================================================================
-         // 고정 공장재고의 Account가 없을 경우 에러처리
-         //============================================================================
+        //============================================================================
+        // 고정 공장재고의 Account가 없을 경우 에러처리
+        //============================================================================
         if(fixAccountForAsset == null) {
             throw new Dummy_IF_BatchUtil.DummyValidException('공장재고 Account 가 존재하지 않습니다. 확인 바랍니다.');
         }
@@ -93,11 +93,11 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
         //============================================================================
         this.interfaceId = 'IF_KR_ERP_SE_0004';
         this.deleteInfo = new Dummy_IF_Batch.DeleteInfo(
-            'IF_KR_ERP_SE_0004__c',
-            interfaceId,
-             // 20140414 : Monthly 에서 Daily 로 변경
-            Dummy_IF_Batch.DUMMY_BATCH_PERIOD_TYPE.DAILY,
-            this.exeDatetime
+                'IF_KR_ERP_SE_0004__c',
+                interfaceId,
+                // 20140414 : Monthly 에서 Daily 로 변경
+                Dummy_IF_Batch.DUMMY_BATCH_PERIOD_TYPE.DAILY,
+                this.exeDatetime
         );
 
         /*
@@ -120,12 +120,12 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
         //============================================================================
         String machineNo;
         for(IF_KR_ERP_SE_0004__c dummy : [
-            SELECT  Id, MachineNo__c
-            FROM    IF_KR_ERP_SE_0004__c
-            WHERE   InterfaceId__c = :this.interfaceId
-            AND     isBatchCompleted__c = FALSE
-            AND     isBatchError__c = FALSE
-            ORDER BY CreatedDate DESC
+                SELECT  Id, MachineNo__c
+                FROM    IF_KR_ERP_SE_0004__c
+                WHERE   InterfaceId__c = :this.interfaceId
+                AND     isBatchCompleted__c = FALSE
+                AND     isBatchError__c = FALSE
+                ORDER BY CreatedDate DESC
         ]) {
             machineNo = dummy.MachineNo__c;
             if(!disctinctMap.containsKey(machineNo)) {
@@ -204,15 +204,15 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
         String assetName;
         Map<String, Asset> AssetByName = new Map<String, Asset>();
         for(Asset asset : [
-            SELECT  Id,
-                    Name,           // 일련번호
-                    BatchNo__c,     // 배치번호
-                    Product2Id,
-                    ProductionDate__c,
-                    InventoryType__c,
-                    ErpLGORT__c
-            FROM    Asset
-            WHERE   BatchNo__c IN :DummyByMachineNo.keySet()
+                SELECT  Id,
+                        Name,           // 일련번호
+                        BatchNo__c,     // 배치번호
+                        Product2Id,
+                        ProductionDate__c,
+                        InventoryType__c,
+                        ErpLGORT__c
+                FROM    Asset
+                WHERE   BatchNo__c IN :DummyByMachineNo.keySet()
         ]) {
             assetName = asset.BatchNo__c;
             if(!AssetByName.containsKey(assetName)) {
@@ -294,12 +294,12 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
                 dummy.BatchErrorComment__c = String.join(errorComments, ', ');
 
                 targetBadDummyList.add(Dummy_IF_BatchUtil.setDummyBatchResult(
-                    dummy,
-                    String.format(
-                        Dummy_IF_BatchUtil.DUMMY_BATCH_ERROR_VALID,
-                        new String[]{'ProductCode__c or 매핑 Product2 or MachineNo__c or ProductDate__c'}
-                    ),
-                    this.errorDummyIds
+                        dummy,
+                        String.format(
+                                Dummy_IF_BatchUtil.DUMMY_BATCH_ERROR_VALID,
+                                new String[]{'ProductCode__c or 매핑 Product2 or MachineNo__c or ProductDate__c'}
+                        ),
+                        this.errorDummyIds
                 ));
 
                 continue;
@@ -312,17 +312,17 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
             //============================================================================
             if(isExistRecord == false) {
                 targetInstList.add(tmpAsset = new Asset(
-                    OwnerId = fixAccountOwnerIdForAsset,
-                    // 신규인 경우 stock__c 와 QiStorc__c 의 값을 비교하여 유형 세팅
-                    InventoryType__c    = (dummy.Stock__c > 0) ? '공장재고(가용)' : ((dummy.QiStock__c > 0) ? '공장재고(QI)' : null),
-                    AccountId           = Dummy_IF_KR_ERP_SE_0004_ba.fixAccountIdForAsset,
-                    Dealer__c           = null,
-                    Customer__c         = null,
-                    Name                = dummy.SerialNo__c,
-                    BatchNo__c          = tmpMachineNo,
-                    Product2Id          = tmpProduct.Id,
-                    ProductionDate__c   = tmpProductDate,
-                    ErpLGORT__c         = dummy.ErpLGORT__c
+                        OwnerId = fixAccountOwnerIdForAsset,
+                        // 신규인 경우 stock__c 와 QiStorc__c 의 값을 비교하여 유형 세팅
+                        InventoryType__c    = (dummy.Stock__c > 0) ? '공장재고(가용)' : ((dummy.QiStock__c > 0) ? '공장재고(QI)' : null),
+                        AccountId           = Dummy_IF_KR_ERP_SE_0004_ba.fixAccountIdForAsset,
+                        Dealer__c           = null,
+                        Customer__c         = null,
+                        Name                = dummy.SerialNo__c,
+                        BatchNo__c          = tmpMachineNo,
+                        Product2Id          = tmpProduct.Id,
+                        ProductionDate__c   = tmpProductDate,
+                        ErpLGORT__c         = dummy.ErpLGORT__c
                 ));
             }
             //============================================================================
@@ -367,10 +367,10 @@ public class Dummy_IF_KR_ERP_SE_0004_ba extends Dummy_IF_Batch {
 
             for(Asset asset: (List<Asset>)targetInstList) {
                 newAssetTasks.add(new Task(
-                    WhatId = asset.Id,
-                    Subject = '생산입고',
-                    Status = 'Completed',
-                    ActivityDate = asset.ProductionDate__c
+                        WhatId = asset.Id,
+                        Subject = '생산입고',
+                        Status = 'Completed',
+                        ActivityDate = asset.ProductionDate__c
                 ));
             }
 
