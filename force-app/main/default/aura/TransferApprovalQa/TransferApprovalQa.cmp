@@ -6,7 +6,7 @@
 * @group         :
 * @group-content :
 * @description   : 전배 승인 처리
-* @tester        :
+* @tester        :lsMSalesOrderAssetTransferApproval
 * @reference     :
 * @copyright     : Copyright © I2max. All Rights Reserved.
 * @modification Log
@@ -34,8 +34,6 @@
     <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <c:lacComQuickAction title="전배 승인 처리" aura:id="quickAction" hasSelfFooter="{#false}" isWide="{#true}">
-
-<!--        || {!v.isProcessed} || {!v.isRejectGrant} || {!v.isTargetContract} || {!v.isSendReceiveItem} || {!v.notiMessage} ||-->
 
         <aura:if isTrue="{!not(v.isProcessed)}">
             <c:lacComSectionFrame title="전배 요청 정보" hasHeader="{#true}">
@@ -65,14 +63,6 @@
                 </lightning:layout>
                 <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
                     <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
-                        <label for="division" class="slds-m-top_medium">전배 대상 여부</label>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem size="8">
-                        <lightning:input type="checkbox" label="Basic option" variant="label-hidden" name="input1" checked="{!v.isSendReceiveItem}" disabled="true"/>
-                    </lightning:layoutItem>
-                </lightning:layout>
-                <lightning:layout horizontalAlign="center" class="slds-m-top_medium">
-                    <lightning:layoutItem size="2" class="slds-align-middle slds-m-right--large">
                         <label for="division" class="slds-m-top_medium">승인 여부</label>
                     </lightning:layoutItem>
                     <lightning:layoutItem size="8">
@@ -83,6 +73,7 @@
             </c:lacComSectionFrame>
             <br/>
             <!-- 거부 시 계약 정보 테이블 -->
+<!--
             <aura:if isTrue="{!and(v.isSendReceiveItem , equals(v.transferData.assetTransferRequest.Status__c, '거부'))}">
                 <aura:if isTrue="{!not(empty(v.transferData.contracts))}">
                     <c:lacComSectionFrame title="계약 정보" hasHeader="{#true}">
@@ -141,6 +132,7 @@
                     </aura:set>
                 </aura:if>
             </aura:if>
+-->
             <aura:set attribute="else">
                 <div class="slds-align_absolute-center">
                     {!v.notiMessage}

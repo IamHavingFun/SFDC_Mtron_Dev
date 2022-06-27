@@ -26,7 +26,8 @@ private class AssetReturn_tr_ts {
 		TestDataSalesFactory.init();
 
 		Asset testAsset = TestDataSalesFactory.baseAsset.clone(false, true);
-		testAsset.Name = 'Test1000';
+		testAsset.Name = 'N12345678914';
+		testAsset.BatchNo__c = '12345678914';
 		testAsset.Order__c = null;
 		insert testAsset;
 

@@ -41,7 +41,6 @@ public with sharing class AssetSendReceiveSpecifiedDate_ba implements Database.B
                     ' SELECT  Id, InventoryType__c ' +
                             ' FROM Asset' +
                             ' WHERE   InventoryType__c = \'대리점재고\'' +
-                            ' AND     fm_SendReceiveExpectedDate__c <= :targetDate' +
                             ' AND     IsSendReceiveItem__c = false';
         }
         return Database.getQueryLocator(query);

@@ -199,7 +199,6 @@ public without sharing class LwsService {
                 * LWSNo__c 필수 항목
                 * ================================================================*/
 
-/*
                 isGoodResponseData = String.isNotBlank(temp.LwsNo);
 
                 if (isGoodResponseData == false) {
@@ -224,12 +223,14 @@ public without sharing class LwsService {
                         tmpAsset.AccountId                          = pdi.Consumer__c; // 실소유자
                         tmpAsset.PDI__c                             = pdi.Id; // PDI 연결
                         tmpAsset.Contract__c                        = pdi.Contract__c; // 계약 연결
+/*
                         tmpAsset.IsSendReceiveItem__c               = false;
                         tmpAsset.SendReceiveSpecifiedDate__c        = null;
                         tmpAsset.DateSendReceiveExcept__c           = null;
                         tmpAsset.CondSendReceiveExcept__c           = '';
                         tmpAsset.NumSendReceiveExcept__c            = 0;
                         tmpAsset.TransferOrder__c                   = null;
+*/
                         tmpAsset.WtyStartDate__c                    = String.isNotBlank(temp.WtyStartDate) ? Dummy_IF_BatchUtil.getIFDate(temp.WtyStartDate) : null;
                         tmpAsset.WtyEndDate__c                      = String.isNotBlank(temp.WtyEndDate) ? Dummy_IF_BatchUtil.getIFDate(temp.WtyEndDate) : null;
                         assets.add(tmpAsset);
@@ -257,7 +258,7 @@ public without sharing class LwsService {
                     returnMap.put('STATUS', 'Y');
                     returnMap.put('MESSAGE', '');
                 }
-*/
+
 
                 //============================================================================
                 // 변경된 작업분

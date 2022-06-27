@@ -79,7 +79,7 @@ public with sharing class GuideActionOpportunityCloseCheck_ba implements Databas
                     o.StageName = '실주';
                     // 20210416 추가
                     o.SystemStatus__c = '실주';
-                    o.LossReason__c = 'Other';
+                    o.LossReason__c = '기간 경과 자동 판매실패';
                 } else if(! o.ActivityCheck__c ){
                     o.ActivityCheck__c = True;
                 }

@@ -34,7 +34,7 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
     public void execute(Database.BatchableContext BC, List<Account> accounts) {
         //scope.Id 기준으로 각 오브젝트 쿼리 + 합산
         Account scope = accounts.get(0); //batch size = 1
-/*
+
         List<AggregateResult> opptyAggregateResults = [
                 SELECT Dealer__c, SUM(SalesIQ_1__c) SalesIQ_1__c
                 FROM Opportunity
@@ -74,19 +74,12 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
                 GROUP BY Contract__r.Dealer__c
         ];
 
-        List<AggregateResult> assetAggregateResults = [
-                SELECT Dealer__c, SUM(SalesIQ_1__c) SalesIQ_1__c
-                FROM Asset
-                WHERE AssetRegDate__c >= LAST_N_MONTHS:2 AND AssetRegDate__c < LAST_N_DAYS:2
-                AND Dealer__c =: scope.Id
-                GROUP BY Dealer__c
-        ];
 
-        **
+        /**
          * 연체 체크는 월 1회만 처리 한다.
          * 주의 시작일과 종료일의 월이 다르면 수행.
          * 데이터 처리 기준은 전주 기준으로 처리 하고 있다.
-        *
+        */
         Date startDate = Date.today().toStartOfWeek().addDays(-7);
         Date endDate = startDate.addDays(6);
         List<AggregateResult> accountAggregateResults = new List<AggregateResult>();
@@ -104,7 +97,7 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
         Decimal leadSalesIQ = getSalesIQ(leadAggregateResults,'lead');
         Decimal caseSalesIQ = getSalesIQ(caseAggregateResults,'case');
         Decimal pdiSalesIQ = getSalesIQ(pdiAggregateResults,'pdi');
-        Decimal assetSalesIQ = getSalesIQ(assetAggregateResults,'asset');
+        Decimal assetSalesIQ = 0;//getSalesIQ(assetAggregateResults,'asset');
         Decimal accountSalesIQ = getSalesIQ(accountAggregateResults,'account');
 
         Decimal allSalesIQSum = (Decimal) opptySalesIQ + contractSalesIQ + leadSalesIQ + caseSalesIQ + pdiSalesIQ + assetSalesIQ + accountSalesIQ;
@@ -114,8 +107,8 @@ public with sharing class AccountSalesIQUpdate_Range_ba implements Database.Batc
 
         scope.LastSalesScoring__c = 0;
         scope.SalesScoring__c = allSalesIQSum;
-*/
-        update scope;
+
+//        update scope;
 
     }
 

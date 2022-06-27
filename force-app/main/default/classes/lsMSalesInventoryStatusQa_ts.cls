@@ -26,6 +26,8 @@ private class lsMSalesInventoryStatusQa_ts {
 
         Asset testAsset2 = testAsset.clone(false, true);
         testAsset2.InventoryType__c = '공장재고(가용)';
+        testAsset2.Name = 'N12345678911';
+        testAsset2.BatchNo__c = '12345678911';
         insert testAsset2;
 
         testAsset.Product2 = testProduct;

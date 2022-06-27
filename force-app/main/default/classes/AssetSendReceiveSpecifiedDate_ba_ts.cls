@@ -25,6 +25,8 @@ private class AssetSendReceiveSpecifiedDate_ba_ts {
         TestDataSalesFactory.init();
 
         Asset testAsset = TestDataSalesFactory.baseAsset.clone(false, true);
+        testAsset.Name = 'N12345678915';
+        testAsset.BatchNo__c = '12345678915';
         testAsset.DealerReceiptType__c = '전수배주문';
         testAsset.DealerReceiptDate__c = TestDataUtilFactory.d.addDays(-90);
         insert testAsset;

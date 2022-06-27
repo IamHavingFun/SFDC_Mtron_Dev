@@ -26,6 +26,8 @@ private class AssetSendReceiveItemConfirm_ba_ts {
 
         Asset testAsset = TestDataSalesFactory.baseAsset.clone(false, true);
         testAsset.Order__c = null;
+        testAsset.Name = 'N12345678913';
+        testAsset.BatchNo__c = '12345678913';
         testAsset.DealerReceiptDate__c = TestDataUtilFactory.d.addDays(-90);
         insert testAsset;
 

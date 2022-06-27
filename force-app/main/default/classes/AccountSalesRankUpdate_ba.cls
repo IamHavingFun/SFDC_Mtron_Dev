@@ -28,7 +28,7 @@ public class AccountSalesRankUpdate_ba implements Database.Batchable<SObject>, D
     public void execute(Database.BatchableContext BC, List<Account> scope) {
         Map<Decimal, List<Account>> scoringMap          = new Map<Decimal, List<Account>>();
         List<Account>               targetUpdateList    = new List<Account>();
-/*
+
         List<Account>               accounts            = [
                 SELECT Id, SalesScoring__c, SalesIQRank__c
                 FROM Account
@@ -59,9 +59,8 @@ public class AccountSalesRankUpdate_ba implements Database.Batchable<SObject>, D
                 targetUpdateList.add(tempAcc);
             }
         }
-        update targetUpdateList;
- */
-    }
+ //       update targetUpdateList;
+     }
 
     public void finish(Database.BatchableContext BC) {
 

@@ -37,11 +37,18 @@
         //============================================================================
         component.set('v.assetTransfer', event.getSource().get('v.value'));
 
+        helper.gfn_createComponent(component, 'lacComConfirmQuickAction', {
+            'action': component.get('c.doReject'),
+            'btnLabel': '확인',
+            'title': '전배 거부 처리',
+            'comment': '전배 거부 처리 하시겠습니까?'
+        });
+/*
         helper.gfn_createComponent(component, 'lsMSalesOrderAssetTransferContract', {
             'recordId':component.get('v.assetTransfer').Id,
             'contractId':component.getReference('v.contractId')
         }, 'slds-modal_medium');
-
+*/
     },
 
 
