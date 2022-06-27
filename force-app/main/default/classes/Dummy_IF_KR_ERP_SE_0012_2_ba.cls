@@ -232,7 +232,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						InventoryType__c,
 						AccountId,
 						DealerReceiptDate__c,
-						SalesRep__c,
 						Dealer__c,
 						DealerCode__c,
 						BusinessOffice__c,
@@ -416,7 +415,6 @@ public class Dummy_IF_KR_ERP_SE_0012_2_ba extends Dummy_IF_Batch {
 						tmpAsset.WtyEndDate__c = null;      // 워린티 기간 종료 초기화
 						tmpAsset.Dealer__c = null;
 						tmpAsset.DealerCode__c = null;
-						tmpAsset.SalesRep__c = null;
 						tmpAsset.BusinessOffice__c = null;
 						// 대리점 입고일
 						tmpAsset.DealerReceiptDate__c = null;

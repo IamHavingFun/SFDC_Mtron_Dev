@@ -286,7 +286,6 @@ public class Dummy_IF_KR_ERP_SE_0012_ba extends Dummy_IF_Batch {
                         InventoryType__c,
                         AccountId,
                         DealerReceiptDate__c,
-                        SalesRep__c,
                         Dealer__c,
                         DealerCode__c,
                         BusinessOffice__c,
